@@ -105,7 +105,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
             {/* Left Side: Form Section */}
             <div className="w-full md:w-3/5 p-8 md:p-16 flex flex-col bg-gradient-to-br from-obsidian to-obsidian/50 overflow-y-auto">
-              <h2 className="text-4xl md:text-5xl font-display font-black tracking-tighter uppercase mb-4 text-white">Let's <span className="text-cyber-teal">Talk</span></h2>
+              <h2 className="text-4xl md:text-5xl font-display font-black tracking-tighter uppercase mb-4 text-white">Let's <span className="text-gradient">Talk</span></h2>
               <p className="text-white/40 mb-12 text-sm leading-relaxed max-w-md">
                 To request a quote or want to meet up for coffee, contact us directly or fill out the form and we will get back to you promptly.
               </p>
@@ -220,11 +220,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
                 <div className="flex items-center gap-4 text-white/60">
                   <Phone className="w-5 h-5 text-cyber-teal flex-shrink-0" />
-                  <span className="text-sm">+1 (555) 000-0000</span>
+                  <span className="text-sm">+91 87546 59759</span>
                 </div>
                 <div className="flex items-center gap-4 text-white/60">
                   <Mail className="w-5 h-5 text-cyber-teal flex-shrink-0" />
-                  <span className="text-sm">hello@lykspire.com</span>
+                  <span className="text-sm">info@tieraprom.co.in</span>
                 </div>
               </div>
             </div>

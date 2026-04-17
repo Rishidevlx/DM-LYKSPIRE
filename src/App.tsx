@@ -17,6 +17,7 @@ import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
 import ContactModal from "./components/ContactModal";
 import WhatsAppFloating from "./components/WhatsAppFloating";
+import Stats from "./components/Stats";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +51,7 @@ export default function App() {
         >
           <Navbar />
           <Hero />
+          <Stats />
           <Services />
           <CaseStudies />
           <About />

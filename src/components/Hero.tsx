@@ -44,6 +44,19 @@ export default function Hero() {
             </span>
           </h1>
           
+          <div className="flex flex-col gap-4 mb-8">
+            <div className="flex items-center">
+              <span className="px-3 py-1.5 rounded-lg bg-cyber-teal/10 border border-cyber-teal/30 text-cyber-teal text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
+                AI-powered lead generation platform for startups
+              </span>
+            </div>
+            <div className="flex items-center">
+              <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/50 text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
+                Designed for early-stage founders
+              </span>
+            </div>
+          </div>
+
           <p className="text-white/60 text-lg md:text-[18px] max-w-[540px] mb-12 leading-[1.6]">
             We help brands scale through strategy, storytelling, and high-impact digital marketing. 
             From content and social media to SEO and creative production, we build marketing systems that drive real growth.
@@ -54,7 +67,7 @@ export default function Hero() {
               onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
               className="btn-primary text-lg px-10 py-5"
             >
-              Get Started <ArrowUpRight className="w-5 h-5" />
+              Try in 30 seconds <ArrowUpRight className="w-5 h-5" />
             </button>
           </div>
         </motion.div>

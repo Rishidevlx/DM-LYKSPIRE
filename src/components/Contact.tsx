@@ -91,7 +91,7 @@ export default function Contact() {
                 <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
                   <Send className="w-5 h-5 text-cyber-teal" />
                 </div>
-                <span className="font-bold">hello@lykspire.com</span>
+                <span className="font-bold">info@tieraprom.co.in</span>
               </div>
             </div>
           </div>

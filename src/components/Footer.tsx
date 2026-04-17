@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ArrowUpRight, Instagram, Linkedin, Twitter, Mail, MapPin } from "lucide-react";
+import { ArrowUpRight, Linkedin, Mail, MapPin } from "lucide-react";
 import logo from "../assest/LYKSPIRE LOGO.png";
 
 export default function Footer() {
@@ -36,13 +36,9 @@ export default function Footer() {
               <h4 className="font-display font-bold mb-6 text-sm uppercase tracking-widest text-white/40">Social</h4>
               <ul className="space-y-4 text-white/60">
                 <li className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
-                  <Linkedin className="w-4 h-4" /> LinkedIn
-                </li>
-                <li className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
-                  <Instagram className="w-4 h-4" /> Instagram
-                </li>
-                <li className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
-                  <Twitter className="w-4 h-4" /> Twitter
+                  <a href="https://www.linkedin.com/company/LyKSpire" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    <Linkedin className="w-4 h-4" /> LinkedIn
+                  </a>
                 </li>
               </ul>
             </div>
@@ -50,7 +46,7 @@ export default function Footer() {
               <h4 className="font-display font-bold mb-6 text-sm uppercase tracking-widest text-white/40">Contact</h4>
               <div className="space-y-4">
                 <p className="flex items-center gap-3 text-white/60 hover:text-white transition-colors cursor-pointer">
-                  <Mail className="w-4 h-4 text-cyber-teal" /> hello@lykspire.com
+                  <Mail className="w-4 h-4 text-cyber-teal" /> info@tieraprom.co.in
                 </p>
                 <p className="flex items-start gap-3 text-white/60 hover:text-white transition-colors cursor-pointer leading-relaxed">
                   <MapPin className="w-4 h-4 text-cyber-teal flex-shrink-0 mt-1" />

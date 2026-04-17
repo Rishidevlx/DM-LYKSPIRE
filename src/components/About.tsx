@@ -6,9 +6,19 @@ const storyLines = [
   { text: "We don’t do marketing.", highlight: false },
   { text: "We build growth systems.", highlight: true },
   { text: "At LYKSPIRE, we combine GenAI,", highlight: false },
-  { text: "automation, and performance marketing.", highlight: true },
+  { 
+    text: "automation, performance marketing.", 
+    highlight: true, 
+    customStyle: (t: string) => {
+      return (
+        <span>
+          <span className="text-white/40">automation</span>, <span className="text-cyber-teal">performance</span> <span className="text-white/40">marketing</span>.
+        </span>
+      );
+    }
+  },
   { text: "To create systems that attract,", highlight: false },
-  { text: "engage, and convert. Consistently.", highlight: true },
+  { text: "engage, convert. Consistently.", highlight: true },
   { text: "Because growth should not be random.", highlight: false },
   { text: "It should be engineered.", highlight: true }
 ];
@@ -21,9 +31,9 @@ const founders = [
     icon: Cpu
   },
   {
-    name: "Lokeshwari Subramanian",
+    name: "Lokeshwari Subramaniyan",
     role: "Co-Founder",
-    description: "Lokeshwari Subramanian brings a strategic and creative edge to LyKSpire. With a deep understanding of audience behavior and digital trends, she ensures that every campaign is both impactful and performance-driven. Her expertise lies in aligning brand voice with growth strategies — turning ideas into high-converting content and campaigns.",
+    description: "Lokeshwari Subramaniyan brings a strategic and creative edge to LyKSpire. With a deep understanding of audience behavior and digital trends, she ensures that every campaign is both impactful and performance-driven. Her expertise lies in aligning brand voice with growth strategies — turning ideas into high-converting content and campaigns.",
     icon: Zap
   }
 ];
@@ -59,7 +69,7 @@ export default function About() {
                 transition={{ duration: 0.8, delay: i * 0.1 }}
                 className={`text-4xl md:text-6xl lg:text-7xl font-display font-black uppercase tracking-tighter leading-tight ${line.highlight ? "text-cyber-teal" : "text-white/60"}`}
               >
-                {line.text}
+                {line.customStyle ? line.customStyle(line.text) : line.text}
               </motion.div>
             ))}
           </div>
@@ -81,30 +91,57 @@ export default function About() {
             viewport={{ once: true }}
             className={`text-3xl font-display font-black uppercase tracking-tighter ${line.highlight ? "text-cyber-teal" : "text-white/40"}`}
           >
-            {line.text}
+            {line.customStyle ? line.customStyle(line.text) : line.text}
           </motion.div>
         ))}
       </section>
 
-      {/* Stats / System Metrics */}
-      <section className="py-24 px-6 border-y border-white/5 bg-white/[0.02]">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="flex flex-col items-center text-center p-8 rounded-3xl border border-white/5 bg-white/[0.02] hover:border-cyber-teal/30 transition-colors group"
-            >
-              <stat.icon className="w-8 h-8 text-cyber-teal mb-4 group-hover:scale-110 transition-transform" />
-              <div className="text-4xl font-display font-black text-white mb-1">{stat.value}</div>
-              <div className="text-[10px] font-black uppercase tracking-widest text-white/40">{stat.label}</div>
-            </motion.div>
-          ))}
+
+
+      {/* Philosophy Grid Boxes */}
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
+          >
+            <Cpu className="w-10 h-10 text-cyber-teal mb-6" />
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">95% AI Efficiency</h3>
+            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">Guided by Human Intelligence</p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+            className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
+          >
+            <Shield className="w-10 h-10 text-cyber-teal mb-6" />
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">Anytime Reach</h3>
+            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">Uninterrupted Growth Support</p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+            className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
+          >
+            <Globe className="w-10 h-10 text-cyber-teal mb-6" />
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">AI Is Human Action</h3>
+            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">
+              Driven by Real Creators.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
+            className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(74,222,128,0.05)]"
+          >
+            <Zap className="w-10 h-10 text-cyber-teal mb-6" />
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic leading-tight">Accelerate Growth by 4×</h3>
+            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">Velocity Engineered</p>
+          </motion.div>
         </div>
       </section>
+
+
 
       {/* Founders Section - Futuristic HUD Cards */}
       <section className="py-32 px-6 max-w-7xl mx-auto">
