@@ -216,7 +216,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               <div className="relative z-10 space-y-6 mt-16">
                 <div className="flex items-start gap-4 text-white/60">
                   <MapPin className="w-5 h-5 text-cyber-teal flex-shrink-0 mt-0.5" />
-                  <span className="text-sm">Global Digital Hub, Operating Worldwide.</span>
+                  <span className="text-sm">Coimbatore, Tamil Nadu, India</span>
                 </div>
                 <div className="flex items-center gap-4 text-white/60">
                   <Phone className="w-5 h-5 text-cyber-teal flex-shrink-0" />

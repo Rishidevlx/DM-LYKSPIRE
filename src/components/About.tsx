@@ -5,7 +5,17 @@ import logo from "../assest/LYKSPIRE LOGO.png";
 const storyLines = [
   { text: "We don’t do marketing.", highlight: false },
   { text: "We build growth systems.", highlight: true },
-  { text: "At LYKSPIRE, we combine GenAI,", highlight: false },
+  { 
+    text: "At LYKSPIRE, we combine GenAI,", 
+    highlight: true,
+    customStyle: (t: string) => {
+      return (
+        <span>
+          At LYKSPIRE, we combine <span className="text-cyber-teal">GenAI</span>,
+        </span>
+      );
+    }
+  },
   { 
     text: "automation, performance marketing.", 
     highlight: true, 
@@ -18,7 +28,7 @@ const storyLines = [
     }
   },
   { text: "To create systems that attract,", highlight: false },
-  { text: "engage, convert. Consistently.", highlight: true },
+  { text: "engage, convert & Consistently.", highlight: true },
   { text: "Because growth should not be random.", highlight: false },
   { text: "It should be engineered.", highlight: true }
 ];
@@ -40,7 +50,7 @@ const founders = [
 
 const stats = [
   { label: "AI Efficiency", value: "95%", icon: Cpu },
-  { label: "Scale Velocity", value: "4x", icon: Zap },
+  { label: "Scale Velocity", value: "10x", icon: Zap },
   { label: "System Uptime", value: "24/7", icon: Shield },
   { label: "Global Reach", value: "∞", icon: Globe }
 ];
@@ -124,7 +134,7 @@ export default function About() {
             className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
           >
             <Globe className="w-10 h-10 text-cyber-teal mb-6" />
-            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">AI Is Human Action</h3>
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">AI X Human Touch</h3>
             <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">
               Driven by Real Creators.
             </p>
@@ -135,7 +145,7 @@ export default function About() {
             className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(74,222,128,0.05)]"
           >
             <Zap className="w-10 h-10 text-cyber-teal mb-6" />
-            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic leading-tight">Accelerate Growth by 4×</h3>
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic leading-tight">Accelerate Growth by 10×</h3>
             <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">Velocity Engineered</p>
           </motion.div>
         </div>

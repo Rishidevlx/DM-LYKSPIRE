@@ -3,15 +3,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 
 export default function Hero() {
-  const growthTargets = ["Brands", "Founders", "Startups", "Creators"];
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % growthTargets.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
@@ -26,49 +17,48 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col justify-center"
         >
-          <h1 className="font-display text-6xl md:text-[88px] font-black leading-[1.1] mb-8 tracking-[-4px] uppercase text-white flex flex-wrap gap-x-4 items-end">
-            <span>Growth Marketing<br/>for</span>
-            <span className="text-cyber-teal inline-flex min-w-[280px] md:min-w-[450px]">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={index}
-                  initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
-                  animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
-                  exit={{ opacity: 0, clipPath: 'inset(0 0% 0 100%)' }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="inline-block whitespace-nowrap"
-                >
-                  {growthTargets[index]}
-                </motion.span>
-              </AnimatePresence>
+          <div className="flex items-center mb-6">
+            <span className="px-3 py-1.5 rounded-full bg-cyber-teal/10 border border-cyber-teal/30 text-cyber-teal text-[10px] md:text-xs font-black uppercase tracking-[0.2em] animate-pulse">
+              Built for Scale
             </span>
-          </h1>
-          
-          <div className="flex flex-col gap-4 mb-8">
-            <div className="flex items-center">
-              <span className="px-3 py-1.5 rounded-lg bg-cyber-teal/10 border border-cyber-teal/30 text-cyber-teal text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
-                AI-powered lead generation platform for startups
-              </span>
-            </div>
-            <div className="flex items-center">
-              <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/50 text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
-                Designed for early-stage founders
-              </span>
-            </div>
           </div>
 
-          <p className="text-white/60 text-lg md:text-[18px] max-w-[540px] mb-12 leading-[1.6]">
-            We help brands scale through strategy, storytelling, and high-impact digital marketing. 
-            From content and social media to SEO and creative production, we build marketing systems that drive real growth.
+          <h1 className="font-display text-5xl md:text-7xl font-black leading-tight mb-8 tracking-tighter uppercase text-white">
+            We Build <span className="text-gradient">AI-Powered</span> Growth Systems That Turn Visitors Into Customers  <span className="italic">Automatically</span>
+          </h1>
+          
+          <p className="text-white/60 text-lg md:text-xl max-w-[600px] mb-10 leading-relaxed">
+            LyKSpire helps businesses scale using AI, automation, and conversion systems so you don’t rely on inconsistent marketing anymore.
           </p>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 mb-10">
             <button 
               onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
-              className="btn-primary text-lg px-10 py-5"
+              className="btn-primary text-base px-8 py-4 whitespace-nowrap"
             >
-              Try in 30 seconds <ArrowUpRight className="w-5 h-5" />
+               Get My Custom Growth Plan
             </button>
+            <button 
+              onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
+              className="btn-outline text-base px-8 py-4 whitespace-nowrap"
+            >
+               Book Free Strategy Call
+            </button>
+          </div>
+
+          <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
+            <span className="flex items-center gap-2">
+              <div className="w-1 h-1 bg-cyber-teal rounded-full" />
+              Custom-built
+            </span>
+            <span className="flex items-center gap-2">
+              <div className="w-1 h-1 bg-cyber-teal rounded-full" />
+              No templates
+            </span>
+            <span className="flex items-center gap-2">
+              <div className="w-1 h-1 bg-cyber-teal rounded-full" />
+              No guesswork
+            </span>
           </div>
         </motion.div>
 

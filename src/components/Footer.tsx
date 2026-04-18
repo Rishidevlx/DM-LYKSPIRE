@@ -50,7 +50,7 @@ export default function Footer() {
                 </p>
                 <p className="flex items-start gap-3 text-white/60 hover:text-white transition-colors cursor-pointer leading-relaxed">
                   <MapPin className="w-4 h-4 text-cyber-teal flex-shrink-0 mt-1" />
-                  Global Digital Hub<br />Operating Worldwide
+                  Coimbatore, <br /> Tamil Nadu, India
                 </p>
               </div>
             </div>
@@ -65,6 +65,10 @@ export default function Footer() {
           
           <p className="text-white/30 text-sm">
             © 2026 LYKSPIRE. All rights reserved.
+          </p>
+
+          <p className="text-white/30 text-sm">
+            Developed by <a href="https://www.linkedin.com/in/rishiaravindha" target="_blank" rel="noopener noreferrer" className="text-cyber-teal font-bold hover:underline transition-all">Rishi Aravindha | Freelance Developer</a>
           </p>
 
           <div className="flex gap-8 text-xs text-white/30 uppercase tracking-widest">

@@ -56,7 +56,7 @@ const cases = [
     metrics: [
       { label: "Entry Errors", value: "−100%" },
       { label: "Faster closing", value: "6x" },
-      { label: "Costs saved", value: "$35K/y" }
+      { label: "Costs saved", value: "INR 35K/y" }
     ],
     icon: FileText,
     color: "bg-olive-900/40",

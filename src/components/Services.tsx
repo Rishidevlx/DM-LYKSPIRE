@@ -56,7 +56,7 @@ export default function Services() {
     target: targetRef,
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-80%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-65%"]);
 
   return (
     <section id="services" className="bg-obsidian">
@@ -76,6 +76,24 @@ export default function Services() {
                 <ServiceCard service={service} index={i} />
               </div>
             ))}
+            
+            {/* CTA CARD */}
+            <div className="flex-shrink-0 w-[450px] glass-card p-10 flex flex-col justify-center items-center text-center border-cyber-teal/30 bg-cyber-teal/5 relative overflow-hidden group">
+               <div className="absolute inset-0 bg-gradient-to-br from-cyber-teal/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+               <Sparkles className="w-16 h-16 text-cyber-teal mb-8 animate-pulse" />
+               <h3 className="text-4xl font-display font-black uppercase tracking-tighter mb-4">
+                 Get My Custom <br/> <span className="text-gradient">Growth Plan</span>
+               </h3>
+               <p className="text-white/60 text-sm leading-relaxed mb-10 max-w-[280px]">
+                 Receive a personalized system blueprint tailored to your business.
+               </p>
+               <button 
+                 onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
+                 className="btn-primary"
+               >
+                 Book My Call
+               </button>
+            </div>
           </motion.div>
 
           {/* Scroll Progress Indicator */}
@@ -108,6 +126,28 @@ export default function Services() {
               <ServiceCard service={service} index={i} isMobile />
             </motion.div>
           ))}
+          
+          {/* CTA CARD MOBILE */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="w-full glass-card p-10 flex flex-col justify-center items-center text-center border-cyber-teal/30 bg-cyber-teal/5"
+          >
+             <Sparkles className="w-12 h-12 text-cyber-teal mb-6" />
+             <h3 className="text-3xl font-display font-black uppercase tracking-tighter mb-4">
+               Get My Custom <br/> <span className="text-gradient">Growth Plan</span>
+             </h3>
+             <p className="text-white/60 text-sm leading-relaxed mb-8 max-w-[280px]">
+               Receive a personalized system blueprint tailored to your business.
+             </p>
+             <button 
+               onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
+               className="btn-primary w-full"
+             >
+               Book My Call
+             </button>
+          </motion.div>
         </div>
       </div>
     </section>

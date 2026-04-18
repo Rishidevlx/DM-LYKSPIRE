@@ -13,8 +13,9 @@ export default function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-obsidian/85 backdrop-blur-2xl border-b border-white/5"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <img src={logo} alt="LYKSPIRE" className="h-10 w-auto" />
+          <span className="text-gradient font-display font-black text-2xl tracking-tighter uppercase">LYKSPIRE</span>
         </div>
         
         <div className="hidden md:flex items-center gap-10 text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">

@@ -18,6 +18,10 @@ import Preloader from "./components/Preloader";
 import ContactModal from "./components/ContactModal";
 import WhatsAppFloating from "./components/WhatsAppFloating";
 import Stats from "./components/Stats";
+import ProblemSolution from "./components/ProblemSolution";
+import Results from "./components/Results";
+import FAQ from "./components/FAQ";
+import PrimaryCTA from "./components/PrimaryCTA";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -51,12 +55,16 @@ export default function App() {
         >
           <Navbar />
           <Hero />
+          <ProblemSolution />
           <Stats />
           <Services />
+          <Results />
           <CaseStudies />
           <About />
           <Process />
           <Testimonials />
+          <PrimaryCTA />
+          <FAQ />
           <Contact />
           <Footer />
         </motion.div>
