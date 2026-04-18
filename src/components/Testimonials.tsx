@@ -7,6 +7,16 @@ const testimonials = [
     company: "Premium Retail Brand – Washington DC"
   },
   {
+    quote: "The level of automation and intelligence they brought into our funnel is unmatched. We now save over 120 hours per month while scaling faster than ever.",
+    author: "Priya Nair",
+    company: "Head of Digital, GrowthNest Solutions"
+  },
+  {
+    quote: "The automation systems they implemented streamlined our entire marketing workflow. We’ve reduced manual effort by 70+ hours monthly and saw a 38% increase in qualified leads.",
+    author: "A. Sharma",
+    company: "Marketing Head, Zyphra Digital"
+  },
+  {
     quote: "The AI-driven systems they built for us saved over 100 hours of manual work per month while increasing our conversion rates by 45%.",
     author: "Marketing Lead",
     company: "Leadsense"

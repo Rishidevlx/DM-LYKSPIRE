@@ -48,14 +48,38 @@ export default function PrimaryCTA() {
 
             <h2 className="text-6xl md:text-8xl lg:text-[100px] font-display font-black tracking-tighter uppercase mb-10 leading-[0.85] text-white">
               Build a <br />
-              <span className="text-gradient drop-shadow-2xl">Growth Engine</span> <br />
+              <div className="flex flex-wrap justify-center items-center gap-x-4">
+                <span className="text-gradient drop-shadow-2xl">Growth</span>
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  className="relative inline-flex items-center"
+                >
+                  <span className="text-white">EN</span>
+                  <motion.span
+                    animate={{ rotate: [0, 360, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 8.5 }}
+                    className="inline-block text-cyber-teal"
+                  >
+                    G
+                  </motion.span>
+                  <span className="text-white">INE</span>
+                </motion.div>
+              </div>
               That Works Alone
             </h2>
             
-            <p className="text-white/40 text-lg md:text-2xl font-bold uppercase tracking-[0.2em] mb-16 max-w-3xl mx-auto leading-relaxed">
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-white/40 text-lg md:text-2xl font-bold uppercase tracking-[0.2em] mb-16 max-w-3xl mx-auto leading-relaxed"
+            >
               Stop relying on <span className="text-white">temporary tactics</span>. <br />
               Secure your <span className="text-cyber-teal">market dominance</span> with automated intelligence.
-            </p>
+            </motion.p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
               <motion.button 

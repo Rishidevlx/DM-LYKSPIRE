@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
 import { TrendingUp, Clock, Zap, Maximize } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useState, useEffect } from "react";
 
-const data = [
+const baseData = [
   { name: 'Month 1', value: 400 },
   { name: 'Month 2', value: 800 },
   { name: 'Month 3', value: 1200 },
@@ -13,6 +14,28 @@ const data = [
 ];
 
 export default function Results() {
+  const [colorIndex, setColorIndex] = useState(0);
+  const [graphData, setGraphData] = useState(baseData);
+  
+  const colors = [
+    { stroke: "#3b82f6", fill: "#3b82f6" }, // Blue
+    { stroke: "#a855f7", fill: "#a855f7" }, // Purple/Gradient
+    { stroke: "#22c55e", fill: "#22c55e" }  // Green
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setColorIndex((prev) => (prev + 1) % colors.length);
+      
+      // Add slight jitter to values but keep the trend upward
+      setGraphData(prev => prev.map((d, i) => ({
+        ...d,
+        value: baseData[i].value + (Math.random() * 500 - 250)
+      })));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const outcomes = [
     { text: "Increase conversion rates", icon: TrendingUp },
     { text: "Reduce manual work", icon: Zap },
@@ -46,9 +69,10 @@ export default function Results() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-blue-500/30 transition-all hover:bg-white/[0.04]"
+                  className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 group transition-all hover:bg-white/[0.04]"
+                  style={{ borderColor: `${colors[colorIndex].stroke}33` }}
                 >
-                  <item.icon className="w-8 h-8 text-blue-500 mb-6 group-hover:scale-110 transition-transform" />
+                  <item.icon className="w-8 h-8 mb-6 group-hover:scale-110 transition-transform" style={{ color: colors[colorIndex].stroke }} />
                   <h3 className="text-lg font-display font-black uppercase tracking-tighter leading-tight">{item.text}</h3>
                 </motion.div>
               ))}
@@ -56,36 +80,36 @@ export default function Results() {
           </motion.div>
 
           {/* Real-time Growth Graph */}
-          <div className="relative h-[500px] glass-card !p-8 border-blue-500/10 overflow-hidden shadow-[0_0_50px_rgba(59,130,246,0.1)]">
+          <div className="relative h-[500px] glass-card !p-8 overflow-hidden shadow-[0_0_50px_rgba(59,130,246,0.1)] transition-all duration-1000" style={{ borderColor: `${colors[colorIndex].stroke}22` }}>
              <div className="absolute top-8 left-8 z-10">
-                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500/50 mb-2">Real-time Performance Metrics</div>
+                <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-2 transition-colors duration-1000" style={{ color: colors[colorIndex].stroke }}>Real-time Performance Metrics</div>
                 <div className="text-3xl font-display font-black uppercase text-white tracking-tight">Accelerating GROWTH</div>
              </div>
 
              <div className="h-full w-full mt-12">
                 <ResponsiveContainer width="100%" height="80%">
-                  <AreaChart data={data}>
+                  <AreaChart data={graphData}>
                     <defs>
-                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      <linearGradient id="colorDynamic" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={colors[colorIndex].fill} stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor={colors[colorIndex].fill} stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                     <XAxis dataKey="name" hide />
                     <YAxis hide domain={[0, 'auto']} />
                     <Tooltip 
-                      contentStyle={{ backgroundColor: '#0A0A0A', border: '1px solid rgba(59,130,246,0.3)', borderRadius: '12px' }}
-                      itemStyle={{ color: '#3b82f6', fontWeight: 'bold' }}
+                      contentStyle={{ backgroundColor: '#0A0A0A', border: `1px solid ${colors[colorIndex].stroke}33`, borderRadius: '12px' }}
+                      itemStyle={{ color: colors[colorIndex].stroke, fontWeight: 'bold' }}
                     />
                     <Area 
                       type="monotone" 
                       dataKey="value" 
-                      stroke="#3b82f6" 
+                      stroke={colors[colorIndex].stroke} 
                       strokeWidth={4}
                       fillOpacity={1} 
-                      fill="url(#colorValue)" 
-                      animationDuration={3000}
+                      fill="url(#colorDynamic)" 
+                      animationDuration={1500}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -93,7 +117,7 @@ export default function Results() {
 
              <div className="absolute bottom-8 right-8 flex items-center gap-4">
                 <div className="flex flex-col items-end">
-                  <div className="text-4xl font-display font-black text-blue-500 tracking-tighter">95%</div>
+                  <div className="text-4xl font-display font-black tracking-tighter transition-colors duration-1000" style={{ color: colors[colorIndex].stroke }}>95%</div>
                   <div className="text-[8px] font-black uppercase tracking-widest text-white/30 text-right">Optimization Rate</div>
                 </div>
                 <div className="w-px h-10 bg-white/10" />
@@ -103,7 +127,7 @@ export default function Results() {
                 </div>
              </div>
 
-             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 via-transparent to-transparent pointer-events-none" />
+             <div className="absolute inset-0 bg-gradient-to-tr via-transparent to-transparent pointer-events-none transition-all duration-1000" style={{ backgroundImage: `linear-gradient(to top right, ${colors[colorIndex].stroke}05, transparent)` }} />
           </div>
         </div>
       </div>

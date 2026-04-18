@@ -45,13 +45,21 @@ export default function Footer() {
             <div className="col-span-2 md:col-span-1">
               <h4 className="font-display font-bold mb-6 text-sm uppercase tracking-widest text-white/40">Contact</h4>
               <div className="space-y-4">
-                <p className="flex items-center gap-3 text-white/60 hover:text-white transition-colors cursor-pointer">
+                <a 
+                  href="mailto:info@tieraprom.co.in"
+                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors"
+                >
                   <Mail className="w-4 h-4 text-cyber-teal" /> info@tieraprom.co.in
-                </p>
-                <p className="flex items-start gap-3 text-white/60 hover:text-white transition-colors cursor-pointer leading-relaxed">
+                </a>
+                <a 
+                  href="https://maps.google.com/?q=Coimbatore,Tamil+Nadu,India"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 text-white/60 hover:text-white transition-colors leading-relaxed"
+                >
                   <MapPin className="w-4 h-4 text-cyber-teal flex-shrink-0 mt-1" />
                   Coimbatore, <br /> Tamil Nadu, India
-                </p>
+                </a>
               </div>
             </div>
           </div>
@@ -68,7 +76,7 @@ export default function Footer() {
           </p>
 
           <p className="text-white/30 text-sm">
-            Developed by <a href="https://www.linkedin.com/in/rishiaravindha" target="_blank" rel="noopener noreferrer" className="text-cyber-teal font-bold hover:underline transition-all">Rishi Aravindha | Freelance Developer</a>
+            Developed by <a href="https://www.linkedin.com/in/rishiaravindha" target="_blank" rel="noopener noreferrer" className="text-cyber-teal font-bold hover:underline transition-all">Rishi Aravindha </a>
           </p>
 
           <div className="flex gap-8 text-xs text-white/30 uppercase tracking-widest">

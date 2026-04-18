@@ -24,7 +24,7 @@ export default function Hero() {
           </div>
 
           <h1 className="font-display text-5xl md:text-7xl font-black leading-tight mb-8 tracking-tighter uppercase text-white">
-            We Build <span className="text-gradient">AI-Powered</span> Growth Systems That Turn Visitors Into Customers  <span className="italic">Automatically</span>
+            We Build <span className="text-gradient">AI-Powered</span> Growth Systems That Turn Visitors Into <span className="text-cyber-teal">Customers</span> <span className="text-gradient">Automatically</span>
           </h1>
           
           <p className="text-white/60 text-lg md:text-xl max-w-[600px] mb-10 leading-relaxed">

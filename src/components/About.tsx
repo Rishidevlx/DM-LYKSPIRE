@@ -1,6 +1,79 @@
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Cpu, Zap, Shield, Globe } from "lucide-react";
 import logo from "../assest/LYKSPIRE LOGO.png";
+
+// --- Sub-components moved to top to fix hoisting errors ---
+
+const words = ["RIGHT", "SYSTEMS", "RIGHT SYSTEMS"];
+
+interface ScrambledLetterProps {
+  targetChar: string;
+  delay: number;
+}
+
+const ScrambledLetter: React.FC<ScrambledLetterProps> = ({ targetChar, delay }) => {
+  const [char, setChar] = useState("");
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+
+  useEffect(() => {
+    let iteration = 0;
+    const interval = setInterval(() => {
+      if (iteration > 10) {
+        setChar(targetChar);
+        clearInterval(interval);
+      } else {
+        setChar(chars[Math.floor(Math.random() * chars.length)]);
+      }
+      iteration++;
+    }, 50);
+    return () => clearInterval(interval);
+  }, [targetChar]);
+
+  return (
+    <motion.span
+      initial={{ x: 20, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ delay, duration: 0.4 }}
+      className="inline-block min-w-[0.6em] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+    >
+      {char || "\u00A0"}
+    </motion.span>
+  );
+};
+
+interface ScrambledTextProps {
+  text: string;
+}
+
+const ScrambledText: React.FC<ScrambledTextProps> = ({ text }) => {
+  return (
+    <div className="flex justify-center items-center">
+      {text.split("").map((char, i) => (
+        <ScrambledLetter key={`${text}-${i}`} targetChar={char} delay={i * 0.05} />
+      ))}
+    </div>
+  );
+};
+
+const TypingWords: React.FC = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex(prev => (prev + 1) % words.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex items-center justify-center overflow-visible">
+      <div className="text-3xl md:text-5xl lg:text-[90px] font-display font-black uppercase tracking-tighter">
+        <ScrambledText key={String(index)} text={words[index]} />
+      </div>
+    </div>
+  );
+};
 
 const storyLines = [
   { text: "We don’t do marketing.", highlight: false },
@@ -22,7 +95,7 @@ const storyLines = [
     customStyle: (t: string) => {
       return (
         <span>
-          <span className="text-white/40">automation</span>, <span className="text-cyber-teal">performance</span> <span className="text-white/40">marketing</span>.
+          <span className="text-white/40">automation</span>, <span className="text-cyber-teal">performance &</span> <span className="text-white/40">marketing</span>.
         </span>
       );
     }
@@ -30,7 +103,41 @@ const storyLines = [
   { text: "To create systems that attract,", highlight: false },
   { text: "engage, convert & Consistently.", highlight: true },
   { text: "Because growth should not be random.", highlight: false },
-  { text: "It should be engineered.", highlight: true }
+  { 
+    text: "It should be 3NG!N33R3D.", 
+    highlight: true,
+    customStyle: () => {
+      return (
+        <div className="flex flex-col md:flex-row items-center justify-center gap-x-6 gap-y-2 translate-y-[4px]">
+          <span className="text-white/60">It should be</span>
+          <div className="relative min-w-[300px] text-cyber-teal">
+            <motion.span
+              animate={{
+                opacity: [1, 1, 0, 1],
+              }}
+              transition={{ duration: 10, repeat: Infinity }}
+            >
+              <motion.span
+                initial={{ width: 0 }}
+                animate={{ 
+                  width: ["0%", "100%", "100%", "0%"],
+                  transition: { 
+                    duration: 10, 
+                    repeat: Infinity, 
+                    times: [0, 0.2, 0.8, 1],
+                    ease: "easeInOut"
+                  }
+                }}
+                className="inline-block overflow-hidden whitespace-nowrap border-r-4 border-cyber-teal translate-y-[4px]"
+              >
+                3NG!N33R3D.
+              </motion.span>
+            </motion.span>
+          </div>
+        </div>
+      );
+    }
+  }
 ];
 
 const founders = [
@@ -91,8 +198,8 @@ export default function About() {
       </section>
 
       {/* Mobile Storytelling (Simplified) */}
-      <section className="md:hidden py-24 px-6 space-y-12">
-        <div className="section-label">Our Mission</div>
+      <section className="md:hidden py-24 px-6 space-y-12 text-center">
+        <div className="section-label mx-auto">Our Mission</div>
         {storyLines.map((line, i) => (
           <motion.div
             key={i}
@@ -101,12 +208,10 @@ export default function About() {
             viewport={{ once: true }}
             className={`text-3xl font-display font-black uppercase tracking-tighter ${line.highlight ? "text-cyber-teal" : "text-white/40"}`}
           >
-            {line.customStyle ? line.customStyle(line.text) : line.text}
+            {line.text}
           </motion.div>
         ))}
       </section>
-
-
 
       {/* Philosophy Grid Boxes */}
       <section className="py-24 px-6 max-w-7xl mx-auto">
@@ -116,8 +221,8 @@ export default function About() {
             className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
           >
             <Cpu className="w-10 h-10 text-cyber-teal mb-6" />
-            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">95% AI Efficiency</h3>
-            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">Guided by Human Intelligence</p>
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic text-gradient">95% AI Efficiency</h3>
+            <p className="text-white/40 text-[10px] leading-relaxed uppercase tracking-widest font-black">Guided by Human Intelligence</p>
           </motion.div>
 
           <motion.div 
@@ -125,8 +230,8 @@ export default function About() {
             className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
           >
             <Shield className="w-10 h-10 text-cyber-teal mb-6" />
-            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">Anytime Reach</h3>
-            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">Uninterrupted Growth Support</p>
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic">Anytime Reach</h3>
+            <p className="text-white/40 text-[10px] leading-relaxed uppercase tracking-widest font-black">Uninterrupted Growth Support</p>
           </motion.div>
 
           <motion.div 
@@ -134,8 +239,8 @@ export default function About() {
             className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
           >
             <Globe className="w-10 h-10 text-cyber-teal mb-6" />
-            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4">AI X Human Touch</h3>
-            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic">AI X Human Touch</h3>
+            <p className="text-white/40 text-[10px] leading-relaxed uppercase tracking-widest font-black">
               Driven by Real Creators.
             </p>
           </motion.div>
@@ -146,20 +251,39 @@ export default function About() {
           >
             <Zap className="w-10 h-10 text-cyber-teal mb-6" />
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic leading-tight">Accelerate Growth by 10×</h3>
-            <p className="text-white/40 text-sm leading-relaxed uppercase tracking-widest font-bold">Velocity Engineered</p>
+            <p className="text-white/40 text-[10px] leading-relaxed uppercase tracking-widest font-black">Velocity Engineered</p>
           </motion.div>
         </div>
       </section>
 
-
-
-      {/* Founders Section - Futuristic HUD Cards */}
+      {/* Leadership Section */}
       <section className="py-32 px-6 max-w-7xl mx-auto">
         <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
             <div className="section-label">Leadership</div>
-            <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase">
-              The <span className="text-gradient">Architects</span>
+            <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase relative">
+              The <span className="text-gradient">Growth</span>
+              <br />
+              <div className="relative inline-block text-[#a855f7]">
+                Architects
+                <motion.div
+                  animate={{ 
+                    x: [0, 20, 0, -20, 0],
+                    y: [0, -10, 0, 10, 0],
+                    scale: [1, 1.5, 1],
+                    rotate: [0, 45, 0, -45, 0],
+                    opacity: [0.5, 1, 0.5]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-4 -right-12 w-8 h-8 flex items-center justify-center pointer-events-none"
+                >
+                  <div 
+                    className="w-full h-full bg-gradient-to-tr from-cyber-teal via-purple-500 to-cyber-teal shadow-[0_0_20px_rgba(74,222,128,0.5)]"
+                    style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}
+                  />
+                  <div className="absolute inset-0 bg-white/20 blur-sm rounded-full" />
+                </motion.div>
+              </div>
             </h2>
           </div>
           <p className="text-white/40 max-w-md text-sm leading-relaxed">
@@ -207,7 +331,7 @@ export default function About() {
       </section>
 
       {/* Final Philosophy - High Impact */}
-      <section className="py-48 px-6 relative flex items-center justify-center">
+      <section className="py-24 md:py-48 px-4 md:px-6 relative flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-cyber-teal/5 blur-[120px] rounded-full" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(74,222,128,0.1)_0%,transparent_70%)]" />
         
@@ -218,14 +342,20 @@ export default function About() {
           className="text-center relative z-10"
         >
           <div className="text-cyber-teal font-black uppercase tracking-[0.4em] text-xs mb-8">Core Philosophy</div>
-          <h2 className="text-7xl md:text-[120px] font-display font-black uppercase tracking-tighter leading-[0.8] mb-12">
+          <h2 className="text-5xl md:text-7xl lg:text-[120px] font-display font-black uppercase tracking-tighter leading-[0.8] mb-8">
             Growth is <br />
             <span className="text-gradient">Not Luck.</span>
           </h2>
-          <div className="flex items-center justify-center gap-6">
-            <div className="h-px w-12 bg-white/20" />
-            <p className="text-white/40 font-black uppercase tracking-widest text-sm">It’s built with the right systems.</p>
-            <div className="h-px w-12 bg-white/20" />
+          <div className="flex flex-col items-center justify-center gap-6">
+            <div className="flex items-center gap-4">
+              <div className="h-px w-12 bg-white/20" />
+              <p className="text-white/40 font-black uppercase tracking-widest text-sm">It’s built with the</p>
+              <div className="h-px w-12 bg-white/20" />
+            </div>
+            
+            <div className="h-40 flex items-center justify-center mt-4">
+              <TypingWords />
+            </div>
           </div>
         </motion.div>
       </section>

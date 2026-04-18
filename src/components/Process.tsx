@@ -1,6 +1,60 @@
 import { motion } from "motion/react";
 import { Check, ArrowRight, Activity, Target, Zap, Waves, Filter, Heart, Repeat } from "lucide-react";
 import caseStudyImg from "../assest/Case studies Slide 2.jpeg";
+import { useState, useEffect } from "react";
+
+const TypingScalable = () => {
+  const [text, setText] = useState("");
+  const [done, setDone] = useState(false);
+  const targetText = "Scalable.";
+  
+  useEffect(() => {
+    // Initial type
+    let i = 0;
+    let current = "";
+    setDone(false);
+    
+    const type = () => {
+      const interval = setInterval(() => {
+        if (i < targetText.length) {
+          current += targetText[i];
+          setText(current);
+          i++;
+        } else {
+          setDone(true);
+          clearInterval(interval);
+        }
+      }, 150);
+      return interval;
+    };
+    
+    const initial = type();
+    
+    // Repeat every 10s
+    const loop = setInterval(() => {
+      i = 0;
+      current = "";
+      setText("");
+      setDone(false);
+      type();
+    }, 10000);
+
+    return () => {
+      clearInterval(initial);
+      clearInterval(loop);
+    };
+  }, []);
+
+  return (
+    <motion.span
+      animate={done ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="inline-block text-gradient"
+    >
+      {text}
+    </motion.span>
+  );
+};
 
 const steps = [
   {
@@ -122,8 +176,51 @@ export default function Process() {
 
         <div className="mb-32">
           <div className="section-label">Our Workflow</div>
-          <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase mb-8">
-            Simple. Structured. <br /> <span className="text-gradient">Scalable.</span>
+          <h2 className="text-4xl md:text-6xl lg:text-8xl font-display font-black tracking-tighter uppercase mb-6 md:mb-8 leading-tight">
+            Simple. 
+            {/* STRUCTURED — Crack animation matching "Isn't Delivering" style */}
+            <span className="relative inline-block mx-2">
+              {/* Top Half — slides UP on crack, returns after 2s */}
+              <motion.span
+                whileInView={{
+                  y: [0, -8, -8, 0],
+                  transition: { duration: 10, repeat: Infinity, times: [0, 0.08, 0.28, 0.38] }
+                }}
+                viewport={{ once: true }}
+                className="absolute inset-0 text-white select-none pointer-events-none"
+                style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 48%, 85% 52%, 50% 47%, 15% 53%, 0% 47%)' }}
+              >
+                Structured.
+              </motion.span>
+              {/* Bottom Half — slides DOWN on crack, returns after 2s */}
+              <motion.span
+                whileInView={{
+                  y: [0, 8, 8, 0],
+                  transition: { duration: 10, repeat: Infinity, times: [0, 0.08, 0.28, 0.38] }
+                }}
+                viewport={{ once: true }}
+                className="absolute inset-0 text-white select-none pointer-events-none"
+                style={{ clipPath: 'polygon(0% 47%, 15% 53%, 50% 47%, 85% 52%, 100% 48%, 100% 100%, 0% 100%)' }}
+              >
+                Structured.
+              </motion.span>
+              {/* Purple Glow Layer — fires after rejoin */}
+              <motion.span
+                whileInView={{
+                  opacity: [0, 0, 0, 1, 0],
+                  textShadow: ["none", "none", "none", "0 0 25px rgba(168,85,247,0.9)", "none"],
+                  transition: { duration: 10, repeat: Infinity, times: [0, 0.3, 0.38, 0.45, 0.55] }
+                }}
+                viewport={{ once: true }}
+                className="text-[#a855f7]"
+              >
+                Structured.
+              </motion.span>
+              {/* invisible base to hold layout */}
+              <span className="opacity-0">Structured.</span>
+            </span>
+            <br />
+            <TypingScalable />
           </h2>
           <p className="text-white/40 text-xl font-bold uppercase tracking-widest max-w-xl">
             We follow a proven methodology to engineer your growth system.

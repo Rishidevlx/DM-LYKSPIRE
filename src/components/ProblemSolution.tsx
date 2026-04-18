@@ -25,16 +25,86 @@ export default function ProblemSolution() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-red-500/5 blur-[120px] rounded-full" />
         
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 1, ease: "easeOut" }}
             >
               <div className="section-label text-red-400 border-red-400/20 bg-red-400/5">The Challenge</div>
-              <h2 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase mb-8 leading-tight">
+              <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-black tracking-tighter uppercase mb-6 md:mb-8 leading-tight relative">
                 Why Your Marketing <br />
-                <span className="text-red-500">Isn’t Delivering</span> Results
+                <div className="relative inline-block mt-2">
+                  {/* Top Half of Text */}
+                  <motion.span 
+                    initial={{ y: 0, rotate: 0 }}
+                    whileInView={{ 
+                      y: [0, -5, -5, -7, -5],
+                      rotate: [0, -1, -1, -2, -1],
+                      transition: { 
+                        times: [0, 0.1, 0.8, 0.9, 1],
+                        duration: 10, 
+                        repeat: Infinity,
+                        delay: 2
+                      } 
+                    }}
+                    viewport={{ once: true }}
+                    className="absolute inset-0 text-red-500 select-none pointer-events-none"
+                    style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 48%, 85% 52%, 70% 47%, 50% 55%, 30% 45%, 15% 53%, 0% 47%)' }}
+                  >
+                    Isn’t Delivering
+                  </motion.span>
+                  
+                  {/* Bottom Half of Text */}
+                  <motion.span 
+                    initial={{ y: 0, rotate: 0 }}
+                    whileInView={{ 
+                      y: [0, 5, 5, 7, 5],
+                      rotate: [0, 0.5, 0.5, 1, 0.5],
+                      transition: { 
+                        times: [0, 0.1, 0.8, 0.9, 1],
+                        duration: 10, 
+                        repeat: Infinity,
+                        delay: 2
+                      } 
+                    }}
+                    viewport={{ once: true }}
+                    className="absolute inset-0 text-red-500 select-none pointer-events-none"
+                    style={{ clipPath: 'polygon(0% 47%, 15% 53%, 30% 45%, 50% 55%, 70% 47%, 85% 52%, 100% 48%, 100% 100%, 0% 100%)' }}
+                  >
+                    Isn’t Delivering
+                  </motion.span>
+
+                  {/* Base Text (Invisible to maintain layout) */}
+                  <span className="opacity-0">Isn’t Delivering</span>
+
+                  {/* Realistic Crack Line Effect */}
+                  <motion.svg 
+                    initial={{ opacity: 0, pathLength: 0 }}
+                    whileInView={{ 
+                      opacity: [0, 1, 1, 0.8, 1],
+                      pathLength: [0, 1, 1, 1, 1],
+                      transition: { 
+                        times: [0, 0.1, 0.8, 0.9, 1],
+                        duration: 10, 
+                        repeat: Infinity,
+                        delay: 2
+                      } 
+                    }}
+                    viewport={{ once: true }}
+                    className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible" 
+                    viewBox="0 0 500 100"
+                  >
+                    <path 
+                      d="M 0 50 L 75 56 L 150 48 L 250 58 L 350 50 L 425 55 L 500 51" 
+                      fill="none" 
+                      stroke="rgba(255,255,255,0.8)" 
+                      strokeWidth="2" 
+                      className="drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]"
+                    />
+                  </motion.svg>
+                </div> Results
               </h2>
               <p className="text-white/60 text-lg mb-12 max-w-xl">
                 Most businesses don’t lack effort — <span className="text-white font-bold">they lack a system.</span> Without a structured process, your growth is hit-or-miss.
@@ -85,10 +155,60 @@ export default function ProblemSolution() {
                        }}
                      />
                    ))}
-                   <div className="relative z-10 text-center">
-                      <div className="text-[120px] font-display font-black text-red-500 opacity-20 select-none">LOST</div>
-                      <div className="text-sm font-black tracking-[1em] text-red-400 mt-[-40px]">OPPORTUNITIES</div>
-                   </div>
+                    <div className="relative z-10 w-full h-full p-8 flex flex-col items-center justify-start pt-8">
+                        <motion.div 
+                         initial={{ opacity: 0, y: -20 }}
+                         whileInView={{ opacity: 1, y: 0 }}
+                         className="text-3xl md:text-4xl lg:text-5xl font-black tracking-[0.3em] md:tracking-[0.5em] text-red-500 mb-4 md:mb-6 self-center"
+                        >
+                          MISSES
+                        </motion.div>
+                        
+                        <div className="relative w-full flex-1">
+                          {/* Straight down arrow — left side, top to bottom */}
+                          <motion.svg 
+                            className="absolute inset-0 w-full h-full pointer-events-none"
+                            viewBox="0 0 400 320"
+                          >
+                            {/* Vertical line on left side */}
+                            <motion.path 
+                              d="M 40 10 L 40 290" 
+                              fill="none" 
+                              stroke="rgba(239, 68, 68, 0.6)" 
+                              strokeWidth="3"
+                              initial={{ pathLength: 0 }}
+                              whileInView={{ pathLength: 1 }}
+                              transition={{ duration: 1.6, ease: "easeInOut" }}
+                            />
+                            {/* Arrow head pointing DOWN */}
+                            <motion.polygon
+                              points="28,276 40,300 52,276"
+                              fill="rgba(239, 68, 68, 0.8)"
+                              initial={{ opacity: 0 }}
+                              whileInView={{ opacity: 1 }}
+                              transition={{ delay: 1.4 }}
+                            />
+                          </motion.svg>
+
+                          {/* GROWTH letters — staggered diagonally to the RIGHT of the arrow */}
+                          {["G", "R", "O", "W", "T", "H"].map((letter, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, x: 20, y: -10 }}
+                              whileInView={{ opacity: 1, x: 0, y: 0 }}
+                              transition={{ delay: 0.3 + i * 0.18, duration: 0.5 }}
+                              className="absolute text-5xl md:text-6xl font-display font-black text-red-600/40"
+                              style={{ 
+                                left: `${20 + i * 12}%`, 
+                                top: `${5 + i * 15}%`,
+                                textShadow: '0 0 30px rgba(239, 68, 68, 0.3)'
+                              }}
+                            >
+                              {letter}
+                            </motion.div>
+                          ))}
+                        </div>
+                     </div>
                 </div>
               </div>
             </div>
@@ -144,8 +264,26 @@ export default function ProblemSolution() {
 
           <div className="mt-32 p-12 glass-card text-center border-cyber-teal/10">
              <CheckCircle2 className="w-16 h-16 text-cyber-teal mx-auto mb-8 animate-bounce" />
-             <h3 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter mb-6">
-               Your business runs on <span className="text-cyber-teal italic text-gradient">systems</span> — not guesswork.
+             <h3 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter mb-6 leading-tight">
+                Your business runs on <span className="text-cyber-teal italic text-gradient">systems</span> — not 
+                <motion.span 
+                  initial={{ filter: "blur(12px)", opacity: 0 }}
+                  whileInView={{ 
+                    filter: ["blur(12px)", "blur(0px)", "blur(0px)", "blur(12px)"],
+                    opacity: [0, 1, 1, 0],
+                    transition: { 
+                      duration: 10, 
+                      repeat: Infinity,
+                      times: [0, 0.1, 0.3, 0.4],
+                      repeatDelay: 0,
+                      delay: 1
+                    }
+                  }}
+                  viewport={{ once: true }}
+                  className="inline-block ml-3"
+                >
+                  guesswork.
+                </motion.span>
              </h3>
              <button 
               onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
