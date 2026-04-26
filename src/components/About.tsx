@@ -5,8 +5,6 @@ import logo from "../assest/LYKSPIRE LOGO.png";
 
 // --- Sub-components moved to top to fix hoisting errors ---
 
-const words = ["RIGHT", "SYSTEMS", "RIGHT SYSTEMS"];
-
 interface ScrambledLetterProps {
   targetChar: string;
   delay: number;
@@ -19,14 +17,14 @@ const ScrambledLetter: React.FC<ScrambledLetterProps> = ({ targetChar, delay }) 
   useEffect(() => {
     let iteration = 0;
     const interval = setInterval(() => {
-      if (iteration > 10) {
+      if (iteration > 15) {
         setChar(targetChar);
         clearInterval(interval);
       } else {
         setChar(chars[Math.floor(Math.random() * chars.length)]);
       }
       iteration++;
-    }, 50);
+    }, 40);
     return () => clearInterval(interval);
   }, [targetChar]);
 
@@ -35,7 +33,7 @@ const ScrambledLetter: React.FC<ScrambledLetterProps> = ({ targetChar, delay }) 
       initial={{ x: 20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay, duration: 0.4 }}
-      className="inline-block min-w-[0.6em] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+      className="inline-block min-w-[0.6em] text-cyber-teal drop-shadow-[0_0_10px_rgba(74,222,128,0.8)] text-center"
     >
       {char || "\u00A0"}
     </motion.span>
@@ -58,17 +56,26 @@ const ScrambledText: React.FC<ScrambledTextProps> = ({ text }) => {
 
 const TypingWords: React.FC = () => {
   const [index, setIndex] = useState(0);
+  const words = ["SYSTEMS.", "STRATEGY."];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex(prev => (prev + 1) % words.length);
-    }, 3500);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="flex items-center justify-center overflow-visible">
-      <div className="text-3xl md:text-5xl lg:text-[90px] font-display font-black uppercase tracking-tighter">
+    <div className="flex items-center justify-center gap-4 md:gap-6 overflow-visible">
+      <div className="flex items-center gap-4 text-3xl md:text-5xl lg:text-[90px] font-display font-black uppercase tracking-tighter">
+        <motion.span
+          initial={{ filter: "blur(20px)", opacity: 0 }}
+          animate={{ filter: "blur(0px)", opacity: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="text-white"
+        >
+          RIGHT
+        </motion.span>
         <ScrambledText key={String(index)} text={words[index]} />
       </div>
     </div>
@@ -78,8 +85,8 @@ const TypingWords: React.FC = () => {
 const storyLines = [
   { text: "We don’t do marketing.", highlight: false },
   { text: "We build growth systems.", highlight: true },
-  { 
-    text: "At LYKSPIRE, we combine GenAI,", 
+  {
+    text: "At LYKSPIRE, we combine GenAI,",
     highlight: true,
     customStyle: (t: string) => {
       return (
@@ -89,9 +96,9 @@ const storyLines = [
       );
     }
   },
-  { 
-    text: "automation, performance marketing.", 
-    highlight: true, 
+  {
+    text: "automation, performance marketing.",
+    highlight: true,
     customStyle: (t: string) => {
       return (
         <span>
@@ -103,8 +110,8 @@ const storyLines = [
   { text: "To create systems that attract,", highlight: false },
   { text: "engage, convert & Consistently.", highlight: true },
   { text: "Because growth should not be random.", highlight: false },
-  { 
-    text: "It should be 3NG!N33R3D.", 
+  {
+    text: "It should be 3NG!N33R3D.",
     highlight: true,
     customStyle: () => {
       return (
@@ -119,11 +126,11 @@ const storyLines = [
             >
               <motion.span
                 initial={{ width: 0 }}
-                animate={{ 
+                animate={{
                   width: ["0%", "100%", "100%", "0%"],
-                  transition: { 
-                    duration: 10, 
-                    repeat: Infinity, 
+                  transition: {
+                    duration: 10,
+                    repeat: Infinity,
                     times: [0, 0.2, 0.8, 1],
                     ease: "easeInOut"
                   }
@@ -141,6 +148,12 @@ const storyLines = [
 ];
 
 const founders = [
+  {
+    name: "Vijayayaraghavan Ramakrishanan",
+    role: "Director & Chief Financial Officer",
+    description: "Vijayayaraghavan Ramakrishanan brings over 24 years of entrepreneurial experience, with a strong foundation in digital media, printing, and advertising. Having built and scaled his own business over decades, he possesses deep expertise in brand execution, creative production, and commercial strategy.\n\nAt LyKSpire, he leads financial strategy and contributes to the company’s long-term vision, ensuring disciplined growth, operational efficiency, and scalable execution. His leadership bridges traditional business strength with a modern, innovation-driven approach — enabling the company to deliver consistent, high-impact outcomes for a global client base.\n\nWith a proven track record across evolving media landscapes, he provides the strategic backbone that supports LyKSpire’s ambition to operate at a global standard.",
+    icon: Globe
+  },
   {
     name: "Karunakaran Vijayaraghavan",
     role: "Founder",
@@ -174,7 +187,7 @@ export default function About() {
         {/* Background Grid & HUD Elements */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
         <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-[rgba(10,10,10,0.8)]" />
-        
+
         <div className="relative z-10 max-w-6xl mx-auto w-full px-6 flex flex-col items-center text-center">
           <div className="space-y-4">
             {storyLines.map((line, i) => (
@@ -216,7 +229,7 @@ export default function About() {
       {/* Philosophy Grid Boxes */}
       <section className="py-24 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
           >
@@ -225,7 +238,7 @@ export default function About() {
             <p className="text-white/40 text-[10px] leading-relaxed uppercase tracking-widest font-black">Guided by Human Intelligence</p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
             className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
           >
@@ -234,7 +247,7 @@ export default function About() {
             <p className="text-white/40 text-[10px] leading-relaxed uppercase tracking-widest font-black">Uninterrupted Growth Support</p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
             className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
           >
@@ -245,7 +258,7 @@ export default function About() {
             </p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
             className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(74,222,128,0.05)]"
           >
@@ -267,7 +280,7 @@ export default function About() {
               <div className="relative inline-block text-[#a855f7]">
                 Architects
                 <motion.div
-                  animate={{ 
+                  animate={{
                     x: [0, 20, 0, -20, 0],
                     y: [0, -10, 0, 10, 0],
                     scale: [1, 1.5, 1],
@@ -277,7 +290,7 @@ export default function About() {
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute -top-4 -right-12 w-8 h-8 flex items-center justify-center pointer-events-none"
                 >
-                  <div 
+                  <div
                     className="w-full h-full bg-gradient-to-tr from-cyber-teal via-purple-500 to-cyber-teal shadow-[0_0_20px_rgba(74,222,128,0.5)]"
                     style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}
                   />
@@ -291,14 +304,14 @@ export default function About() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="flex flex-col gap-16">
           {founders.map((founder, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: i === 0 ? -30 : 30 }}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative group"
+              className={`relative group w-full md:w-[85%] lg:w-[75%] ${i % 2 === 0 ? "self-start" : "self-end"}`}
             >
               {/* HUD Frame */}
               <div className="absolute -inset-4 border border-white/5 rounded-[40px] group-hover:border-cyber-teal/20 transition-colors duration-500" />
@@ -315,8 +328,8 @@ export default function About() {
                   </div>
                   <founder.icon className="w-10 h-10 text-white/10 group-hover:text-cyber-teal transition-colors" />
                 </div>
-                
-                <p className="text-white/50 leading-relaxed text-sm mb-12 flex-1">
+
+                <p className="text-white/50 leading-relaxed text-sm mb-12 flex-1 whitespace-pre-line">
                   {founder.description}
                 </p>
 
@@ -334,7 +347,7 @@ export default function About() {
       <section className="py-24 md:py-48 px-4 md:px-6 relative flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-cyber-teal/5 blur-[120px] rounded-full" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(74,222,128,0.1)_0%,transparent_70%)]" />
-        
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -352,7 +365,7 @@ export default function About() {
               <p className="text-white/40 font-black uppercase tracking-widest text-sm">It’s built with the</p>
               <div className="h-px w-12 bg-white/20" />
             </div>
-            
+
             <div className="h-40 flex items-center justify-center mt-4">
               <TypingWords />
             </div>

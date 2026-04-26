@@ -47,9 +47,9 @@ const TypingScalable = () => {
 
   return (
     <motion.span
-      animate={done ? { scale: [1, 1.08, 1] } : { scale: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="inline-block text-gradient"
+      animate={done ? { scaleX: [1, 1.4, 1], letterSpacing: ["normal", "0.15em", "normal"] } : { scaleX: 1, letterSpacing: "normal" }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+      className="inline-block text-gradient origin-left"
     >
       {text}
     </motion.span>
