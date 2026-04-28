@@ -17,6 +17,7 @@ import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
 import ContactModal from "./components/ContactModal";
 import WhatsAppFloating from "./components/WhatsAppFloating";
+import AIChatbotFloating from "./components/AIChatbotFloating";
 import Stats from "./components/Stats";
 import ProblemSolution from "./components/ProblemSolution";
 import Results from "./components/Results";
@@ -77,6 +78,7 @@ export default function App() {
       
       {/* Floating Elements */}
       <WhatsAppFloating />
+      <AIChatbotFloating />
     </main>
   );
 }
