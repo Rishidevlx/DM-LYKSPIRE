@@ -14,6 +14,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px;
   }
   body {
     @apply bg-obsidian text-white font-sans antialiased selection:bg-cyber-teal selection:text-obsidian;
