@@ -37,7 +37,7 @@ export default function FAQ() {
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-5 sticky top-32"
+            className="lg:col-span-5 lg:sticky lg:top-32 z-10 mb-12 lg:mb-0"
           >
             <div className="section-label">Support & Clarity</div>
             <h2 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase mb-8 leading-tight">
@@ -74,13 +74,13 @@ export default function FAQ() {
               >
                 <button
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                  className="w-full flex items-center justify-between p-8 text-left"
+                  className="w-full flex items-center justify-between p-6 md:p-8 text-left"
                 >
-                  <div className="flex items-center gap-6">
-                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-colors ${openIndex === i ? 'bg-cyber-teal/10 border-cyber-teal/30 text-cyber-teal' : 'bg-white/5 border-white/10 text-white/30'}`}>
+                  <div className="flex items-center gap-4 md:gap-6">
+                     <div className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center border transition-colors ${openIndex === i ? 'bg-cyber-teal/10 border-cyber-teal/30 text-cyber-teal' : 'bg-white/5 border-white/10 text-white/30'}`}>
                         {openIndex === i ? <Sparkles className="w-5 h-5" /> : <HelpCircle className="w-5 h-5" />}
                      </div>
-                     <span className={`text-lg md:text-xl font-display font-black uppercase tracking-tight transition-colors ${openIndex === i ? 'text-white' : 'text-white/60'}`}>
+                     <span className={`text-base md:text-xl font-display font-black uppercase tracking-tight transition-colors ${openIndex === i ? 'text-white' : 'text-white/60'}`}>
                        {faq.q}
                      </span>
                   </div>
@@ -97,7 +97,7 @@ export default function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
                     >
-                      <div className="px-8 pb-8 pl-24 text-white/50 text-base leading-relaxed uppercase tracking-[0.05em] font-medium">
+                      <div className="px-6 md:px-8 pb-8 pl-6 md:pl-24 text-white/50 text-sm md:text-base leading-relaxed uppercase tracking-[0.05em] font-medium">
                         <div className="w-full h-px bg-white/5 mb-8" />
                         {faq.a}
                       </div>

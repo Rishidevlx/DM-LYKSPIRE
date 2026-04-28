@@ -163,7 +163,7 @@ const EngineAnimation = () => {
 
 export default function PrimaryCTA() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const isInView = useInView(sectionRef, { once: false, margin: "-100px" });
 
   return (
     <section

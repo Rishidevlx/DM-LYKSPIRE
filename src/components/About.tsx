@@ -33,7 +33,7 @@ const ScrambledLetter: React.FC<ScrambledLetterProps> = ({ targetChar, delay }) 
       initial={{ x: 20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay, duration: 0.4 }}
-      className="inline-block min-w-[0.6em] text-cyber-teal drop-shadow-[0_0_10px_rgba(74,222,128,0.8)] text-center"
+      className="inline-block min-w-[0.6em] text-gradient drop-shadow-[0_0_10px_rgba(168,85,247,0.4)] text-center"
     >
       {char || "\u00A0"}
     </motion.span>
@@ -54,6 +54,17 @@ const ScrambledText: React.FC<ScrambledTextProps> = ({ text }) => {
   );
 };
 
+const TypingDots: React.FC = () => {
+  const [dots, setDots] = useState("");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots(prev => prev.length >= 3 ? "" : prev + ".");
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+  return <span className="inline-block w-4 text-left ml-1">{dots}</span>;
+};
+
 const TypingWords: React.FC = () => {
   const [index, setIndex] = useState(0);
   const words = ["SYSTEMS.", "STRATEGY."];
@@ -70,7 +81,8 @@ const TypingWords: React.FC = () => {
       <div className="flex items-center gap-4 text-3xl md:text-5xl lg:text-[90px] font-display font-black uppercase tracking-tighter">
         <motion.span
           initial={{ filter: "blur(20px)", opacity: 0 }}
-          animate={{ filter: "blur(0px)", opacity: 1 }}
+          whileInView={{ filter: "blur(0px)", opacity: 1 }}
+          viewport={{ once: false }}
           transition={{ duration: 1.5, ease: "easeOut" }}
           className="text-white"
         >
@@ -195,7 +207,7 @@ export default function About() {
                 key={i}
                 initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: false, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: i * 0.1 }}
                 className={`text-4xl md:text-6xl lg:text-7xl font-display font-black uppercase tracking-tighter leading-tight ${line.highlight ? "text-cyber-teal" : "text-white/60"}`}
               >
@@ -218,7 +230,7 @@ export default function About() {
             key={i}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false, margin: "-50px" }}
             className={`text-3xl font-display font-black uppercase tracking-tighter ${line.highlight ? "text-cyber-teal" : "text-white/40"}`}
           >
             {line.text}
@@ -230,8 +242,8 @@ export default function About() {
       <section className="py-24 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-50px" }}
+            className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(168,85,247,0.15)]"
           >
             <Cpu className="w-10 h-10 text-cyber-teal mb-6" />
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic text-gradient">95% AI Efficiency</h3>
@@ -239,8 +251,8 @@ export default function About() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-            className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-50px" }} transition={{ delay: 0.1 }}
+            className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(168,85,247,0.15)]"
           >
             <Shield className="w-10 h-10 text-cyber-teal mb-6" />
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic">Anytime Reach</h3>
@@ -248,8 +260,8 @@ export default function About() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-            className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 group hover:border-cyber-teal/30 transition-colors"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-50px" }} transition={{ delay: 0.2 }}
+            className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(168,85,247,0.15)]"
           >
             <Globe className="w-10 h-10 text-cyber-teal mb-6" />
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic">AI X Human Touch</h3>
@@ -259,8 +271,8 @@ export default function About() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
-            className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(74,222,128,0.05)]"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-50px" }} transition={{ delay: 0.3 }}
+            className="p-8 rounded-3xl bg-cyber-teal/5 border border-cyber-teal/20 group hover:border-cyber-teal/40 transition-colors shadow-[0_0_30px_rgba(168,85,247,0.15)]"
           >
             <Zap className="w-10 h-10 text-cyber-teal mb-6" />
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter mb-4 italic leading-tight">Accelerate Growth by 10×</h3>
@@ -271,75 +283,103 @@ export default function About() {
 
       {/* Leadership Section */}
       <section className="py-32 px-6 max-w-7xl mx-auto">
-        <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div>
-            <div className="section-label">Leadership</div>
-            <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase relative">
-              The <span className="text-gradient">Growth</span>
-              <br />
-              <div className="relative inline-block text-[#a855f7]">
-                Architects
-                <motion.div
-                  animate={{
-                    x: [0, 20, 0, -20, 0],
-                    y: [0, -10, 0, 10, 0],
-                    scale: [1, 1.5, 1],
-                    rotate: [0, 45, 0, -45, 0],
-                    opacity: [0.5, 1, 0.5]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-4 -right-12 w-8 h-8 flex items-center justify-center pointer-events-none"
-                >
-                  <div
-                    className="w-full h-full bg-gradient-to-tr from-cyber-teal via-purple-500 to-cyber-teal shadow-[0_0_20px_rgba(74,222,128,0.5)]"
-                    style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}
-                  />
-                  <div className="absolute inset-0 bg-white/20 blur-sm rounded-full" />
-                </motion.div>
-              </div>
-            </h2>
-          </div>
-          <p className="text-white/40 max-w-md text-sm leading-relaxed">
+        <div className="mb-24 flex flex-col items-center justify-center text-center gap-6">
+          <div className="section-label">Leadership</div>
+          <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase relative">
+            The <span className="text-gradient">Growth</span>
+            <br />
+            <div className="relative inline-block text-[#a855f7]">
+              Architects
+              <motion.div
+                animate={{
+                  x: [0, 20, 0, -20, 0],
+                  y: [0, -10, 0, 10, 0],
+                  scale: [1, 1.5, 1],
+                  rotate: [0, 45, 0, -45, 0],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-4 -right-12 w-8 h-8 flex items-center justify-center pointer-events-none"
+              >
+                <div
+                  className="w-full h-full bg-gradient-to-tr from-cyber-teal via-purple-500 to-cyber-teal shadow-[0_0_20px_rgba(74,222,128,0.5)]"
+                  style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}
+                />
+                <div className="absolute inset-0 bg-white/20 blur-sm rounded-full" />
+              </motion.div>
+            </div>
+          </h2>
+          <p className="text-white/40 max-w-xl text-sm leading-relaxed mt-4">
             Engineering growth through a unique blend of strategic vision, technical automation, and creative performance.
           </p>
         </div>
 
-        <div className="flex flex-col gap-16">
-          {founders.map((founder, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className={`relative group w-full md:w-[85%] lg:w-[75%] ${i % 2 === 0 ? "self-start" : "self-end"}`}
-            >
-              {/* HUD Frame */}
-              <div className="absolute -inset-4 border border-white/5 rounded-[40px] group-hover:border-cyber-teal/20 transition-colors duration-500" />
-              <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyber-teal/40 rounded-tl-2xl opacity-0 group-hover:opacity-100 transition-all" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyber-teal/40 rounded-br-2xl opacity-0 group-hover:opacity-100 transition-all" />
+        <div className="relative max-w-5xl mx-auto mt-16 pt-8">
+          {/* Top Horizontal Line */}
+          <div className="absolute left-[50%] -translate-x-1/2 top-0 w-48 h-px bg-white/10 hidden md:block" />
 
-              <div className="relative glass-card p-12 h-full flex flex-col">
-                <div className="flex items-start justify-between mb-10">
-                  <div>
-                    <h3 className="text-3xl font-black font-display uppercase tracking-tighter mb-2">{founder.name}</h3>
-                    <div className="px-3 py-1 bg-cyber-teal/10 border border-cyber-teal/20 rounded-full inline-block">
-                      <span className="text-cyber-teal text-[10px] font-black uppercase tracking-widest">{founder.role}</span>
+          {/* Center Line */}
+          <div className="absolute left-[50%] top-0 bottom-0 w-px bg-white/10 hidden md:block" />
+
+          <div className="flex flex-col gap-24">
+            {founders.map((founder, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, margin: "-100px" }}
+                  className={`relative flex flex-col md:flex-row items-center justify-between w-full group ${isEven ? 'md:flex-row-reverse' : ''}`}
+                >
+                  {/* Empty space for alternating layout on desktop */}
+                  <div className="hidden md:block md:w-[45%]" />
+
+                  {/* Horizontal Connector Line */}
+                  <div className={`absolute top-1/2 -translate-y-1/2 h-px bg-white/10 hidden md:block z-0 group-hover:bg-cyber-teal/30 transition-colors duration-500
+                    ${isEven ? 'right-[50%] w-[5%]' : 'left-[50%] w-[5%]'}
+                  `} />
+
+                  {/* Icon on Center Line */}
+                  <div className="absolute left-[50%] -translate-x-1/2 w-12 h-12 rounded-full bg-obsidian border-2 border-cyber-teal/30 z-10 hidden md:flex items-center justify-center cursor-pointer overflow-visible group-hover:border-cyber-teal/60 transition-all duration-300 group-hover:scale-110 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                     <div className="absolute inset-0 bg-cyber-teal/10 group-hover:bg-cyber-teal/20 transition-colors rounded-full" />
+                     <founder.icon className="w-5 h-5 text-cyber-teal relative z-10" />
+                     
+                     {/* Hover tooltip for position */}
+                     <div className={`absolute top-1/2 -translate-y-1/2 bg-cyber-teal text-white text-[10px] md:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-50
+                        ${isEven ? 'left-full ml-4' : 'right-full mr-4'}
+                     `}>
+                        {founder.role}
+                     </div>
+                  </div>
+
+                  {/* Card Container */}
+                  <div className="w-full md:w-[45%] relative z-10">
+                    <div className="relative glass-card p-10 h-full flex flex-col group-hover:border-cyber-teal/30 transition-colors duration-500 hover:shadow-[0_0_30px_rgba(168,85,247,0.1)]">
+                      <div className="flex items-start justify-between mb-8">
+                        <div>
+                          <h3 className="text-2xl font-black font-display uppercase tracking-tighter mb-2">{founder.name}</h3>
+                          <div className="px-3 py-1 bg-cyber-teal/10 border border-cyber-teal/20 rounded-full inline-block">
+                            <span className="text-cyber-teal text-[10px] font-black uppercase tracking-widest">{founder.role}</span>
+                          </div>
+                        </div>
+                        <founder.icon className="w-8 h-8 text-white/10 group-hover:text-cyber-teal transition-colors md:hidden" />
+                      </div>
+
+                      <p className="text-white/50 leading-relaxed text-sm mb-10 flex-1 whitespace-pre-line">
+                        {founder.description}
+                      </p>
+
+                      <div className="flex items-center gap-4 mt-auto">
+                        <div className="h-px flex-1 bg-white/10 group-hover:bg-cyber-teal/20 transition-colors" />
+                        <div className="text-[10px] font-black uppercase tracking-widest text-white/20 group-hover:text-cyber-teal/60 transition-colors">System ID: 00{i + 1}</div>
+                      </div>
                     </div>
                   </div>
-                  <founder.icon className="w-10 h-10 text-white/10 group-hover:text-cyber-teal transition-colors" />
-                </div>
-
-                <p className="text-white/50 leading-relaxed text-sm mb-12 flex-1 whitespace-pre-line">
-                  {founder.description}
-                </p>
-
-                <div className="flex items-center gap-4">
-                  <div className="h-px flex-1 bg-white/10" />
-                  <div className="text-[10px] font-black uppercase tracking-widest text-white/20">System ID: 00{i + 1}</div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -348,29 +388,43 @@ export default function About() {
         <div className="absolute inset-0 bg-cyber-teal/5 blur-[120px] rounded-full" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(74,222,128,0.1)_0%,transparent_70%)]" />
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="text-center relative z-10"
-        >
-          <div className="text-cyber-teal font-black uppercase tracking-[0.4em] text-xs mb-8">Core Philosophy</div>
-          <h2 className="text-5xl md:text-7xl lg:text-[120px] font-display font-black uppercase tracking-tighter leading-[0.8] mb-8">
+        <div className="text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-50px" }}
+            className="text-cyber-teal font-black uppercase tracking-[0.4em] text-xs mb-8 inline-block"
+          >
+            Core Philosophy
+          </motion.div>
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-50px" }}
+            transition={{ delay: 0.2 }}
+            className="text-5xl md:text-7xl lg:text-[120px] font-display font-black uppercase tracking-tighter leading-[0.8] mb-8"
+          >
             Growth is <br />
             <span className="text-gradient">Not Luck.</span>
-          </h2>
-          <div className="flex flex-col items-center justify-center gap-6">
-            <div className="flex items-center gap-4">
-              <div className="h-px w-12 bg-white/20" />
-              <p className="text-white/40 font-black uppercase tracking-widest text-sm">It’s built with the</p>
-              <div className="h-px w-12 bg-white/20" />
+          </motion.h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-50px" }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col items-center justify-center gap-6"
+          >
+            <div className="flex items-center gap-2">
+              <p className="text-white/40 font-black uppercase tracking-widest text-sm flex items-center">
+                It’s built with the<TypingDots />
+              </p>
             </div>
 
             <div className="h-40 flex items-center justify-center mt-4">
               <TypingWords />
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </section>
     </div>
   );

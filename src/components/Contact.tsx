@@ -1,5 +1,5 @@
-import { useState, FormEvent } from "react";
-import { motion } from "motion/react";
+import { useState, FormEvent, useRef } from "react";
+import { motion, useInView } from "motion/react";
 import { Send, CheckCircle2 } from "lucide-react";
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,6 +13,9 @@ export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const isInView = useInView(headingRef, { once: false, margin: "-50px" });
+  const buildText = "BUILD".split("");
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -79,8 +82,25 @@ export default function Contact() {
         <div className="grid lg:grid-cols-2 gap-20">
           <div>
             <div className="section-label">Contact</div>
-            <h2 className="text-6xl md:text-8xl font-display font-black tracking-tighter uppercase mb-8">
-              Let's Build <br /> Your <span className="text-gradient">System</span>
+            <h2 ref={headingRef} className="text-5xl md:text-7xl lg:text-8xl font-display font-black tracking-tighter uppercase mb-8">
+              Let's <span className="inline-flex items-end overflow-visible">
+                {buildText.map((char, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ y: 50, opacity: 0, scaleY: 0.5 }}
+                    animate={isInView ? { y: 0, opacity: 1, scaleY: 1 } : {}}
+                    transition={{
+                      duration: 0.6,
+                      delay: index * 0.1 + 0.2,
+                      type: "spring",
+                      bounce: 0.5
+                    }}
+                    className="inline-block origin-bottom"
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </span> <br /> Your <span className="text-gradient">System</span>
             </h2>
             <p className="text-white/40 text-xl max-w-md leading-relaxed mb-12">
               Ready to scale? Fill out the form and we'll get back to you within 24 hours.

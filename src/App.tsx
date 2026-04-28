@@ -22,6 +22,7 @@ import ProblemSolution from "./components/ProblemSolution";
 import Results from "./components/Results";
 import FAQ from "./components/FAQ";
 import PrimaryCTA from "./components/PrimaryCTA";
+import GlobalPresence from "./components/GlobalPresence";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,7 @@ export default function App() {
           <PrimaryCTA />
           <FAQ />
           <Contact />
+          <GlobalPresence />
           <Footer />
         </motion.div>
       )}
