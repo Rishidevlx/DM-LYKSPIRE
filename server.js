@@ -33,7 +33,7 @@ Their ultimate goals are: ${goals}.
 
 Please provide a highly professional, structured, and actionable plan on how they can use AI to automate tasks, solve their challenges, and achieve their goals to scale their business. Use clear headings, bullet points, and concise professional English. Do not use Markdown, just use standard text formatting. Limit the response to 3-4 sections max.`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
