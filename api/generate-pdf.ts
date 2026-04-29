@@ -9,47 +9,118 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { planText } = req.body;
+    const { planData, userDetails } = req.body;
 
-    if (!planText) {
-      return res.status(400).json({ message: 'Missing plan text' });
+    if (!planData || !userDetails) {
+      return res.status(400).json({ message: 'Missing plan data or user details' });
     }
 
-    // Set headers for PDF download
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="AI_Automation_Plan.pdf"');
+    res.setHeader('Content-Disposition', 'attachment; filename="ZenThira_Growth_Plan.pdf"');
 
-    // Create a new PDF document
-    const doc = new PDFDocument({ margin: 50 });
-
-    // Pipe the PDF to the response
-    doc.pipe(res);
-
-    // Add Watermark Logo
-    const logoPath = path.join(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
-    if (fs.existsSync(logoPath)) {
-      doc.save()
-         .opacity(0.08)
-         .image(logoPath, (doc.page.width - 400) / 2, (doc.page.height - 400) / 2, { width: 400 })
-         .restore();
-    }
-
-    // Styling the PDF
-    doc.fontSize(24).fillColor('#00B4D8').text('Lykspire AI Business Consultant', { align: 'center' });
-    doc.moveDown(0.5);
-    doc.fontSize(14).fillColor('#666666').text('Your Custom Automation & Growth Strategy', { align: 'center' });
-    doc.moveDown(2);
-
-    // Add content
-    // We clean up markdown asterisks if any remain for a cleaner look in the PDF
-    const cleanText = planText.replace(/\*\*/g, '').replace(/\*/g, '•');
-
-    doc.fontSize(12).fillColor('#333333').text(cleanText, {
-      align: 'left',
-      lineGap: 4,
+    const doc = new PDFDocument({ 
+      margin: 50,
+      size: 'A4',
+      bufferPages: true 
     });
 
-    // Finalize the PDF and end the stream
+    doc.pipe(res);
+
+    const primaryColor = '#a855f7'; // Purple Theme
+    const darkColor = '#0a0a0a';
+    const textColor = '#333333';
+    const lightGray = '#f0f0f0';
+
+    // Helper to format text
+    const cleanText = (text: any) => {
+      if (!text) return "";
+      if (typeof text === 'object') {
+        return Object.entries(text).map(([k, v]) => `• ${k.toUpperCase()}:\n${typeof v === 'string' ? v : JSON.stringify(v)}`).join('\n\n');
+      }
+      return String(text).replace(/\*\*/g, '').replace(/\*/g, '•');
+    };
+
+    // Header Background
+    doc.rect(0, 0, doc.page.width, 100).fill(darkColor);
+    
+    // Logo / Title
+    try {
+      doc.image('src/assest/download.jpeg', 50, 25, { width: 50 });
+      doc.fontSize(24).fillColor(primaryColor).font('Times-Bold')
+         .text('ZenThira AI', 110, 35);
+      doc.fontSize(12).fillColor('#ffffff').font('Times-Roman')
+         .text('Custom Growth & Automation Strategy', 110, 63);
+    } catch(e) {
+      doc.fontSize(24).fillColor(primaryColor).font('Times-Bold')
+         .text('ZenThira AI', 50, 40);
+      doc.fontSize(12).fillColor('#ffffff').font('Times-Roman')
+         .text('Custom Growth & Automation Strategy', 50, 68);
+    }
+
+    doc.moveDown(4);
+
+    // Client Details Section
+    doc.rect(50, 120, doc.page.width - 100, 50).fill(lightGray);
+    doc.fontSize(14).fillColor(darkColor).font('Times-Bold')
+       .text('Prepared For:', 65, 135);
+    doc.fontSize(12).font('Times-Roman')
+       .text(`Email: ${userDetails.email} | Phone: ${userDetails.phone}`, 65, 155);
+
+    doc.moveDown(3);
+
+    // Function to render section box without causing empty pages
+    const renderSection = (title: string, content: any) => {
+      doc.moveDown(2);
+      
+      // Section Title (Text only to prevent rect pagination bugs)
+      doc.fontSize(16).fillColor(primaryColor).font('Times-Bold')
+         .text(title, 50, doc.y);
+      
+      doc.moveDown(1);
+      
+      // Content
+      doc.fontSize(11).fillColor(textColor).font('Times-Roman')
+         .text(cleanText(content), 50, doc.y, {
+           align: 'left',
+           lineGap: 4,
+           width: doc.page.width - 100
+         });
+    };
+
+    renderSection("1. Business Overview", planData.businessOverview);
+    renderSection("2. AI Solutions & Automation Plan", planData.automationPlan);
+    renderSection("3. Future Growth & Enhancements", planData.futureGrowth);
+
+    // Add Watermark Logo (Center of the document, on every page)
+    const logoPath = path.join(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
+    if (fs.existsSync(logoPath)) {
+      const range = doc.bufferedPageRange();
+      for (let i = range.start; i < range.start + range.count; i++) {
+        doc.switchToPage(i);
+        doc.save()
+           .opacity(0.05)
+           .image(logoPath, (doc.page.width - 300) / 2, (doc.page.height - 300) / 2, { width: 300 })
+           .restore();
+      }
+    }
+
+    // Add footer and page numbers
+    const range2 = doc.bufferedPageRange();
+    for (let i = range2.start; i < range2.start + range2.count; i++) {
+      doc.switchToPage(i);
+      
+      // Footer Line
+      doc.rect(50, doc.page.height - 50, doc.page.width - 100, 1).fill('#dddddd');
+      
+      // Footer text
+      doc.fontSize(9).fillColor('#888888').font('Helvetica')
+         .text('Generated by ZenThira AI | Confidential Strategy Document', 50, doc.page.height - 40);
+         
+      // Page Number
+      doc.fontSize(9).fillColor('#888888').font('Helvetica')
+         .text(`Page ${i + 1} of ${range2.count}`, doc.page.width - 100, doc.page.height - 40, { align: 'right' });
+    }
+
     doc.end();
 
   } catch (error) {
