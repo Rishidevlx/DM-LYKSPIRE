@@ -45,14 +45,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     // Logo / Title
     try {
-      doc.image('src/assest/download.jpeg', 50, 25, { width: 50 });
+      doc.image('src/assest/LYKSPIRE LOGO.png', 50, 25, { width: 50 });
       doc.fontSize(24).fillColor(primaryColor).font('Times-Bold')
-         .text('ZenThira AI', 110, 35);
+         .text('LyKSpire', 110, 35);
       doc.fontSize(12).fillColor('#ffffff').font('Times-Roman')
          .text('Custom Growth & Automation Strategy', 110, 63);
     } catch(e) {
       doc.fontSize(24).fillColor(primaryColor).font('Times-Bold')
-         .text('ZenThira AI', 50, 40);
+         .text('LyKSpire', 50, 40);
       doc.fontSize(12).fillColor('#ffffff').font('Times-Roman')
          .text('Custom Growth & Automation Strategy', 50, 68);
     }
