@@ -89,132 +89,168 @@ app.post('/api/generate-pdf', async (req, res) => {
     }
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="ZenThira_Growth_Plan.pdf"');
+    res.setHeader('Content-Disposition', 'attachment; filename="LyKSpire_AI_Strategy_Plan.pdf"');
 
-    const doc = new PDFDocument({ 
-      margin: 50,
-      size: 'A4',
-      bufferPages: true 
-    });
-
+    const doc = new PDFDocument({ margin: 0, size: 'A4', bufferPages: true });
     doc.pipe(res);
 
-    const primaryColor = '#a855f7'; // Purple Theme
-    const darkColor = '#0a0a0a';
-    const textColor = '#333333';
-    const lightGray = '#f0f0f0';
+    const W        = doc.page.width;   // 595
+    const H        = doc.page.height;  // 842
+    const MARGIN   = 52;
+    const CW       = W - MARGIN * 2;
+    const purple   = '#7c3aed';
+    const purpleL  = '#a855f7';
+    const dark     = '#1a1a2e';
+    const gray     = '#555566';
+    const lightLine= '#e0e0ee';
 
-    // Helper to format text
+    // ── cleanText helper ──
     const cleanText = (text) => {
-      if (!text) return "";
-      
-      const parseValue = (val, depth = 0) => {
+      if (!text) return '';
+      const parse = (val, depth = 0) => {
         if (typeof val === 'string') {
           val = val.trim();
           if ((val.startsWith('{') && val.endsWith('}')) || (val.startsWith('[') && val.endsWith(']'))) {
             try { val = JSON.parse(val); } catch(e) {}
           }
         }
-        
-        const indent = " ".repeat(depth * 2);
-        if (Array.isArray(val)) {
-          return val.map(item => `${indent}• ${parseValue(item, 0)}`).join('\n');
-        }
+        const pad = '  '.repeat(depth);
+        if (Array.isArray(val)) return val.map(x => `${pad}• ${parse(x, 0)}`).join('\n');
         if (typeof val === 'object' && val !== null) {
-          return Object.entries(val)
-            .map(([k, v]) => `${indent}• ${k.toUpperCase()}:\n${parseValue(v, depth + 1)}`)
-            .join('\n\n');
+          return Object.entries(val).map(([k,v]) => `${pad}• ${k.replace(/_/g,' ').toUpperCase()}:\n${parse(v, depth+1)}`).join('\n\n');
         }
-        return String(val).replace(/\*\*/g, '').replace(/\*/g, '');
+        return String(val).replace(/\*\*/g,'').replace(/\*/g,'');
       };
-
-      return parseValue(text).trim();
+      return parse(text).trim();
     };
 
-    // Header Background
-    doc.rect(0, 0, doc.page.width, 100).fill(darkColor);
-    
-    // Logo / Title
+    // ══════════════════════════════
+    //  HELPER: draw background on current page
+    // ══════════════════════════════
+    const drawPageBackground = () => {
+      // White background
+      doc.rect(0, 0, W, H).fill('#ffffff');
+
+      // Watermark logo — large, centered, very faint
+      const logoPath = path.resolve(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
+      try {
+        if (fs.existsSync(logoPath)) {
+          doc.opacity(0.04);
+          doc.image(logoPath, W / 2 - 110, H / 2 - 110, { width: 220 });
+          doc.opacity(1);
+        }
+      } catch(e) {}
+
+      // Left purple accent stripe
+      doc.rect(0, 0, 5, H).fill(purple);
+
+      // Top header bar
+      doc.rect(0, 0, W, 72).fill('#f8f6ff');
+      doc.rect(0, 72, W, 1.5).fill(purpleL);
+    };
+
+    // ══════════════════════════════
+    //  PAGE 1 — HEADER
+    // ══════════════════════════════
+    drawPageBackground();
+
+    // Logo in header
+    const logoPath2 = path.resolve(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
     try {
-      doc.image('src/assest/LYKSPIRE LOGO.png', 50, 25, { width: 50 });
-      doc.fontSize(24).fillColor(primaryColor).font('Times-Bold')
-         .text('LyKSpire', 110, 35);
-      doc.fontSize(12).fillColor('#ffffff').font('Times-Roman')
-         .text('Custom Growth & Automation Strategy', 110, 63);
-    } catch(e) {
-      doc.fontSize(24).fillColor(primaryColor).font('Times-Bold')
-         .text('LyKSpire', 50, 40);
-      doc.fontSize(12).fillColor('#ffffff').font('Times-Roman')
-         .text('Custom Growth & Automation Strategy', 50, 68);
-    }
+      if (fs.existsSync(logoPath2)) {
+        doc.opacity(1);
+        doc.image(logoPath2, MARGIN, 14, { width: 40 });
+      }
+    } catch(e) {}
 
-    doc.moveDown(4);
+    // Brand name
+    doc.fontSize(18).fillColor(dark).font('Times-Bold')
+       .text('LyKSpire', MARGIN + 50, 18, { lineBreak: false });
+    doc.fontSize(8).fillColor(purpleL).font('Times-Roman')
+       .text('AI-POWERED GROWTH & AUTOMATION', MARGIN + 50, 42, { lineBreak: false });
 
-    // Client Details Section
-    doc.rect(50, 120, doc.page.width - 100, 50).fill(lightGray);
-    doc.fontSize(14).fillColor(darkColor).font('Times-Bold')
-       .text('Prepared For:', 65, 135);
-    doc.fontSize(12).font('Times-Roman')
-       .text(`Email: ${userDetails.email} | Phone: ${userDetails.phone}`, 65, 155);
+    // Date — top right
+    const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    doc.fontSize(8).fillColor(gray).font('Times-Roman')
+       .text(dateStr, 0, 30, { lineBreak: false, width: W - MARGIN, align: 'right' });
 
-    doc.moveDown(3);
+    // Report title block
+    doc.fontSize(26).fillColor(dark).font('Times-Bold')
+       .text('AI Business Strategy Report', MARGIN, 90, { width: CW });
 
-    // Function to render section box without causing empty pages
+    doc.fontSize(11).fillColor(gray).font('Times-Roman')
+       .text('A personalised AI growth & automation plan — prepared exclusively by LyKSpire.', MARGIN, 124, { width: CW });
+
+    // Purple underline accent
+    doc.rect(MARGIN, 148, 56, 3).fill(purple);
+    doc.rect(MARGIN + 62, 148, 20, 3).fill(purpleL).opacity(0.4);
+    doc.opacity(1);
+
+    // Thin divider
+    doc.rect(MARGIN, 162, CW, 0.75).fill(lightLine);
+
+    // ══════════════════════════════
+    //  SECTION RENDERER
+    // ══════════════════════════════
+    const sectionColors = [purple, purpleL, '#059669'];
+    let sIdx = 0;
+
     const renderSection = (title, content) => {
       const cleaned = cleanText(content);
       if (!cleaned) return;
-      
-      doc.moveDown(1.5);
-      
-      // Section Title (Text only to prevent rect pagination bugs)
-      doc.fontSize(16).fillColor(primaryColor).font('Times-Bold')
-         .text(title, 50, doc.y);
-      
-      doc.moveDown(0.5);
-      
-      // Content
-      doc.fontSize(11).fillColor(textColor).font('Times-Roman')
-         .text(cleanText(content), 50, doc.y, {
-           align: 'left',
-           lineGap: 4,
-           width: doc.page.width - 100
-         });
+      const col = sectionColors[sIdx % 3];
+      sIdx++;
+      if (doc.y > H - 160) {
+        doc.addPage();
+        drawPageBackground();
+        doc.y = 90;
+      }
+      doc.moveDown(1.4);
+      const ty = doc.y;
+
+      // Title
+      doc.fontSize(14).fillColor(col).font('Times-Bold')
+         .text(title, MARGIN, ty, { lineBreak: false });
+
+      // Underline: drawn BELOW title using fixed offset (ty + fontSize + gap)
+      const underlineY = ty + 18;   // 14pt + 4px gap
+      const titleW = doc.widthOfString(title, { fontSize: 14 });
+      doc.rect(MARGIN, underlineY, titleW, 1.5).fill(col).opacity(0.5);
+      doc.opacity(1);
+
+      // Body text starts below the underline
+      doc.y = underlineY + 10;
+      doc.fontSize(10.5).fillColor(dark).font('Times-Roman')
+         .text(cleaned, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 4.5 });
     };
 
-    renderSection("1. Business Overview", planData.businessOverview);
-    renderSection("2. AI Solutions & Automation Plan", planData.automationPlan);
-    renderSection("3. Future Growth & Enhancements", planData.futureGrowth);
+    // Render all sections
+    doc.y = 172;
+    renderSection('Business Overview', planData.businessOverview);
+    renderSection('AI Solutions & Automation Plan', planData.automationPlan);
+    renderSection('Future Growth & Enhancements', planData.futureGrowth);
 
-    // Add footer and page numbers on all pages
-    const range2 = doc.bufferedPageRange();
-    const totalPages = range2.count;
-    for (let i = range2.start; i < range2.start + totalPages; i++) {
+    // ══════════════════════════════
+    //  FOOTER ON ALL PAGES
+    // ══════════════════════════════
+    const range = doc.bufferedPageRange();
+    const total = range.count;
+    for (let i = range.start; i < range.start + total; i++) {
       doc.switchToPage(i);
-      const footerY = doc.page.height - 40;
-      
-      // Footer Line
-      doc.rect(50, footerY - 10, doc.page.width - 100, 1).fill('#dddddd');
-      
-      // Footer text - absolute coords, lineBreak: false prevents cursor overflow
-      doc.fontSize(9).fillColor('#888888').font('Helvetica')
-         .text('Generated by LyKSpire | Confidential Strategy Document', 50, footerY, { lineBreak: false });
-         
-      // Page Number
-      doc.fontSize(9).fillColor('#888888').font('Helvetica')
-         .text(`Page ${i + 1} of ${totalPages}`, 0, footerY, { align: 'right', lineBreak: false, width: doc.page.width - 50 });
+      const fY = H - 38;
+      doc.rect(MARGIN, fY - 8, CW, 0.75).fill(lightLine);
+      doc.fontSize(8).fillColor(gray).font('Times-Roman')
+         .text('lykspire.com  |  Confidential AI Strategy Document', MARGIN, fY, { lineBreak: false });
+      doc.fontSize(8).fillColor(purpleL).font('Times-Bold')
+         .text(`Page ${i + 1} of ${total}`, 0, fY, { align: 'right', lineBreak: false, width: W - MARGIN });
     }
 
-    // CRITICAL: Reset cursor to safe Y after switchToPage loop
-    // Without this, PDFKit sees cursor at bottom and creates a blank overflow page
-    doc.switchToPage(range2.start + totalPages - 1);
+    doc.switchToPage(range.start + total - 1);
     doc.y = 100;
-
     doc.end();
-  } catch (error) {
-    console.error('Error generating PDF:', error);
-    if (!res.headersSent) {
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
+
+  } catch(err) {
+    console.error('PDF route error:', err);
   }
 });
 

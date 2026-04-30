@@ -62,6 +62,13 @@ export default function AIChatbotFloating() {
     };
   }, [isOpen]);
 
+  // Listen to external open-chatbot event (fired by Hero CTA button)
+  useEffect(() => {
+    const handler = () => { setIsOpen(true); setShowTooltip(false); };
+    window.addEventListener('open-chatbot', handler);
+    return () => window.removeEventListener('open-chatbot', handler);
+  }, []);
+
   // Helper to safely render AI output which might occasionally be a nested object
   const renderText = (text: any) => {
     if (!text) return "";
