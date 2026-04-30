@@ -214,7 +214,7 @@ app.post('/api/generate-pdf', async (req, res) => {
 
       // Underline: drawn BELOW title using fixed offset (ty + fontSize + gap)
       const underlineY = ty + 18;   // 14pt + 4px gap
-      const titleW = doc.widthOfString(title, { fontSize: 14 });
+      const titleW = doc.widthOfString(title); // fontSize already set to 14 above
       doc.rect(MARGIN, underlineY, titleW, 1.5).fill(col).opacity(0.5);
       doc.opacity(1);
 

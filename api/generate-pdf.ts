@@ -104,9 +104,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // Underline: fixed offset below title (ty + fontSize + gap)
       const underlineY = ty + 18;
-      const titleW = doc.widthOfString(title, { fontSize: 14 });
+      const titleW = doc.widthOfString(title); // fontSize already set to 14 above
       doc.rect(MARGIN, underlineY, titleW, 1.5).fill(col).opacity(0.5);
       doc.opacity(1);
+
 
       doc.y = underlineY + 10;
       doc.fontSize(10.5).fillColor(dark).font('Times-Roman')
