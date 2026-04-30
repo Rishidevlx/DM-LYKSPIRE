@@ -1,6 +1,6 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Bot, X, Sparkles, Download, CheckCircle2, ChevronRight, ChevronLeft, Mail, Phone, User } from "lucide-react";
+import { Bot, X, Sparkles, Download, ChevronRight, ChevronLeft, Mail, Phone, User, AlertCircle } from "lucide-react";
 import botIcon from "../assest/download.jpeg";
 
 export default function AIChatbotFloating() {
@@ -24,18 +24,69 @@ export default function AIChatbotFloating() {
     phone: ""
   });
   const [showLeadForm, setShowLeadForm] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generatedPlan, setGeneratedPlan] = useState<any>(null);
 
+  // Chatbot Tooltip Feature
+  const [tooltipMessage, setTooltipMessage] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  useEffect(() => {
+    // Show first message after 10 seconds
+    const timer1 = setTimeout(() => {
+      if (!isOpen) {
+        setTooltipMessage("Hey! Want a free AI Growth Plan for your business? Click me! 🚀");
+        setShowTooltip(true);
+      }
+    }, 10000);
+
+    // Hide first message after 20 seconds (10s + 20s = 30s)
+    const timer2 = setTimeout(() => {
+      setShowTooltip(false);
+    }, 30000);
+
+    // Show second message 5 seconds after hiding (30s + 5s = 35s)
+    const timer3 = setTimeout(() => {
+      if (!isOpen) {
+        setTooltipMessage("Still thinking? Let ZenThira analyze your business and give you actionable strategies! 💡");
+        setShowTooltip(true);
+      }
+    }, 35000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, [isOpen]);
+
   // Helper to safely render AI output which might occasionally be a nested object
   const renderText = (text: any) => {
     if (!text) return "";
-    if (typeof text === 'string') return text;
-    if (typeof text === 'object') {
-      return Object.entries(text).map(([k, v]) => `• ${k.toUpperCase()}:\n${typeof v === 'string' ? v : JSON.stringify(v)}`).join('\n\n');
-    }
-    return String(text);
+    
+    const parseValue = (val: any, depth = 0): string => {
+      if (typeof val === 'string') {
+        val = val.trim();
+        if ((val.startsWith('{') && val.endsWith('}')) || (val.startsWith('[') && val.endsWith(']'))) {
+          try { val = JSON.parse(val); } catch(e) {}
+        }
+      }
+
+      const indent = " ".repeat(depth * 4);
+      if (Array.isArray(val)) {
+        return val.map(item => `${indent}• ${parseValue(item, 0)}`).join('\n');
+      }
+      if (typeof val === 'object' && val !== null) {
+        return Object.entries(val)
+          .map(([k, v]) => `${indent}• ${k.toUpperCase()}:\n${parseValue(v, depth + 1)}`)
+          .join('\n\n');
+      }
+      return String(val).replace(/\*\*/g, '').replace(/\*/g, '');
+    };
+
+    return parseValue(text).trim();
   };
 
   const validateStep = () => {
@@ -109,14 +160,16 @@ export default function AIChatbotFloating() {
   const handleDownloadPDF = async () => {
     // Basic validation for lead form
     if (!leadDetails.email || !leadDetails.phone) {
-      alert("Please fill in your Email and Mobile Number to get the PDF.");
+      setToastMessage("Please fill in both Email & Phone Number to download!");
+      setTimeout(() => setToastMessage(""), 3000);
       return;
     }
     
     // Email regex validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(leadDetails.email)) {
-      alert("Please enter a valid email address.");
+      setToastMessage("Please enter a valid email address!");
+      setTimeout(() => setToastMessage(""), 3000);
       return;
     }
 
@@ -144,7 +197,8 @@ export default function AIChatbotFloating() {
       setShowLeadForm(false);
     } catch (error) {
       console.error(error);
-      alert("Failed to download PDF.");
+      setToastMessage("Failed to download PDF. Please try again.");
+      setTimeout(() => setToastMessage(""), 3000);
     }
   };
 
@@ -160,20 +214,63 @@ export default function AIChatbotFloating() {
 
   return (
     <>
-      {/* Floating Button */}
-      <motion.button
-        onClick={() => setIsOpen(true)}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: isOpen ? 0 : 1 }}
-        transition={{ delay: 1.2 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        style={{ pointerEvents: isOpen ? 'none' : 'auto' }}
-        className="fixed bottom-20 right-4 md:bottom-28 md:right-8 z-[85] w-14 h-14 md:w-16 md:h-16 bg-transparent rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(168,85,247,0.4)] hover:shadow-[0_15px_40px_rgba(168,85,247,0.6)] group overflow-hidden border-2 border-cyber-teal"
-      >
-        <img src={botIcon} alt="ZenThira" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-        <div className="absolute inset-0 rounded-full border border-cyber-teal animate-ping opacity-30" />
-      </motion.button>
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: -20, x: "-50%" }}
+            className="fixed top-10 left-1/2 z-[9999] bg-red-500 text-white px-6 py-3 rounded-full font-bold shadow-2xl flex items-center gap-2"
+          >
+            <AlertCircle className="w-5 h-5" />
+            {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Button with Tooltip */}
+      <div className="fixed bottom-20 right-4 md:bottom-24 md:right-8 z-50 flex flex-col items-end">
+        <AnimatePresence>
+          {showTooltip && !isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="mb-4 mr-2 bg-gradient-to-r from-purple-600 to-cyber-teal p-[2px] rounded-2xl shadow-2xl shadow-purple-500/20 max-w-[250px]"
+            >
+              <div className="bg-[#111] rounded-2xl p-4 relative">
+                <button 
+                  onClick={() => setShowTooltip(false)}
+                  className="absolute -top-2 -right-2 bg-white text-black rounded-full p-1 shadow hover:scale-110 transition-transform"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+                <p className="text-white text-sm font-bold leading-relaxed">{tooltipMessage}</p>
+                {/* Pointer Arrow */}
+                <div className="absolute -bottom-2 right-6 w-4 h-4 bg-[#111] rotate-45 border-b-[2px] border-r-[2px] border-cyber-teal"></div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          onClick={() => {
+            setIsOpen(true);
+            setShowTooltip(false);
+          }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: isOpen ? 0 : 1 }}
+          transition={{ delay: 1.2 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          style={{ pointerEvents: isOpen ? 'none' : 'auto' }}
+          className="w-14 h-14 md:w-16 md:h-16 bg-transparent rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(168,85,247,0.4)] hover:shadow-[0_15px_40px_rgba(168,85,247,0.6)] group overflow-hidden border-2 border-cyber-teal"
+        >
+          <img src={botIcon} alt="ZenThira" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+          <div className="absolute inset-0 rounded-full border border-cyber-teal animate-ping opacity-30" />
+        </motion.button>
+      </div>
 
       {/* Background Overlay for Center Modal */}
       <AnimatePresence>
@@ -499,53 +596,49 @@ export default function AIChatbotFloating() {
             >
               <button 
                 onClick={() => setShowLeadForm(false)}
-                className="absolute top-4 right-4 w-8 h-8 bg-[#111] rounded-full flex items-center justify-center text-white/50 hover:text-white"
+                className="absolute top-4 right-4 text-white/50 hover:text-white"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
-
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-cyber-teal/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Mail className="w-5 h-5 text-cyber-teal" />
+              
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+                  <Mail className="w-8 h-8 text-purple-400" />
                 </div>
-                <h3 className="text-white font-bold text-xl mb-1">Get Your Free Strategy</h3>
-                <p className="text-white/50 text-sm">Enter your details to instantly download the PDF plan.</p>
               </div>
-
+              
+              <h3 className="text-2xl font-black text-center text-white mb-2">Get Your Strategy PDF</h3>
+              <p className="text-white/50 text-center text-sm mb-8">Enter your details to instantly unlock and download the complete plan.</p>
+              
               <div className="space-y-5">
-                <div className="space-y-1.5">
-                  <label className="text-xs text-white/60 font-bold uppercase tracking-wider">Email Address <span className="text-red-500">*</span></label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-white/30 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="email" 
-                      value={leadDetails.email}
-                      onChange={(e) => setLeadDetails({...leadDetails, email: e.target.value})}
-                      className="w-full bg-[#111] border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-white text-sm focus:border-cyber-teal focus:outline-none transition-colors"
-                      placeholder="john@example.com"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-white/70 uppercase tracking-wider">Email Address <span className="text-red-500">*</span></label>
+                  <input 
+                    type="email" 
+                    value={leadDetails.email}
+                    onChange={(e) => setLeadDetails({...leadDetails, email: e.target.value})}
+                    placeholder="john@example.com"
+                    className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+                  />
                 </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs text-white/60 font-bold uppercase tracking-wider">Mobile Number <span className="text-red-500">*</span></label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-white/30 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="tel" 
-                      value={leadDetails.phone}
-                      onChange={(e) => setLeadDetails({...leadDetails, phone: e.target.value})}
-                      className="w-full bg-[#111] border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-white text-sm focus:border-cyber-teal focus:outline-none transition-colors"
-                      placeholder="+91 9876543210"
-                    />
-                  </div>
+                
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-white/70 uppercase tracking-wider">Mobile Number <span className="text-red-500">*</span></label>
+                  <input 
+                    type="tel" 
+                    value={leadDetails.phone}
+                    onChange={(e) => setLeadDetails({...leadDetails, phone: e.target.value})}
+                    placeholder="+91 9876543210"
+                    className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+                  />
                 </div>
 
                 <button 
                   onClick={handleDownloadPDF}
-                  className="w-full py-4 mt-4 bg-cyber-teal text-obsidian rounded-xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(20,241,149,0.3)] flex justify-center items-center gap-2"
+                  className="w-full py-4 mt-4 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-500/20"
                 >
-                  <Download className="w-4 h-4" /> Download PDF Now
+                  <Download className="w-4 h-4" />
+                  UNLOCK & DOWNLOAD PDF
                 </button>
               </div>
             </motion.div>
