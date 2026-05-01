@@ -166,7 +166,7 @@ app.post('/api/generate-pdf', async (req, res) => {
       return res.status(400).json({ message: 'Missing plan data or user details' });
     }
 
-    // ══ Save lead to TiDB (non-blocking) ══
+    // ══ Save lead to TiDB (awaited) ══
     const saveLead = async () => {
       try {
         await db.execute(
@@ -178,7 +178,7 @@ app.post('/api/generate-pdf', async (req, res) => {
         console.error('Lead save error:', e.message);
       }
     };
-    saveLead();
+    await saveLead();
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="LyKSpire_AI_Strategy_Plan.pdf"');

@@ -27,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ message: 'Missing plan data or user details' });
     }
 
-    // ══ Save lead to TiDB (non-blocking) ══
+    // ══ Save lead to TiDB (awaited to ensure completion in serverless) ══
     const saveLead = async () => {
       try {
         await db.execute(
@@ -39,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         console.error('Lead save error:', e.message);
       }
     };
-    saveLead();
+    await saveLead();
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="LyKSpire_AI_Strategy_Plan.pdf"');
