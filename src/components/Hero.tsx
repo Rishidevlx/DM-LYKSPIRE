@@ -88,21 +88,26 @@ export default function Hero() {
               <line x1={70}   y1={83} x2={81.4} y2={50}   stroke="#ec4899" strokeWidth=".5" strokeDasharray="3 2.5" opacity=".35"/>
 
               {/* Animated dots: INPUTS → Sales */}
-              <motion.circle cx={18.6} cy={50} r={.9} fill="#14F195"
-                animate={{ cx:[18.6,27.7,18.6], opacity:[0,1,0] }}
-                transition={{ duration:1.8, repeat:Infinity, delay:0, ease:"easeInOut" }}/>
+              <motion.circle r=".9" fill="#14F195"
+                initial={{ cx: "18.6", cy: "50", opacity: 0 }}
+                animate={{ cx: ["18.6", "27.7", "18.6"], opacity: [0, 1, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}/>
               {/* Animated dots: INPUTS → Ops */}
-              <motion.circle cx={18.6} cy={50} r={.9} fill="#f59e0b"
-                animate={{ cx:[18.6,27.7], cy:[50,83], opacity:[0,1,0] }}
-                transition={{ duration:2, repeat:Infinity, delay:0.6, ease:"easeInOut" }}/>
+              <motion.circle r=".9" fill="#f59e0b"
+                initial={{ cx: "18.6", cy: "50", opacity: 0 }}
+                animate={{ cx: ["18.6", "27.7", "18.6"], cy: ["50", "83", "50"], opacity: [0, 1, 0] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.6, ease: "easeInOut" }}/>
               {/* Animated dots: Support → OUTPUTS */}
-              <motion.circle cx={70} cy={50} r={.9} fill="#3b82f6"
-                animate={{ cx:[70,81.4,70], opacity:[0,1,0] }}
-                transition={{ duration:1.8, repeat:Infinity, delay:0.9, ease:"easeInOut" }}/>
+              <motion.circle r=".9" fill="#3b82f6"
+                initial={{ cx: "70", cy: "50", opacity: 0 }}
+                animate={{ cx: ["70", "81.4", "70"], opacity: [0, 1, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, delay: 0.9, ease: "easeInOut" }}/>
               {/* Animated dots: Analytics → OUTPUTS */}
-              <motion.circle cx={70} cy={83} r={.9} fill="#ec4899"
-                animate={{ cx:[70,81.4], cy:[83,50], opacity:[0,1,0] }}
-                transition={{ duration:2, repeat:Infinity, delay:1.5, ease:"easeInOut" }}/>
+              <motion.circle r=".9" fill="#ec4899"
+                initial={{ cx: "70", cy: "83", opacity: 0 }}
+                animate={{ cx: ["70", "81.4", "70"], cy: ["83", "50", "83"], opacity: [0, 1, 0] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 1.5, ease: "easeInOut" }}/>
+
             </svg>
 
             {/* INPUTS panel — desktop only */}
@@ -134,9 +139,13 @@ export default function Hero() {
                     />
                     {/* initial cx/cy required to avoid SVG undefined attr error */}
                     <motion.circle
-                      cx={pct[2]} cy={pct[2]}
                       r={1} fill={a.color}
-                      animate={{ cx:[pct[2],pct[a.col as 1|2|3],pct[2]], cy:[pct[2],pct[a.row as 1|2|3],pct[2]], opacity:[0,1,0] }}
+                      initial={{ cx: String(pct[2]), cy: String(pct[2]), opacity: 0 }}
+                      animate={{ 
+                        cx:[String(pct[2]), String(pct[a.col as 1|2|3]), String(pct[2])], 
+                        cy:[String(pct[2]), String(pct[a.row as 1|2|3]), String(pct[2])], 
+                        opacity:[0,1,0] 
+                      }}
                       transition={{ duration:2.2, repeat:Infinity, delay:i*0.45, ease:"easeInOut" }}
                     />
                   </g>
@@ -223,6 +232,32 @@ export default function Hero() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Mobile: INPUTS & OUTPUTS horizontal strips */}
+          <div className="lg:hidden flex flex-col gap-2 mt-2">
+            <div className="bg-[#0d0d1e] border border-white/8 rounded-xl px-3 py-2.5">
+              <p className="text-white/35 text-[8px] font-black uppercase tracking-widest mb-2 text-center">Inputs</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 justify-center">
+                {inputs.map((label, i) => { const Icon = inputIcons[i]; return (
+                  <div key={label} className="flex items-center gap-1.5">
+                    <Icon size={9} className="text-white/40"/>
+                    <span className="text-white/50 text-[9px]">{label}</span>
+                  </div>
+                );})}
+              </div>
+            </div>
+            <div className="bg-[#0d0d1e] border border-white/8 rounded-xl px-3 py-2.5">
+              <p className="text-white/35 text-[8px] font-black uppercase tracking-widest mb-2 text-center">Outputs</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 justify-center">
+                {outputs.map((label, i) => { const Icon = outputIcons[i]; return (
+                  <div key={label} className="flex items-center gap-1.5">
+                    <Icon size={9} className="text-cyber-teal"/>
+                    <span className="text-white/55 text-[9px]">{label}</span>
+                  </div>
+                );})}
+              </div>
             </div>
           </div>
 

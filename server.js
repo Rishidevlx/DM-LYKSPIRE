@@ -2,12 +2,59 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import PDFDocument from 'pdfkit';
+import path from 'path';
+import fs from 'fs';
+import mysql from 'mysql2/promise';
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ══ TiDB Cloud Connection Pool ══
+const db = mysql.createPool({
+  host: process.env.TIDB_HOST || 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
+  port: parseInt(process.env.TIDB_PORT || '4000'),
+  user: process.env.TIDB_USER,
+  password: process.env.TIDB_PASS,
+  database: process.env.TIDB_NAME || 'lykspire_leads',
+  ssl: { rejectUnauthorized: true },
+  waitForConnections: true,
+  connectionLimit: 5,
+});
+
+// ══ Auto-create DB + table on startup ══
+async function initDB() {
+  try {
+    // Create database
+    const rootPool = mysql.createPool({
+      host: process.env.TIDB_HOST || 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
+      port: parseInt(process.env.TIDB_PORT || '4000'),
+      user: process.env.TIDB_USER,
+      password: process.env.TIDB_PASS,
+      ssl: { rejectUnauthorized: true },
+      waitForConnections: true,
+      connectionLimit: 2,
+    });
+    await rootPool.execute(`CREATE DATABASE IF NOT EXISTS ${process.env.TIDB_NAME || 'lykspire_leads'}`);
+    await rootPool.end();
+    // Create table
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS pdf_downloads (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(50),
+        downloaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('TiDB: lykspire_leads DB & table ready ✅');
+  } catch (err) {
+    console.error('TiDB init error:', err.message);
+  }
+}
+initDB();
+
 
 // API 1: Generate Plan using Gemini
 app.post('/api/generate-plan', async (req, res) => {
@@ -23,23 +70,57 @@ app.post('/api/generate-plan', async (req, res) => {
       return res.status(500).json({ message: 'GROQ_API_KEY is not configured in .env' });
     }
 
-    const prompt = `Act as an Expert AI Business Consultant. 
-The user runs a ${business_type} business in the ${industry || 'general'} industry. 
-Their main daily activities are: ${main_activities}. 
-They currently use the following tools: ${tools}. 
-Their team size is: ${team_size}. 
-Their biggest challenges are: ${challenges}. 
-Their ultimate goals are: ${goals}.
+    const prompt = `You are an Expert AI Business Consultant. Analyze this business and generate a detailed, actionable growth plan.
 
-Provide a highly professional, comprehensive, and expert-level AI automation and growth strategy.
-Include real-world examples, actionable steps, and expected ROI. Make it highly detailed and easy to read.
+Business Details:
+- Business Type: ${business_type}
+- Industry: ${industry || 'general'}
+- Daily Activities: ${main_activities}
+- Tools Used: ${tools || 'none specified'}
+- Team Size: ${team_size}
+- Challenges: ${challenges}
+- Goals: ${goals}
 
-You MUST respond ONLY with a valid JSON object containing exactly these 3 keys. The values MUST be simple readable strings (do NOT use nested objects or arrays for the values):
-- "businessOverview": A deep-dive expert summary of their current state.
-- "automationPlan": A highly detailed step-by-step AI integration and automation plan with specific tools and real-world examples.
-- "futureGrowth": Future roadmap, scaling strategies, and enhancements.
+Generate a professional 4-section business growth plan. Respond ONLY with a valid JSON object with exactly these 4 keys.
+All values MUST be detailed, plain readable strings. NO nested objects or arrays.
 
-Do not include any markdown formatting like \`\`\`json, just return the raw JSON object.`;
+- "snapshot": Write 4-5 rich sentences covering: current business stage, team dynamics, main activities, biggest challenge, and what's at stake for their goals. Be specific and insightful.
+
+- "marketEdge": Write 5-6 sentences covering at least 3 opportunities. Include:
+  * Trend Alert: A specific current market trend in their industry they can ride.
+  * Winning Gap: A specific competitor blind spot they can exploit.
+  * Quick Win: One immediate move they can make this week for visible impact.
+  Be specific with platform names, tool names, or industry data where relevant.
+
+- "digitalGrowth": Write 5-6 sentences covering:
+  * Primary Platform: Best digital platform for their business type and why.
+  * Content Strategy: Specific content mix (e.g. 40% educational, 30% promotional, 30% behind-the-scenes).
+  * Local SEO: Specific Google My Business and local keyword tactics.
+  * Engagement: One specific community-building or retargeting tactic.
+  Be highly specific to their industry and business type.
+
+- "actionPlan": Write a detailed 4-week plan as bullet points. Use this EXACT format with line breaks between each week:
+  Week 1 (Branding): [2-3 specific branding actions]
+  • Action 1
+  • Action 2
+  • Action 3
+
+  Week 2 (Launch): [2-3 specific launch actions]
+  • Action 1
+  • Action 2
+  • Action 3
+
+  Week 3 (Audit): [2-3 specific audit/analysis actions]
+  • Action 1
+  • Action 2
+  • Action 3
+
+  Week 4 (Scale): [2-3 specific scaling/automation actions]
+  • Action 1
+  • Action 2
+  • Action 3
+
+Return raw JSON only. No markdown, no code blocks, no extra commentary.`;
 
     const url = `https://api.groq.com/openai/v1/chat/completions`;
 
@@ -76,9 +157,6 @@ Do not include any markdown formatting like \`\`\`json, just return the raw JSON
   }
 });
 
-import path from 'path';
-import fs from 'fs';
-
 // API 2: Generate PDF
 app.post('/api/generate-pdf', async (req, res) => {
   try {
@@ -87,6 +165,20 @@ app.post('/api/generate-pdf', async (req, res) => {
     if (!planData || !userDetails) {
       return res.status(400).json({ message: 'Missing plan data or user details' });
     }
+
+    // ══ Save lead to TiDB (non-blocking) ══
+    const saveLead = async () => {
+      try {
+        await db.execute(
+          'INSERT INTO pdf_downloads (email, phone) VALUES (?, ?)',
+          [userDetails.email || '', userDetails.phone || '']
+        );
+        console.log('Lead saved:', userDetails.email);
+      } catch (e) {
+        console.error('Lead save error:', e.message);
+      }
+    };
+    saveLead();
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="LyKSpire_AI_Strategy_Plan.pdf"');
@@ -132,12 +224,13 @@ app.post('/api/generate-pdf', async (req, res) => {
       doc.rect(0, 0, W, H).fill('#ffffff');
 
       // Watermark logo — large, centered, very faint
-      const logoPath = path.resolve(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
+      const logoPath = path.join(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
       try {
         if (fs.existsSync(logoPath)) {
+          doc.save(); // Save state
           doc.opacity(0.04);
           doc.image(logoPath, W / 2 - 110, H / 2 - 110, { width: 220 });
-          doc.opacity(1);
+          doc.restore(); // Restore state to ensure opacity doesn't leak
         }
       } catch(e) {}
 
@@ -192,7 +285,8 @@ app.post('/api/generate-pdf', async (req, res) => {
     // ══════════════════════════════
     //  SECTION RENDERER
     // ══════════════════════════════
-    const sectionColors = [purple, purpleL, '#059669'];
+    const sectionColors = [purple, purpleL, '#059669', '#f59e0b'];
+
     let sIdx = 0;
 
     const renderSection = (title, content) => {
@@ -200,7 +294,7 @@ app.post('/api/generate-pdf', async (req, res) => {
       if (!cleaned) return;
       const col = sectionColors[sIdx % 3];
       sIdx++;
-      if (doc.y > H - 160) {
+      if (doc.y > H - 195) {  // Even higher threshold to absolutely prevent footer overlap
         doc.addPage();
         drawPageBackground();
         doc.y = 90;
@@ -224,11 +318,12 @@ app.post('/api/generate-pdf', async (req, res) => {
          .text(cleaned, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 4.5 });
     };
 
-    // Render all sections
+    // Render all sections — new 4-section template
     doc.y = 172;
-    renderSection('Business Overview', planData.businessOverview);
-    renderSection('AI Solutions & Automation Plan', planData.automationPlan);
-    renderSection('Future Growth & Enhancements', planData.futureGrowth);
+    renderSection('Snapshot', planData.snapshot);
+    renderSection('Market Edge', planData.marketEdge);
+    renderSection('Digital Growth', planData.digitalGrowth);
+    renderSection('30-Day Action Plan', planData.actionPlan);
 
     // ══════════════════════════════
     //  FOOTER ON ALL PAGES
@@ -237,12 +332,15 @@ app.post('/api/generate-pdf', async (req, res) => {
     const total = range.count;
     for (let i = range.start; i < range.start + total; i++) {
       doc.switchToPage(i);
-      const fY = H - 38;
-      doc.rect(MARGIN, fY - 8, CW, 0.75).fill(lightLine);
+      const fY = H - 36;
+      // Footer divider line
+      doc.rect(MARGIN, fY - 10, CW, 0.75).fill(lightLine);
+      // Left text — explicit coords, no lineBreak
       doc.fontSize(8).fillColor(gray).font('Times-Roman')
-         .text('lykspire.com  |  Confidential AI Strategy Document', MARGIN, fY, { lineBreak: false });
+         .text('lykspire.com  |  Confidential', MARGIN, fY, { lineBreak: false, width: CW / 2 });
+      // Right text — page number, explicit coords
       doc.fontSize(8).fillColor(purpleL).font('Times-Bold')
-         .text(`Page ${i + 1} of ${total}`, 0, fY, { align: 'right', lineBreak: false, width: W - MARGIN });
+         .text(`Page ${i + 1} of ${total}`, MARGIN + CW / 2, fY, { lineBreak: false, width: CW / 2, align: 'right' });
     }
 
     doc.switchToPage(range.start + total - 1);

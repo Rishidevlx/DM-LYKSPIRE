@@ -1,6 +1,7 @@
 import { useState, FormEvent, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Bot, X, Sparkles, Download, ChevronRight, ChevronLeft, Mail, Phone, User, AlertCircle } from "lucide-react";
+import { Bot, X, Sparkles, Download, ChevronRight, ChevronLeft, Mail, Phone, User, AlertCircle, TrendingUp } from "lucide-react";
+
 import botIcon from "../assest/download.jpeg";
 
 export default function AIChatbotFloating() {
@@ -503,48 +504,64 @@ export default function AIChatbotFloating() {
                 </motion.div>
               )}
 
-              {/* Step 3: Result (Structured Cards) */}
+              {/* ── 4 New Plan Cards ── */}
               {step === "result" && generatedPlan && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 select-none">
-                  
-                  {/* Card 1: Business Overview */}
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-6 shadow-lg">
-                    <div className="flex items-center gap-3 mb-4">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 select-none">
+
+                  {/* Card 1: Snapshot */}
+                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
                         <User className="w-4 h-4 text-blue-400" />
                       </div>
-                      <h3 className="text-white font-bold text-lg">Business Overview</h3>
+                      <h3 className="text-white font-bold text-base">Snapshot</h3>
+                      <span className="ml-auto text-sm">📌</span>
                     </div>
                     <div className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
-                      {renderText(generatedPlan.businessOverview) || "Overview not available."}
+                      {renderText(generatedPlan.snapshot) || "Snapshot not available."}
                     </div>
                   </div>
 
-                  {/* Card 2: AI Solutions & Automation */}
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-6 shadow-lg">
-                    <div className="flex items-center gap-3 mb-4">
+                  {/* Card 2: Market Edge */}
+                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center border border-amber-500/30">
+                        <TrendingUp className="w-4 h-4 text-amber-400" />
+                      </div>
+                      <h3 className="text-white font-bold text-base">Market Edge</h3>
+                    </div>
+                    <div className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
+                      {renderText(generatedPlan.marketEdge) || "Market edge details not available."}
+                    </div>
+                  </div>
+
+                  {/* Card 3: Digital Growth */}
+                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-8 h-8 rounded-full bg-cyber-teal/20 flex items-center justify-center border border-cyber-teal/30">
                         <Sparkles className="w-4 h-4 text-cyber-teal" />
                       </div>
-                      <h3 className="text-white font-bold text-lg">AI Solutions & Automation Plan</h3>
+                      <h3 className="text-white font-bold text-base">Digital Growth</h3>
                     </div>
-                    <div className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap select-none">
-                      {renderText(generatedPlan.automationPlan) || "Automation plan not available."}
+                    <div className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
+                      {renderText(generatedPlan.digitalGrowth) || "Digital growth strategy not available."}
                     </div>
                   </div>
 
-                  {/* Card 3: Future Growth */}
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-6 shadow-lg">
-                    <div className="flex items-center gap-3 mb-4">
+                  {/* Card 4: 30-Day Action Plan */}
+                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
                         <ChevronRight className="w-4 h-4 text-purple-400" />
                       </div>
-                      <h3 className="text-white font-bold text-lg">Future Growth & Enhancements</h3>
+                      <h3 className="text-white font-bold text-base">30-Day Action Plan</h3>
+                      <span className="ml-auto text-sm">✅</span>
                     </div>
-                    <div className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap select-none">
-                      {renderText(generatedPlan.futureGrowth) || "Future growth details not available."}
+                    <div className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
+                      {renderText(generatedPlan.actionPlan) || "Action plan not available."}
                     </div>
                   </div>
+
                 </motion.div>
               )}
             </div>
@@ -578,7 +595,7 @@ export default function AIChatbotFloating() {
                     <a href="mailto:info@tieraprom.co.in" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-[#111] px-4 py-2 rounded-full border border-white/5">
                       <Mail className="w-4 h-4" /> info@tieraprom.co.in
                     </a>
-                    <a href="tel:+919876543210" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-[#111] px-4 py-2 rounded-full border border-white/5">
+                    <a href="tel:+918754659759" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-[#111] px-4 py-2 rounded-full border border-white/5">
                       <Phone className="w-4 h-4" /> Book a Call
                     </a>
                   </div>
@@ -624,7 +641,7 @@ export default function AIChatbotFloating() {
                     type="email" 
                     value={leadDetails.email}
                     onChange={(e) => setLeadDetails({...leadDetails, email: e.target.value})}
-                    placeholder="john@example.com"
+                    placeholder="Enter your Gmail"
                     className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
                   />
                 </div>
@@ -635,7 +652,7 @@ export default function AIChatbotFloating() {
                     type="tel" 
                     value={leadDetails.phone}
                     onChange={(e) => setLeadDetails({...leadDetails, phone: e.target.value})}
-                    placeholder="+91 9876543210"
+                    placeholder="Enter your mobile number"
                     className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
                   />
                 </div>

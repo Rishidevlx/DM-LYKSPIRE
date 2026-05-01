@@ -2,6 +2,19 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import PDFDocument from 'pdfkit';
 import path from 'path';
 import fs from 'fs';
+import mysql from 'mysql2/promise';
+
+// ══ TiDB Cloud Connection Pool ══
+const db = mysql.createPool({
+  host: process.env.TIDB_HOST || 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
+  port: parseInt(process.env.TIDB_PORT || '4000'),
+  user: process.env.TIDB_USER,
+  password: process.env.TIDB_PASS,
+  database: process.env.TIDB_NAME || 'lykspire_leads',
+  ssl: { rejectUnauthorized: true },
+  waitForConnections: true,
+  connectionLimit: 5,
+});
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -13,6 +26,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!planData || !userDetails) {
       return res.status(400).json({ message: 'Missing plan data or user details' });
     }
+
+    // ══ Save lead to TiDB (non-blocking) ══
+    const saveLead = async () => {
+      try {
+        await db.execute(
+          'INSERT INTO pdf_downloads (email, phone) VALUES (?, ?)',
+          [userDetails.email || '', userDetails.phone || '']
+        );
+        console.log('Lead saved:', userDetails.email);
+      } catch (e: any) {
+        console.error('Lead save error:', e.message);
+      }
+    };
+    saveLead();
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="LyKSpire_AI_Strategy_Plan.pdf"');
@@ -51,12 +78,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const drawPageBackground = () => {
       doc.rect(0, 0, W, H).fill('#ffffff');
-      const logoPath = path.resolve(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
+      const logoPath = path.join(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
       try {
         if (fs.existsSync(logoPath)) {
+          doc.save();
           doc.opacity(0.04);
           doc.image(logoPath, W / 2 - 110, H / 2 - 110, { width: 220 });
-          doc.opacity(1);
+          doc.restore();
         }
       } catch(e) {}
       doc.rect(0, 0, 5, H).fill(purple);
@@ -82,7 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     doc.opacity(1);
     doc.rect(MARGIN, 162, CW, 0.75).fill(lightLine);
 
-    const sectionColors = [purple, purpleL, '#059669'];
+    const sectionColors = [purple, purpleL, '#059669', '#f59e0b'];
     let sIdx = 0;
 
     const renderSection = (title: string, content: any) => {
@@ -90,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!cleaned) return;
       const col = sectionColors[sIdx % 3];
       sIdx++;
-      if (doc.y > H - 160) {
+      if (doc.y > H - 195) { // Increased threshold
         doc.addPage();
         drawPageBackground();
         doc.y = 90;
@@ -115,18 +143,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     doc.y = 172;
-    renderSection('Business Overview', planData.businessOverview);
-    renderSection('AI Solutions & Automation Plan', planData.automationPlan);
-    renderSection('Future Growth & Enhancements', planData.futureGrowth);
+    renderSection('Snapshot', planData.snapshot);
+    renderSection('Market Edge', planData.marketEdge);
+    renderSection('Digital Growth', planData.digitalGrowth);
+    renderSection('30-Day Action Plan', planData.actionPlan);
+
 
     const range = doc.bufferedPageRange();
     const total = range.count;
     for (let i = range.start; i < range.start + total; i++) {
       doc.switchToPage(i);
-      const fY = H - 38;
-      doc.rect(MARGIN, fY - 8, CW, 0.75).fill(lightLine);
-      doc.fontSize(8).fillColor(gray).font('Times-Roman').text('lykspire.com  |  Confidential AI Strategy Document', MARGIN, fY, { lineBreak: false });
-      doc.fontSize(8).fillColor(purpleL).font('Times-Bold').text(`Page ${i + 1} of ${total}`, 0, fY, { align: 'right', lineBreak: false, width: W - MARGIN });
+      const fY = H - 36;
+      doc.rect(MARGIN, fY - 10, CW, 0.75).fill(lightLine);
+      doc.fontSize(8).fillColor(gray).font('Times-Roman')
+         .text('lykspire.com  |  Confidential', MARGIN, fY, { lineBreak: false, width: CW / 2 });
+      doc.fontSize(8).fillColor(purpleL).font('Times-Bold')
+         .text(`Page ${i + 1} of ${total}`, MARGIN + CW / 2, fY, { lineBreak: false, width: CW / 2, align: 'right' });
+
     }
 
     doc.switchToPage(range.start + total - 1);
