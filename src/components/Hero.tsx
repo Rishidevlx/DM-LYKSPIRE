@@ -15,7 +15,7 @@ const stats = [
   { icon: Settings, val: "70%",  label: "Manual Work Automated" },
   { icon: DollarSign,val:"40%+", label: "Reduction in Costs" },
   { icon: Zap,       val: "3X",  label: "Faster Execution" },
-  { icon: Bot,       val: "24/7",label: "AI Agents Non-Stop" },
+  { icon: Bot,       val: "24/7",label: "Our AI works for your business" },
 ];
 
 // Agent cards — no icons, compact
@@ -65,7 +65,7 @@ export default function Hero() {
 
         {/* ── RIGHT ── */}
         <motion.div initial={{ opacity:0, x:50 }} animate={{ opacity:1, x:0 }} transition={{ duration:1 }} className="flex flex-col gap-3 mt-10 lg:mt-0">
-          <p className="text-center text-[10px] font-black uppercase tracking-[.3em] text-white/30 mb-1">AI Agent Workflow</p>
+          <p className="text-center text-[10px] font-black uppercase tracking-[.3em] text-white/30 mb-1">Deploy your agents that works for your business</p>
 
           {/* 3-panel row — relative so full-width SVG overlay can span everything */}
           <div className="flex gap-3 items-center relative">

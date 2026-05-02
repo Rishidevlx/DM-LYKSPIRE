@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
-import CaseStudies from "./components/CaseStudies";
+import Clients from "./components/Clients";
 import About from "./components/About";
 import Process from "./components/Process";
 import Testimonials from "./components/Testimonials";
@@ -61,7 +61,7 @@ export default function App() {
           <Stats />
           <Services />
           <Results />
-          <CaseStudies />
+          <Clients />
           <About />
           <Process />
           <Testimonials />

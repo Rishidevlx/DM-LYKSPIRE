@@ -47,15 +47,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const doc = new PDFDocument({ margin: 0, size: 'A4', bufferPages: true });
     doc.pipe(res);
 
-    const W        = doc.page.width;
-    const H        = doc.page.height;
-    const MARGIN   = 52;
-    const CW       = W - MARGIN * 2;
-    const purple   = '#7c3aed';
-    const purpleL  = '#a855f7';
-    const dark     = '#1a1a2e';
-    const gray     = '#555566';
-    const lightLine= '#e0e0ee';
+    const W = doc.page.width;
+    const H = doc.page.height;
+    const MARGIN = 52;
+    const CW = W - MARGIN * 2;
+    const purple = '#7c3aed';
+    const purpleL = '#a855f7';
+    const dark = '#1a1a2e';
+    const gray = '#555566';
+    const lightLine = '#e0e0ee';
 
     const cleanText = (text: any): string => {
       if (!text) return '';
@@ -63,15 +63,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (typeof val === 'string') {
           val = val.trim();
           if ((val.startsWith('{') && val.endsWith('}')) || (val.startsWith('[') && val.endsWith(']'))) {
-            try { val = JSON.parse(val); } catch(e) {}
+            try { val = JSON.parse(val); } catch (e) { }
           }
         }
         const pad = '  '.repeat(depth);
         if (Array.isArray(val)) return val.map((x: any) => `${pad}• ${parse(x, 0)}`).join('\n');
         if (typeof val === 'object' && val !== null) {
-          return Object.entries(val).map(([k,v]) => `${pad}• ${k.replace(/_/g,' ').toUpperCase()}:\n${parse(v, depth+1)}`).join('\n\n');
+          return Object.entries(val).map(([k, v]) => `${pad}• ${k.replace(/_/g, ' ').toUpperCase()}:\n${parse(v, depth + 1)}`).join('\n\n');
         }
-        return String(val).replace(/\*\*/g,'').replace(/\*/g,'');
+        return String(val).replace(/\*\*/g, '').replace(/\*/g, '');
       };
       return parse(text).trim();
     };
@@ -86,7 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           doc.image(logoPath, W / 2 - 110, H / 2 - 110, { width: 220 });
           doc.restore();
         }
-      } catch(e) {}
+      } catch (e) { }
       doc.rect(0, 0, 5, H).fill(purple);
       doc.rect(0, 0, W, 72).fill('#f8f6ff');
       doc.rect(0, 72, W, 1.5).fill(purpleL);
@@ -95,16 +95,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     drawPageBackground();
 
     const logoPath2 = path.resolve(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
-    try { if (fs.existsSync(logoPath2)) { doc.opacity(1); doc.image(logoPath2, MARGIN, 14, { width: 40 }); } } catch(e) {}
+    try { if (fs.existsSync(logoPath2)) { doc.opacity(1); doc.image(logoPath2, MARGIN, 14, { width: 40 }); } } catch (e) { }
 
-    doc.fontSize(18).fillColor(dark).font('Times-Bold').text('LyKSpire', MARGIN + 50, 18, { lineBreak: false });
-    doc.fontSize(8).fillColor(purpleL).font('Times-Roman').text('AI-POWERED GROWTH & AUTOMATION', MARGIN + 50, 42, { lineBreak: false });
+    doc.fontSize(18).fillColor(dark).font('Times-Bold').text('ZenThira - It always listens', MARGIN + 50, 18, { lineBreak: false });
+    doc.fontSize(8).fillColor(purpleL).font('Times-Roman').text('Strategy Engine', MARGIN + 50, 42, { lineBreak: false });
 
     const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     doc.fontSize(8).fillColor(gray).font('Times-Roman').text(dateStr, 0, 30, { lineBreak: false, width: W - MARGIN, align: 'right' });
 
     doc.fontSize(26).fillColor(dark).font('Times-Bold').text('AI Business Strategy Report', MARGIN, 90, { width: CW });
-    doc.fontSize(11).fillColor(gray).font('Times-Roman').text('A personalised AI growth & automation plan — prepared exclusively by LyKSpire.', MARGIN, 124, { width: CW });
+    doc.fontSize(11).fillColor(gray).font('Times-Roman').text('An agent always listens to your words.', MARGIN, 124, { width: CW });
     doc.rect(MARGIN, 148, 56, 3).fill(purple);
     doc.rect(MARGIN + 62, 148, 20, 3).fill(purpleL).opacity(0.4);
     doc.opacity(1);
@@ -128,7 +128,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // Title
       doc.fontSize(14).fillColor(col).font('Times-Bold')
-         .text(title, MARGIN, ty, { lineBreak: false });
+        .text(title, MARGIN, ty, { lineBreak: false });
 
       // Underline: fixed offset below title (ty + fontSize + gap)
       const underlineY = ty + 18;
@@ -139,7 +139,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       doc.y = underlineY + 10;
       doc.fontSize(10.5).fillColor(dark).font('Times-Roman')
-         .text(cleaned, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 4.5 });
+        .text(cleaned, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 4.5 });
     };
 
     doc.y = 172;
@@ -156,9 +156,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const fY = H - 36;
       doc.rect(MARGIN, fY - 10, CW, 0.75).fill(lightLine);
       doc.fontSize(8).fillColor(gray).font('Times-Roman')
-         .text('lykspire.com  |  Confidential', MARGIN, fY, { lineBreak: false, width: CW / 2 });
+        .text('lykspire.com  |  Confidential', MARGIN, fY, { lineBreak: false, width: CW / 2 });
       doc.fontSize(8).fillColor(purpleL).font('Times-Bold')
-         .text(`Page ${i + 1} of ${total}`, MARGIN + CW / 2, fY, { lineBreak: false, width: CW / 2, align: 'right' });
+        .text(`Page ${i + 1} of ${total}`, MARGIN + CW / 2, fY, { lineBreak: false, width: CW / 2, align: 'right' });
 
     }
 

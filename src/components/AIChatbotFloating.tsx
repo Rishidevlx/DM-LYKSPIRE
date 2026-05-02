@@ -1,6 +1,6 @@
 import { useState, FormEvent, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Bot, X, Sparkles, Download, ChevronRight, ChevronLeft, Mail, Phone, User, AlertCircle, TrendingUp } from "lucide-react";
+import { Bot, X, Sparkles, Download, ChevronRight, ChevronLeft, Mail, Phone, User, AlertCircle, TrendingUp, Check } from "lucide-react";
 
 import botIcon from "../assest/download.jpeg";
 
@@ -13,6 +13,8 @@ export default function AIChatbotFloating() {
   const [formData, setFormData] = useState({
     business_type: "",
     industry: "",
+    years_in_business: "",
+    language: "English",
     main_activities: "",
     challenges: "",
     tools: "",
@@ -29,6 +31,42 @@ export default function AIChatbotFloating() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generatedPlan, setGeneratedPlan] = useState<any>(null);
+  const [tempPlan, setTempPlan] = useState<any>(null);
+
+  // Loading Stages Logic
+  const [loadingStage, setLoadingStage] = useState(0);
+  const loadingStages = [
+    "Analyzing Business Data",
+    "Identifying Growth Opportunities",
+    "Finalizing Your Strategy"
+  ];
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (step === "loading") {
+      setLoadingStage(0);
+      interval = setInterval(() => {
+        setLoadingStage((prev) => {
+          if (prev < loadingStages.length - 1) return prev + 1;
+          clearInterval(interval);
+          return prev;
+        });
+      }, 2000); // 2s per stage = 10s total analysis
+    }
+    return () => clearInterval(interval);
+  }, [step]);
+
+  // Handle automatic transition from loading to result
+  useEffect(() => {
+    if (step === "loading" && loadingStage === loadingStages.length - 1 && tempPlan) {
+      const timer = setTimeout(() => {
+        setGeneratedPlan(tempPlan);
+        setStep("result");
+        setTempPlan(null);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [loadingStage, step, tempPlan]);
 
   // Chatbot Tooltip Feature
   const [tooltipMessage, setTooltipMessage] = useState("");
@@ -101,6 +139,8 @@ export default function AIChatbotFloating() {
     const newErrors: Record<string, string> = {};
     if (formStep === 1) {
       if (!formData.business_type.trim()) newErrors.business_type = "Required";
+      if (!formData.years_in_business.trim()) newErrors.years_in_business = "Required";
+      if (!formData.language.trim()) newErrors.language = "Required";
     }
     if (formStep === 2) {
       if (!formData.main_activities.trim()) newErrors.main_activities = "Required";
@@ -148,16 +188,15 @@ export default function AIChatbotFloating() {
       const data = await response.json();
       try {
         const parsedPlan = JSON.parse(data.plan);
-        setGeneratedPlan(parsedPlan);
+        setTempPlan(parsedPlan); // Store it but don't show yet
       } catch (err) {
-        // Fallback if not pure JSON
-        setGeneratedPlan({
-          businessOverview: data.plan,
-          automationPlan: "Failed to parse structured format. All data is in the Business Overview section above.",
-          futureGrowth: "Failed to parse structured format. All data is in the Business Overview section above."
+        setTempPlan({
+          snapshot: data.plan,
+          marketEdge: "Analyzed manually by ZenThira Engine.",
+          digitalGrowth: "Strategies embedded in the snapshot above.",
+          actionPlan: "Immediate implementation recommended."
         });
       }
-      setStep("result");
     } catch (error) {
       console.error(error);
       alert("Failed to connect to ZenThira. Check your network or Vercel logs.");
@@ -185,7 +224,11 @@ export default function AIChatbotFloating() {
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planData: generatedPlan, userDetails: leadDetails })
+        body: JSON.stringify({ 
+          planData: generatedPlan, 
+          userDetails: leadDetails,
+          language: formData.language // Added language here
+        })
       });
 
       if (!response.ok) {
@@ -214,8 +257,8 @@ export default function AIChatbotFloating() {
     setStep("form");
     setFormStep(1);
     setFormData({
-      business_type: "", industry: "", main_activities: "",
-      challenges: "", tools: "", team_size: "", goals: ""
+      business_type: "", industry: "", years_in_business: "", language: "English",
+      main_activities: "", challenges: "", tools: "", team_size: "", goals: ""
     });
     setGeneratedPlan(null);
   };
@@ -353,17 +396,42 @@ export default function AIChatbotFloating() {
                   <div className="flex-1">
                     {formStep === 1 && (
                       <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-4">
-                        <div className="space-y-1">
-                          <label className="text-xs text-white/60 uppercase tracking-wider font-bold">Business Type <span className="text-red-500">*</span></label>
-                          <input 
-                            type="text" 
-                            value={formData.business_type}
-                            onChange={(e) => setFormData({...formData, business_type: e.target.value})}
-                            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
-                            placeholder="e.g. Retail, Agency, SaaS"
-                          />
-                          {errors.business_type && <p className="text-red-500 text-[10px]">{errors.business_type}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-xs text-white/60 uppercase tracking-wider font-bold">Business Type <span className="text-red-500">*</span></label>
+                            <input 
+                              type="text" 
+                              value={formData.business_type}
+                              onChange={(e) => setFormData({...formData, business_type: e.target.value})}
+                              className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
+                              placeholder="e.g. Retail, Agency, SaaS"
+                            />
+                            {errors.business_type && <p className="text-red-500 text-[10px]">{errors.business_type}</p>}
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs text-white/60 uppercase tracking-wider font-bold">Years in Business <span className="text-red-500">*</span></label>
+                            <input 
+                              type="number" 
+                              value={formData.years_in_business}
+                              onChange={(e) => setFormData({...formData, years_in_business: e.target.value})}
+                              className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
+                              placeholder="e.g. 5"
+                            />
+                            {errors.years_in_business && <p className="text-red-500 text-[10px]">{errors.years_in_business}</p>}
+                          </div>
                         </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs text-white/60 uppercase tracking-wider font-bold">Select Language <span className="text-red-500">*</span></label>
+                          <SearchableSelect 
+                            value={formData.language}
+                            onChange={(val) => setFormData({...formData, language: val})}
+                            options={languages}
+                            placeholder="Select Language"
+                          />
+                          {errors.language && <p className="text-red-500 text-[10px]">{errors.language}</p>}
+                        </div>
+
                         <div className="space-y-1">
                           <label className="text-xs text-white/60 uppercase tracking-wider font-bold">Industry (Optional)</label>
                           <input 
@@ -489,17 +557,72 @@ export default function AIChatbotFloating() {
               {step === "loading" && (
                 <motion.div 
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} 
-                  className="h-full flex flex-col items-center justify-center text-center space-y-6 min-h-[300px]"
+                  className="h-full flex flex-col items-center justify-start text-center space-y-10 min-h-[500px] relative overflow-hidden pt-24"
                 >
-                  <div className="relative">
-                    <div className="w-20 h-20 rounded-full border-2 border-white/10 border-t-cyber-teal animate-spin" />
-                    <img src={botIcon} alt="ZenThira" className="w-10 h-10 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  <div className="relative z-10">
+                    <motion.div 
+                      animate={{ 
+                        scale: [1, 1.1, 1],
+                        boxShadow: ["0 0 20px rgba(168,85,247,0.2)", "0 0 40px rgba(168,85,247,0.5)", "0 0 20px rgba(168,85,247,0.2)"]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="w-28 h-28 rounded-full border-4 border-white/5 border-t-cyber-teal flex items-center justify-center bg-[#111]" 
+                    >
+                      <motion.div
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-2 border-2 border-dashed border-white/10 rounded-full"
+                      />
+                      <img src={botIcon} alt="ZenThira" className="w-16 h-16 rounded-full border-2 border-cyber-teal/30 shadow-2xl" />
+                    </motion.div>
                   </div>
-                  <div>
-                    <h4 className="text-white font-bold text-lg mb-2">Analyzing your business...</h4>
-                    <p className="text-white/50 text-sm max-w-[280px] mx-auto">
-                      ZenThira is crafting a tailored automation and growth plan based on your inputs.
-                    </p>
+                  
+                  <div className="space-y-6 w-full max-w-sm relative z-10">
+                    <div className="space-y-1">
+                      <h4 className="text-white font-black text-2xl tracking-tighter uppercase italic">ZenThira <span className="text-cyber-teal">Engine</span></h4>
+                    </div>
+ 
+                    <div className="space-y-2.5">
+                      {loadingStages.map((stage, index) => (
+                        <motion.div 
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ 
+                            opacity: loadingStage >= index ? 1 : 0.15,
+                            x: loadingStage >= index ? 0 : -20,
+                            scale: loadingStage === index ? 1.02 : 1,
+                            backgroundColor: loadingStage === index ? "rgba(34,211,238,0.05)" : "transparent"
+                          }}
+                          className={`flex items-center gap-3 border ${loadingStage === index ? 'border-cyber-teal/30' : 'border-white/5'} rounded-xl px-5 py-3.5 transition-all duration-500`}
+                        >
+                          <div className={`w-2.5 h-2.5 rounded-full ${
+                            loadingStage > index ? 'bg-green-500' : 
+                            loadingStage === index ? 'bg-cyber-teal animate-ping' : 'bg-white/10'
+                          }`} />
+                          <span className={`text-xs font-bold tracking-wide transition-colors duration-500 ${
+                            loadingStage === index ? 'text-cyber-teal' : loadingStage > index ? 'text-white/80' : 'text-white/30'
+                          }`}>
+                            {stage}
+                          </span>
+                          {loadingStage > index && (
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="ml-auto">
+                              <Check className="w-4 h-4 text-green-500" />
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
+ 
+                    <div className="pt-2 px-2">
+                      <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden border border-white/10">
+                        <motion.div 
+                          className="h-full bg-gradient-to-r from-purple-600 via-cyber-teal to-purple-600"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${((loadingStage + 1) / loadingStages.length) * 100}%` }}
+                          transition={{ duration: 1 }}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -672,3 +795,84 @@ export default function AIChatbotFloating() {
     </>
   );
 }
+
+// --- Searchable Select Component ---
+const SearchableSelect = ({ value, onChange, options, placeholder }: { 
+  value: string, 
+  onChange: (val: string) => void, 
+  options: {label: string}[],
+  placeholder: string 
+}) => {
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredOptions = options.filter(opt => 
+    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setIsSelectOpen(!isSelectOpen)}
+        className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white flex items-center justify-between focus:border-cyber-teal outline-none transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <Bot className="w-4 h-4 text-cyber-teal/50" />
+          <span className="font-medium">{value || placeholder}</span>
+        </div>
+        <ChevronRight className={`w-4 h-4 text-white/30 transition-transform ${isSelectOpen ? 'rotate-90' : ''}`} />
+      </button>
+
+      <AnimatePresence>
+        {isSelectOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute z-[110] w-full mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+          >
+            <div className="p-3 border-b border-white/5 bg-[#111]">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search language..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyber-teal/50 transition-all"
+                />
+                <Bot className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+              </div>
+            </div>
+            <div className="max-h-64 overflow-y-auto custom-scrollbar py-1">
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map((opt) => (
+                  <button
+                    key={opt.label}
+                    type="button"
+                    onClick={() => {
+                      onChange(opt.label);
+                      setIsSelectOpen(false);
+                      setSearchTerm("");
+                    }}
+                    className={`w-full flex items-center justify-between px-4 py-3 text-sm hover:bg-white/5 transition-all ${value === opt.label ? 'text-cyber-teal bg-cyber-teal/5 font-bold' : 'text-white/60'}`}
+                  >
+                    <span>{opt.label}</span>
+                    {value === opt.label && <Sparkles className="w-3.5 h-3.5" />}
+                  </button>
+                ))
+              ) : (
+                <div className="px-4 py-10 text-center text-white/30 text-xs italic">No languages found</div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const languages = [
+  { label: "English" },
+  { label: "Tamil" }
+];

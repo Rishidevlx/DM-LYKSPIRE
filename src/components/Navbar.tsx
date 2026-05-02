@@ -39,7 +39,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-10 text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">
           <button onClick={() => scrollToSection('hero')} className="hover:text-white transition-colors cursor-pointer">Home</button>
           <button onClick={() => scrollToSection('services')} className="hover:text-white transition-colors cursor-pointer">Services</button>
-          <button onClick={() => scrollToSection('case-studies')} className="hover:text-white transition-colors cursor-pointer">Case Studies</button>
+          <button onClick={() => scrollToSection('clients')} className="hover:text-white transition-colors cursor-pointer">Our Clients</button>
           <button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors cursor-pointer">About</button>
         </div>
 
@@ -73,7 +73,7 @@ export default function Navbar() {
             <div className="flex flex-col items-stretch gap-2 py-10 text-sm font-black text-white/50 uppercase tracking-[0.2em]">
               <button onClick={() => scrollToSection('hero')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">Home</button>
               <button onClick={() => scrollToSection('services')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">Services</button>
-              <button onClick={() => scrollToSection('case-studies')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">Case Studies</button>
+              <button onClick={() => scrollToSection('clients')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">Our Clients</button>
               <button onClick={() => scrollToSection('about')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">About</button>
               <button 
                 onClick={() => {

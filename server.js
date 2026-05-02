@@ -59,7 +59,7 @@ initDB();
 // API 1: Generate Plan using Gemini
 app.post('/api/generate-plan', async (req, res) => {
   try {
-    const { business_type, industry, main_activities, challenges, tools, team_size, goals } = req.body;
+    const { business_type, industry, years_in_business, language, main_activities, challenges, tools, team_size, goals } = req.body;
 
     if (!business_type || !main_activities || !challenges || !goals) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -71,55 +71,50 @@ app.post('/api/generate-plan', async (req, res) => {
     }
 
     const prompt = `You are an Expert AI Business Consultant. Analyze this business and generate a detailed, actionable growth plan.
-
+ 
 Business Details:
 - Business Type: ${business_type}
 - Industry: ${industry || 'general'}
+- Years in Business: ${years_in_business || 'not specified'}
+- Preferred Language: ${language || 'English'}
 - Daily Activities: ${main_activities}
 - Tools Used: ${tools || 'none specified'}
 - Team Size: ${team_size}
 - Challenges: ${challenges}
 - Goals: ${goals}
-
+ 
+STRICT REQUIREMENT: Generate the ENTIRE report in ${language || 'English'}. 
+If the language is NOT English (e.g. Tamil), then:
+1. You MUST NOT use any English words at all.
+2. Translate everything including technical terms, platform names, and labels like "Week 1", "Week 2", "Trend Alert", "Snapshot", etc. into ${language}.
+3. A single English word in the output will be considered a failure.
+ 
 Generate a professional 4-section business growth plan. Respond ONLY with a valid JSON object with exactly these 4 keys.
 All values MUST be detailed, plain readable strings. NO nested objects or arrays.
-
-- "snapshot": Write 4-5 rich sentences covering: current business stage, team dynamics, main activities, biggest challenge, and what's at stake for their goals. Be specific and insightful.
-
-- "marketEdge": Write 5-6 sentences covering at least 3 opportunities. Include:
-  * Trend Alert: A specific current market trend in their industry they can ride.
-  * Winning Gap: A specific competitor blind spot they can exploit.
-  * Quick Win: One immediate move they can make this week for visible impact.
-  Be specific with platform names, tool names, or industry data where relevant.
-
-- "digitalGrowth": Write 5-6 sentences covering:
-  * Primary Platform: Best digital platform for their business type and why.
-  * Content Strategy: Specific content mix (e.g. 40% educational, 30% promotional, 30% behind-the-scenes).
-  * Local SEO: Specific Google My Business and local keyword tactics.
-  * Engagement: One specific community-building or retargeting tactic.
-  Be highly specific to their industry and business type.
-
-- "actionPlan": Write a detailed 4-week plan as bullet points. Use this EXACT format with line breaks between each week:
-  Week 1 (Branding): [2-3 specific branding actions]
-  • Action 1
-  • Action 2
-  • Action 3
-
-  Week 2 (Launch): [2-3 specific launch actions]
-  • Action 1
-  • Action 2
-  • Action 3
-
-  Week 3 (Audit): [2-3 specific audit/analysis actions]
-  • Action 1
-  • Action 2
-  • Action 3
-
-  Week 4 (Scale): [2-3 specific scaling/automation actions]
-  • Action 1
-  • Action 2
-  • Action 3
-
+ 
+- "snapshot": Write 4-5 key points (each on a new line) covering: current business stage, team dynamics, main activities, biggest challenge, and what's at stake.
+ 
+- "marketEdge": Write 5-6 key points (each on a new line) including a "Trend Alert", "Winning Gap", and "Quick Win". (Translate these labels to ${language}).
+ 
+- "digitalGrowth": Write 5-6 key points (each on a new line) covering Primary Platform, Content Strategy, Local SEO, and Engagement tactics.
+ 
+- "actionPlan": Write a detailed 4-week plan. Use this EXACT format (translate "Week" and "Branding/Launch/Audit/Scale" to ${language}, for Tamil use "வாரம்"). Each week must be a header, followed by individual bullet points on new lines:
+  Week 1 (Branding):
+  • Action Point 1
+  • Action Point 2
+ 
+  Week 2 (Launch):
+  • Action Point 1
+  • Action Point 2
+ 
+  Week 3 (Audit):
+  • Action Point 1
+  • Action Point 2
+ 
+  Week 4 (Scale):
+  • Action Point 1
+  • Action Point 2
+ 
 Return raw JSON only. No markdown, no code blocks, no extra commentary.`;
 
     const url = `https://api.groq.com/openai/v1/chat/completions`;
@@ -160,20 +155,19 @@ Return raw JSON only. No markdown, no code blocks, no extra commentary.`;
 // API 2: Generate PDF
 app.post('/api/generate-pdf', async (req, res) => {
   try {
-    const { planData, userDetails } = req.body;
+    const { planData, userDetails, language } = req.body;
 
     if (!planData || !userDetails) {
       return res.status(400).json({ message: 'Missing plan data or user details' });
     }
 
-    // ══ Save lead to TiDB (awaited) ══
+    // ══ Save lead to TiDB ══
     const saveLead = async () => {
       try {
         await db.execute(
           'INSERT INTO pdf_downloads (email, phone) VALUES (?, ?)',
           [userDetails.email || '', userDetails.phone || '']
         );
-        console.log('Lead saved:', userDetails.email);
       } catch (e) {
         console.error('Lead save error:', e.message);
       }
@@ -186,8 +180,8 @@ app.post('/api/generate-pdf', async (req, res) => {
     const doc = new PDFDocument({ margin: 0, size: 'A4', bufferPages: true });
     doc.pipe(res);
 
-    const W        = doc.page.width;   // 595
-    const H        = doc.page.height;  // 842
+    const W        = doc.page.width;
+    const H        = doc.page.height;
     const MARGIN   = 52;
     const CW       = W - MARGIN * 2;
     const purple   = '#7c3aed';
@@ -196,58 +190,79 @@ app.post('/api/generate-pdf', async (req, res) => {
     const gray     = '#555566';
     const lightLine= '#e0e0ee';
 
-    // ── cleanText helper ──
+    // ══ Font Management ══
+    const fontDir = path.join(process.cwd(), 'src', 'fonts');
+    const tamilRegular = path.join(fontDir, 'NotoSansTamil-Regular.ttf');
+    const tamilBold = path.join(fontDir, 'NotoSansTamil-Bold.ttf');
+
+    // Headers and Static UI always use standard English fonts
+    const uiRegular = 'Times-Roman';
+    const uiBold = 'Times-Bold';
+
+    // Content font depends on language
+    let contentRegular = 'Times-Roman';
+    let contentBold = 'Times-Bold';
+
+    if (language === 'Tamil' && fs.existsSync(tamilRegular)) {
+      contentRegular = tamilRegular;
+      contentBold = fs.existsSync(tamilBold) ? tamilBold : tamilRegular;
+    }
+
     const cleanText = (text) => {
       if (!text) return '';
-      const parse = (val, depth = 0) => {
-        if (typeof val === 'string') {
-          val = val.trim();
-          if ((val.startsWith('{') && val.endsWith('}')) || (val.startsWith('[') && val.endsWith(']'))) {
-            try { val = JSON.parse(val); } catch(e) {}
-          }
+      let val = text;
+      if (typeof val === 'string') {
+        val = val.trim();
+        if ((val.startsWith('{') && val.endsWith('}')) || (val.startsWith('[') && val.endsWith(']'))) {
+          try { val = JSON.parse(val); } catch(e) {}
         }
-        const pad = '  '.repeat(depth);
-        if (Array.isArray(val)) return val.map(x => `${pad}• ${parse(x, 0)}`).join('\n');
-        if (typeof val === 'object' && val !== null) {
-          return Object.entries(val).map(([k,v]) => `${pad}• ${k.replace(/_/g,' ').toUpperCase()}:\n${parse(v, depth+1)}`).join('\n\n');
+      }
+
+      const lines = [];
+      const process = (v) => {
+        if (Array.isArray(v)) v.forEach(process);
+        else if (typeof v === 'object' && v !== null) {
+          Object.entries(v).forEach(([k, item]) => {
+            lines.push(`${k.replace(/_/g,' ').toUpperCase()}:`);
+            process(item);
+          });
+        } else {
+          // Split by newline or by period followed by space (sentences)
+          const raw = String(v).replace(/\*\*/g,'').replace(/\*/g,'').trim();
+          const parts = raw.split(/\n|(?<=[.!?])\s+(?=[A-Z\u0B80-\u0BFF])/); 
+          parts.forEach(p => {
+            const clean = p.trim();
+            if (clean) lines.push(clean);
+          });
         }
-        return String(val).replace(/\*\*/g,'').replace(/\*/g,'');
       };
-      return parse(text).trim();
+      process(val);
+
+      return lines.map(line => {
+        if (line.endsWith(':') || line.startsWith('•')) return line;
+        return `• ${line}`;
+      }).join('\n');
     };
 
-    // ══════════════════════════════
-    //  HELPER: draw background on current page
-    // ══════════════════════════════
     const drawPageBackground = () => {
-      // White background
       doc.rect(0, 0, W, H).fill('#ffffff');
-
-      // Watermark logo — large, centered, very faint
       const logoPath = path.join(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
       try {
         if (fs.existsSync(logoPath)) {
-          doc.save(); // Save state
+          doc.save();
           doc.opacity(0.04);
           doc.image(logoPath, W / 2 - 110, H / 2 - 110, { width: 220 });
-          doc.restore(); // Restore state to ensure opacity doesn't leak
+          doc.restore();
         }
       } catch(e) {}
-
-      // Left purple accent stripe
       doc.rect(0, 0, 5, H).fill(purple);
-
-      // Top header bar
       doc.rect(0, 0, W, 72).fill('#f8f6ff');
       doc.rect(0, 72, W, 1.5).fill(purpleL);
     };
 
-    // ══════════════════════════════
-    //  PAGE 1 — HEADER
-    // ══════════════════════════════
     drawPageBackground();
 
-    // Logo in header
+    // Header Content
     const logoPath2 = path.resolve(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
     try {
       if (fs.existsSync(logoPath2)) {
@@ -256,99 +271,93 @@ app.post('/api/generate-pdf', async (req, res) => {
       }
     } catch(e) {}
 
-    // Brand name
-    doc.fontSize(18).fillColor(dark).font('Times-Bold')
+    doc.fontSize(18).fillColor(dark).font(uiBold)
        .text('LyKSpire', MARGIN + 50, 18, { lineBreak: false });
-    doc.fontSize(8).fillColor(purpleL).font('Times-Roman')
+    doc.fontSize(8).fillColor(purpleL).font(uiRegular)
        .text('AI-POWERED GROWTH & AUTOMATION', MARGIN + 50, 42, { lineBreak: false });
 
-    // Date — top right
     const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    doc.fontSize(8).fillColor(gray).font('Times-Roman')
+    doc.fontSize(8).fillColor(gray).font(uiRegular)
        .text(dateStr, 0, 30, { lineBreak: false, width: W - MARGIN, align: 'right' });
 
-    // Report title block
-    doc.fontSize(26).fillColor(dark).font('Times-Bold')
+    doc.fontSize(26).fillColor(dark).font(uiBold)
        .text('AI Business Strategy Report', MARGIN, 90, { width: CW });
 
-    doc.fontSize(11).fillColor(gray).font('Times-Roman')
-       .text('A personalised AI growth & automation plan — prepared exclusively by LyKSpire.', MARGIN, 124, { width: CW });
+    doc.fontSize(11).fillColor(gray).font(uiRegular)
+       .text('A personalised AI growth & automation plan — prepared exclusively by LyKSpire.', MARGIN, 130, { width: CW });
 
-    // Purple underline accent
-    doc.rect(MARGIN, 148, 56, 3).fill(purple);
-    doc.rect(MARGIN + 62, 148, 20, 3).fill(purpleL).opacity(0.4);
+    doc.rect(MARGIN, 154, 56, 3).fill(purple);
+    doc.rect(MARGIN + 62, 154, 20, 3).fill(purpleL).opacity(0.4);
     doc.opacity(1);
+    doc.rect(MARGIN, 168, CW, 0.75).fill(lightLine);
 
-    // Thin divider
-    doc.rect(MARGIN, 162, CW, 0.75).fill(lightLine);
-
-    // ══════════════════════════════
-    //  SECTION RENDERER
-    // ══════════════════════════════
     const sectionColors = [purple, purpleL, '#059669', '#f59e0b'];
-
     let sIdx = 0;
 
     const renderSection = (title, content) => {
       const cleaned = cleanText(content);
       if (!cleaned) return;
-      const col = sectionColors[sIdx % 3];
+      const col = sectionColors[sIdx % sectionColors.length];
       sIdx++;
-      if (doc.y > H - 195) {  // Even higher threshold to absolutely prevent footer overlap
+      
+      // Conservative check for page breaks
+      if (doc.y > H - 180) {
         doc.addPage();
         drawPageBackground();
-        doc.y = 90;
+        doc.y = 110;
       }
-      doc.moveDown(1.4);
+      
+      doc.moveDown(1.5);
       const ty = doc.y;
 
-      // Title
-      doc.fontSize(14).fillColor(col).font('Times-Bold')
+      doc.fontSize(14).fillColor(col).font(uiBold)
          .text(title, MARGIN, ty, { lineBreak: false });
 
-      // Underline: drawn BELOW title using fixed offset (ty + fontSize + gap)
-      const underlineY = ty + 18;   // 14pt + 4px gap
-      const titleW = doc.widthOfString(title); // fontSize already set to 14 above
-      doc.rect(MARGIN, underlineY, titleW, 1.5).fill(col).opacity(0.5);
+      const titleW = doc.widthOfString(title);
+      doc.rect(MARGIN, ty + 18, titleW, 1.5).fill(col).opacity(0.5);
       doc.opacity(1);
 
-      // Body text starts below the underline
-      doc.y = underlineY + 10;
-      doc.fontSize(10.5).fillColor(dark).font('Times-Roman')
-         .text(cleaned, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 4.5 });
+      doc.y = ty + 28;
+      
+      // Render line by line to ensure bullets look good and avoid overlap
+      const lines = cleaned.split('\n');
+      lines.forEach(line => {
+        if (doc.y > H - 80) { // Near footer
+          doc.addPage();
+          drawPageBackground();
+          doc.y = 110;
+        }
+        const isHeader = line.endsWith(':');
+        doc.fontSize(isHeader ? 11 : 10.5)
+           .fillColor(isHeader ? dark : '#333333')
+           .font(isHeader ? contentBold : contentRegular)
+           .text(line, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 3 });
+      });
     };
 
-    // Render all sections — new 4-section template
     doc.y = 172;
     renderSection('Snapshot', planData.snapshot);
     renderSection('Market Edge', planData.marketEdge);
     renderSection('Digital Growth', planData.digitalGrowth);
     renderSection('30-Day Action Plan', planData.actionPlan);
 
-    // ══════════════════════════════
-    //  FOOTER ON ALL PAGES
-    // ══════════════════════════════
     const range = doc.bufferedPageRange();
     const total = range.count;
     for (let i = range.start; i < range.start + total; i++) {
       doc.switchToPage(i);
       const fY = H - 36;
-      // Footer divider line
       doc.rect(MARGIN, fY - 10, CW, 0.75).fill(lightLine);
-      // Left text — explicit coords, no lineBreak
-      doc.fontSize(8).fillColor(gray).font('Times-Roman')
+      doc.fontSize(8).fillColor(gray).font(uiRegular)
          .text('lykspire.com  |  Confidential', MARGIN, fY, { lineBreak: false, width: CW / 2 });
-      // Right text — page number, explicit coords
-      doc.fontSize(8).fillColor(purpleL).font('Times-Bold')
+      doc.fontSize(8).fillColor(purpleL).font(uiBold)
          .text(`Page ${i + 1} of ${total}`, MARGIN + CW / 2, fY, { lineBreak: false, width: CW / 2, align: 'right' });
     }
 
-    doc.switchToPage(range.start + total - 1);
-    doc.y = 100;
     doc.end();
 
   } catch(err) {
     console.error('PDF route error:', err);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
