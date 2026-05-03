@@ -1,11 +1,70 @@
 import { motion } from "motion/react";
+import franchLogo from "../assest/Franchisepreneur logo.png";
+import lankaLogo from "../assest/Lanka greenovation logo.jpg";
+import mindaptLogo from "../assest/Mindapt logo.png";
+import argitLogo from "../assest/Argit logo.jpeg";
 
-const clientLogos = [
-  "SaaSkart", "DocuChain", "Growthly", "Taskly", "DataPilot", "Finova", "Shoplio",
-  "CloudScale", "DevSync", "MarketFlow", "BizEdge", "NextGen", "SmartOps", "AutoLead"
+const clients = [
+  {
+    name: "Franchisepreneur",
+    logo: franchLogo,
+    line: "",
+    link: "https://franchisepreneurglobal.com/"
+  },
+  {
+    name: "Lanka Greenovation",
+    logo: lankaLogo,
+    line: "Hosting partner",
+    link: "https://lankagreenovation.com/"
+  },
+  {
+    name: "FLOWTERNITY",
+    logo: null,
+    line: "Automation provider",
+    link: "https://www.flowternity.com/"
+  },
+  {
+    name: "Mindapt",
+    logo: mindaptLogo,
+    line: "We partnered with Ai solution",
+    link: "https://mindapt.in/"
+  },
+  {
+    name: "Argit",
+    logo: argitLogo,
+    line: "Argit solution",
+    link: "https://www.argitsolutions.in/"
+  }
 ];
 
 export default function Clients() {
+  const ClientCard = ({ client, isMobile = false }: { client: any; isMobile?: boolean }) => (
+    <a
+      href={client.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-cyber-teal/30 hover:bg-white/[0.05] transition-all duration-500 group/item ${isMobile ? 'w-full' : 'shrink-0'}`}
+    >
+      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-cyber-teal/20 flex items-center justify-center border border-white/10 group-hover/item:scale-110 transition-transform overflow-hidden shrink-0">
+        {client.logo ? (
+          <img src={client.logo} alt={client.name} className="w-full h-full object-cover" />
+        ) : (
+          <span className="text-cyber-teal font-black text-xl italic">{client.name[0]}</span>
+        )}
+      </div>
+      <div className="flex flex-col min-w-0">
+        <span className="text-lg md:text-xl font-display font-black tracking-tighter uppercase text-white/40 group-hover/item:text-white transition-colors truncate">
+          {client.name}
+        </span>
+        {client.line && (
+          <span className="text-[10px] font-bold uppercase tracking-widest text-cyber-teal/60 truncate">
+            {client.line}
+          </span>
+        )}
+      </div>
+    </a>
+  );
+
   return (
     <section id="clients" className="py-24 bg-obsidian overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 mb-12">
@@ -20,31 +79,29 @@ export default function Clients() {
         </div>
       </div>
 
-      <div className="relative flex overflow-hidden group">
+      {/* Mobile View: 2 Column Grid */}
+      <div className="md:hidden px-6 grid grid-cols-2 gap-4">
+        {clients.map((client, i) => (
+          <ClientCard key={i} client={client} isMobile />
+        ))}
+      </div>
+
+      {/* Desktop View: Scrolling Marquee */}
+      <div className="hidden md:flex relative overflow-hidden group">
         <motion.div
-          className="flex whitespace-nowrap gap-12 py-10"
+          className="flex whitespace-nowrap gap-8 py-10"
           animate={{
             x: ["0%", "-50%"],
           }}
           transition={{
             ease: "linear",
-            duration: 30,
+            duration: 25,
             repeat: Infinity,
           }}
         >
-          {/* Double the array for seamless looping */}
-          {[...clientLogos, ...clientLogos].map((client, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-cyber-teal/30 hover:bg-white/[0.05] transition-all duration-500 group/item"
-            >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-cyber-teal/20 flex items-center justify-center border border-white/10 group-hover/item:scale-110 transition-transform">
-                <span className="text-cyber-teal font-black text-xl italic">{client[0]}</span>
-              </div>
-              <span className="text-2xl font-display font-black tracking-tighter uppercase text-white/40 group-hover/item:text-white transition-colors">
-                {client}
-              </span>
-            </div>
+          {/* Quadruple for very long desktop screens and smooth loop */}
+          {[...clients, ...clients, ...clients, ...clients].map((client, i) => (
+            <ClientCard key={i} client={client} />
           ))}
         </motion.div>
 
