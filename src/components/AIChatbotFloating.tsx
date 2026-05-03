@@ -28,6 +28,23 @@ export default function AIChatbotFloating() {
   });
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [planCount, setPlanCount] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('zenthira_plan_count');
+      return saved ? parseInt(saved) : 4000;
+    }
+    return 4000;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('zenthira_plan_count', planCount.toString());
+  }, [planCount]);
+
+  useEffect(() => {
+    if (step === "result") {
+      setPlanCount(prev => prev + 200);
+    }
+  }, [step]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generatedPlan, setGeneratedPlan] = useState<any>(null);
@@ -76,7 +93,7 @@ export default function AIChatbotFloating() {
     // Show first message after 10 seconds
     const timer1 = setTimeout(() => {
       if (!isOpen) {
-        setTooltipMessage("Hey! Want a free AI Growth Plan for your business? Click me! 🚀");
+        setTooltipMessage(`Join ${planCount.toLocaleString()}+ businesses that already generated their AI Growth Plan! 🚀`);
         setShowTooltip(true);
       }
     }, 10000);
@@ -359,12 +376,28 @@ export default function AIChatbotFloating() {
                   </p>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-4">
+                <div className="hidden sm:flex items-center gap-2 bg-cyber-teal/5 px-3 py-1.5 rounded-full border border-cyber-teal/20">
+                  <TrendingUp className="w-3.5 h-3.5 text-cyber-teal" />
+                  <span className="text-[11px] text-white/70 font-bold uppercase tracking-wider">
+                    <motion.span
+                      key={planCount}
+                      initial={{ scale: 1.5, color: "#22d3ee" }}
+                      animate={{ scale: 1, color: "rgba(255,255,255,0.7)" }}
+                      className="inline-block mr-1"
+                    >
+                      {planCount.toLocaleString()}+
+                    </motion.span>
+                    Plans Generated
+                  </span>
+                </div>
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Content Area */}
@@ -372,7 +405,7 @@ export default function AIChatbotFloating() {
               
               {/* Step 1: Form Steps */}
               {step === "form" && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 h-full flex flex-col">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                   {/* Progress Bar */}
                   <div>
                     <div className="flex justify-between text-xs text-white/60 mb-2 font-bold uppercase tracking-widest">
@@ -521,35 +554,6 @@ export default function AIChatbotFloating() {
                       </motion.div>
                     )}
                   </div>
-
-                  <div className="flex items-center gap-3 pt-4">
-                    {formStep > 1 && (
-                      <button 
-                        onClick={prevStep}
-                        className="w-12 h-12 shrink-0 bg-[#111] border border-white/10 text-white rounded-xl flex items-center justify-center hover:bg-white/5 transition-colors"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                    )}
-                    
-                    {formStep < totalSteps ? (
-                      <button 
-                        onClick={nextStep}
-                        className="flex-1 py-3.5 bg-white text-obsidian rounded-xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
-                      >
-                        Next Step
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    ) : (
-                      <button 
-                        onClick={() => handleSubmit()}
-                        className="flex-1 py-3.5 bg-cyber-teal text-obsidian rounded-xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_15px_rgba(168,85,247,0.3)]"
-                      >
-                        <Sparkles className="w-4 h-4" />
-                        Generate AI Strategy
-                      </button>
-                    )}
-                  </div>
                 </motion.div>
               )}
 
@@ -688,6 +692,72 @@ export default function AIChatbotFloating() {
                 </motion.div>
               )}
             </div>
+
+            {/* Fixed Footer for Form Step */}
+            {step === "form" && (
+              <div className="p-4 md:p-6 border-t border-white/10 bg-[#0a0a0a] flex flex-col gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+                {/* Social Proof Counter */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-col items-center gap-3"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex -space-x-3">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="w-7 h-7 rounded-full border-2 border-[#111] bg-[#222] flex items-center justify-center overflow-hidden shadow-xl">
+                          <img 
+                            src={`https://i.pravatar.cc/100?u=${i + 10}`} 
+                            alt="User" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <motion.span
+                        key={planCount}
+                        initial={{ scale: 1.2, color: "#22d3ee" }}
+                        animate={{ scale: 1, color: "#fff" }}
+                        className="text-lg font-black tracking-tighter"
+                      >
+                        {planCount.toLocaleString()}+
+                      </motion.span>
+                      <span className="text-[9px] text-white/30 font-black uppercase tracking-[0.2em] italic">Plans Generated</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <div className="flex items-center gap-3">
+                  {formStep > 1 && (
+                    <button 
+                      onClick={prevStep}
+                      className="w-12 h-12 shrink-0 bg-[#111] border border-white/10 text-white rounded-xl flex items-center justify-center hover:bg-white/5 transition-colors"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                  )}
+                  
+                  {formStep < totalSteps ? (
+                    <button 
+                      onClick={nextStep}
+                      className="flex-1 py-3.5 bg-white text-obsidian rounded-xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
+                    >
+                      Next Step
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => handleSubmit()}
+                      className="flex-1 py-3.5 bg-cyber-teal text-obsidian rounded-xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform active:scale-95 shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      Generate AI Strategy
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
             
             {/* Fixed Footer Buttons for Result Step */}
             {step === "result" && generatedPlan && (

@@ -65,7 +65,7 @@ export default function Hero() {
 
         {/* ── RIGHT ── */}
         <motion.div initial={{ opacity:0, x:50 }} animate={{ opacity:1, x:0 }} transition={{ duration:1 }} className="flex flex-col gap-3 mt-10 lg:mt-0">
-          <p className="text-center text-[10px] font-black uppercase tracking-[.3em] text-white/30 mb-1">Deploy your agents that works for your business</p>
+          <p className="text-center text-[10px] font-black uppercase tracking-[.3em] text-white/30 mb-1">Deploy our agents that works for your business</p>
 
           {/* 3-panel row — relative so full-width SVG overlay can span everything */}
           <div className="flex gap-3 items-center relative">
