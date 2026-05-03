@@ -349,7 +349,7 @@ app.post('/api/generate-pdf', async (req, res) => {
       // Render line by line to ensure bullets look good and avoid overlap
       const lines = cleaned.split('\n');
       lines.forEach(line => {
-        if (doc.y > H - 80) { // Near footer
+        if (doc.y > H - 100) { // Increased buffer to avoid footer overlap
           doc.addPage();
           drawPageBackground();
           doc.y = 110;
@@ -358,7 +358,7 @@ app.post('/api/generate-pdf', async (req, res) => {
         doc.fontSize(isHeader ? 11 : 10.5)
            .fillColor(isHeader ? dark : '#333333')
            .font(isHeader ? contentBold : contentRegular)
-           .text(line, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 3 });
+           .text(line, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 4.5 });
       });
     };
 
