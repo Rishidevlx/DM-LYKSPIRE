@@ -76,6 +76,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return parse(text).trim();
     };
 
+    // ══ Font Management ══
+    const fontDir = path.join(process.cwd(), 'src', 'fonts');
+    const tamilRegular = path.join(fontDir, 'NotoSansTamil-Regular.ttf');
+    const tamilBold = path.join(fontDir, 'NotoSansTamil-Bold.ttf');
+
+    // Headers and Static UI always use standard English fonts
+    const uiRegular = 'Times-Roman';
+    const uiBold = 'Times-Bold';
+
+    // Content font depends on language (received from frontend via body or implied by content)
+    const language = req.body.language; 
+    let contentRegular = 'Times-Roman';
+    let contentBold = 'Times-Bold';
+
+    if (language === 'Tamil' && fs.existsSync(tamilRegular)) {
+      contentRegular = tamilRegular;
+      contentBold = fs.existsSync(tamilBold) ? tamilBold : tamilRegular;
+    }
+
     const drawPageBackground = () => {
       doc.rect(0, 0, W, H).fill('#ffffff');
       const logoPath = path.join(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
@@ -97,14 +116,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const logoPath2 = path.resolve(process.cwd(), 'src', 'assest', 'LYKSPIRE LOGO.png');
     try { if (fs.existsSync(logoPath2)) { doc.opacity(1); doc.image(logoPath2, MARGIN, 14, { width: 40 }); } } catch (e) { }
 
-    doc.fontSize(18).fillColor(dark).font('Times-Bold').text('ZenThira - It always listens', MARGIN + 50, 18, { lineBreak: false });
-    doc.fontSize(8).fillColor(purpleL).font('Times-Roman').text('Strategy Engine', MARGIN + 50, 42, { lineBreak: false });
+    doc.fontSize(18).fillColor(dark).font(uiBold).text('ZenThira - It always listens', MARGIN + 50, 18, { lineBreak: false });
+    doc.fontSize(8).fillColor(purpleL).font(uiRegular).text('Strategy Engine', MARGIN + 50, 42, { lineBreak: false });
 
     const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    doc.fontSize(8).fillColor(gray).font('Times-Roman').text(dateStr, 0, 30, { lineBreak: false, width: W - MARGIN, align: 'right' });
+    doc.fontSize(8).fillColor(gray).font(uiRegular).text(dateStr, 0, 30, { lineBreak: false, width: W - MARGIN, align: 'right' });
 
-    doc.fontSize(26).fillColor(dark).font('Times-Bold').text('AI Business Strategy Report', MARGIN, 90, { width: CW });
-    doc.fontSize(11).fillColor(gray).font('Times-Roman').text('An agent always listens to your words.', MARGIN, 124, { width: CW });
+    doc.fontSize(26).fillColor(dark).font(uiBold).text('AI Business Strategy Report', MARGIN, 90, { width: CW });
+    doc.fontSize(11).fillColor(gray).font(uiRegular).text('An agent always listens to your words.', MARGIN, 124, { width: CW });
     doc.rect(MARGIN, 148, 56, 3).fill(purple);
     doc.rect(MARGIN + 62, 148, 20, 3).fill(purpleL).opacity(0.4);
     doc.opacity(1);
@@ -127,7 +146,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const ty = doc.y;
 
       // Title
-      doc.fontSize(14).fillColor(col).font('Times-Bold')
+      doc.fontSize(14).fillColor(col).font(uiBold)
         .text(title, MARGIN, ty, { lineBreak: false });
 
       // Underline: fixed offset below title (ty + fontSize + gap)
@@ -138,7 +157,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 
       doc.y = underlineY + 10;
-      doc.fontSize(10.5).fillColor(dark).font('Times-Roman')
+      doc.fontSize(10.5).fillColor(dark).font(contentRegular)
         .text(cleaned, MARGIN, doc.y, { width: CW, align: 'left', lineGap: 4.5 });
     };
 

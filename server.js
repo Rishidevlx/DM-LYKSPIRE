@@ -39,7 +39,7 @@ async function initDB() {
     });
     await rootPool.execute(`CREATE DATABASE IF NOT EXISTS ${process.env.TIDB_NAME || 'lykspire_leads'}`);
     await rootPool.end();
-    // Create table
+    // Create tables
     await db.execute(`
       CREATE TABLE IF NOT EXISTS pdf_downloads (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -48,13 +48,37 @@ async function initDB() {
         downloaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    console.log('TiDB: lykspire_leads DB & table ready ✅');
+
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS app_stats (
+        stat_key VARCHAR(50) PRIMARY KEY,
+        stat_value INT DEFAULT 0
+      )
+    `);
+
+    // Initialize plan_count with 4000 if it doesn't exist
+    await db.execute(`
+      INSERT IGNORE INTO app_stats (stat_key, stat_value) VALUES ('plan_count', 4000)
+    `);
+
+    console.log('TiDB: lykspire_leads DB & tables ready ✅');
   } catch (err) {
     console.error('TiDB init error:', err.message);
   }
 }
 initDB();
 
+
+// API 0: Get Global Stats
+app.get('/api/stats', async (req, res) => {
+  try {
+    const [rows] = await db.execute('SELECT stat_value FROM app_stats WHERE stat_key = ?', ['plan_count']);
+    const count = rows.length > 0 ? rows[0].stat_value : 4000;
+    res.json({ plan_count: count });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // API 1: Generate Plan using Gemini
 app.post('/api/generate-plan', async (req, res) => {
@@ -144,6 +168,9 @@ Return raw JSON only. No markdown, no code blocks, no extra commentary.`;
     
     // Clean up markdown just in case Groq adds markdown blocks
     generatedText = generatedText.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+    // Increment global count asynchronously (don't block the user)
+    db.execute('UPDATE app_stats SET stat_value = stat_value + 200 WHERE stat_key = ?', ['plan_count']).catch(err => console.error('Stats update error:', err));
 
     return res.status(200).json({ plan: generatedText });
   } catch (error) {

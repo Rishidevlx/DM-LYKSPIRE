@@ -37,8 +37,14 @@ export default function AIChatbotFloating() {
   });
 
   useEffect(() => {
-    localStorage.setItem('zenthira_plan_count', planCount.toString());
-  }, [planCount]);
+    // Fetch initial global count
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => {
+        if (data.plan_count) setPlanCount(data.plan_count);
+      })
+      .catch(err => console.error('Failed to fetch stats:', err));
+  }, []);
 
   useEffect(() => {
     if (step === "result") {
