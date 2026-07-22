@@ -160,12 +160,12 @@ const storyLines = [
 ];
 
 const founders = [
-  {
+  /* {
     name: "Vijayayaraghavan Ramakrishanan",
     role: "Director & Chief Financial Officer",
     description: "Vijayayaraghavan Ramakrishanan brings over 24 years of entrepreneurial experience, with a strong foundation in digital media, printing, and advertising. Having built and scaled his own business over decades, he possesses deep expertise in brand execution, creative production, and commercial strategy.\n\nAt LyKSpire, he leads financial strategy and contributes to the company’s long-term vision, ensuring disciplined growth, operational efficiency, and scalable execution. His leadership bridges traditional business strength with a modern, innovation-driven approach — enabling the company to deliver consistent, high-impact outcomes for a global client base.\n\nWith a proven track record across evolving media landscapes, he provides the strategic backbone that supports LyKSpire’s ambition to operate at a global standard.",
     icon: Globe
-  },
+  }, */
   {
     name: "Karunakaran Vijayaraghavan",
     role: "Founder",
