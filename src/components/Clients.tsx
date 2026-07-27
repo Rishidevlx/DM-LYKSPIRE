@@ -54,7 +54,7 @@ export default function Clients() {
   const [clients, setClients] = useState<ClientData[]>(STATIC_CLIENTS);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/clients")
+    fetch("/api/clients")
       .then((r) => r.json())
       .then((data) => {
         if (data.clients && data.clients.length > 0) {
