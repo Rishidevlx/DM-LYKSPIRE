@@ -1,20 +1,29 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "../assest/LYKSPIRE LOGO.png";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
     
-    // Increased delay to ensure the menu exit animation doesn't block the layout
+    if (location.pathname !== "/") {
+      navigate("/");
+      // Let it navigate first, then scroll. (For a perfect UX, hash routing or scroll to top is better)
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+      return;
+    }
+
     setTimeout(() => {
       const el = document.getElementById(id.replace('#', ''));
       if (el) {
-        // Since we have scroll-padding-top: 100px in index.css, 
-        // we just need to scroll to the element's actual top.
         const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({
           top: yCoordinate,
@@ -31,16 +40,16 @@ export default function Navbar() {
       className="fixed top-0 left-0 right-0 z-[100] px-6 py-4 bg-obsidian/85 backdrop-blur-2xl border-b border-white/5"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <Link to="/" className="flex items-center gap-4">
           <img src={logo} alt="LYKSPIRE" className="h-10 w-auto" />
           <span className="text-gradient font-display font-black text-2xl tracking-tighter uppercase">LYKSPIRE</span>
-        </div>
+        </Link>
         
         <div className="hidden md:flex items-center gap-10 text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">
           <button onClick={() => scrollToSection('hero')} className="hover:text-white transition-colors cursor-pointer">Home</button>
           <button onClick={() => scrollToSection('services')} className="hover:text-white transition-colors cursor-pointer">Services</button>
-          <button onClick={() => scrollToSection('clients')} className="hover:text-white transition-colors cursor-pointer">Our Clients</button>
           <button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors cursor-pointer">About</button>
+          <Link to="/blog" className="hover:text-white transition-colors cursor-pointer">Blog</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-2">

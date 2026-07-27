@@ -29,6 +29,29 @@ export default async function handler(
   });
 
   try {
+    // Save to Database
+    const mysql = require('mysql2/promise');
+    const db = mysql.createPool({
+      host: process.env.TIDB_HOST || 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
+      port: parseInt(process.env.TIDB_PORT || '4000'),
+      user: process.env.TIDB_USER,
+      password: process.env.TIDB_PASS,
+      database: process.env.TIDB_NAME || 'lykspire_leads',
+      ssl: { rejectUnauthorized: true },
+      waitForConnections: true,
+      connectionLimit: 1, // Keep low for serverless
+    });
+
+    try {
+      await db.execute(
+        'INSERT INTO contact_enquiries (name, email, mobile, purpose, message) VALUES (?, ?, ?, ?, ?)',
+        [name, email, mobile || null, purpose || null, message]
+      );
+    } catch (dbErr) {
+      console.error('Failed to save to DB:', dbErr);
+      // Continue to send email even if DB fails
+    }
+
     // Send mail with defined transport object
     await transporter.sendMail({
       from: `"${name}" <${process.env.SMTP_USER}>`,

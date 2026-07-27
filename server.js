@@ -5,8 +5,20 @@ import PDFDocument from 'pdfkit';
 import path from 'path';
 import fs from 'fs';
 import mysql from 'mysql2/promise';
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();
+
+// ══ Cloudinary Config ══
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// ══ Multer (memory storage for Cloudinary) ══
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 const app = express();
 app.use(cors());
@@ -59,6 +71,70 @@ async function initDB() {
     // Initialize plan_count with 4000 if it doesn't exist
     await db.execute(`
       INSERT IGNORE INTO app_stats (stat_key, stat_value) VALUES ('plan_count', 4000)
+    `);
+
+    // Create contact_enquiries table
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS contact_enquiries (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        mobile VARCHAR(50),
+        purpose VARCHAR(255),
+        message TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create / extend blogs table
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS blogs (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        slug VARCHAR(512),
+        banner_image VARCHAR(512),
+        alt_text VARCHAR(255),
+        content LONGTEXT,
+        short_description TEXT,
+        category VARCHAR(100),
+        tags TEXT,
+        publish_date DATE,
+        read_time VARCHAR(50),
+        meta_title VARCHAR(255),
+        meta_description TEXT,
+        keywords TEXT,
+        author VARCHAR(100) DEFAULT 'Admin',
+        status VARCHAR(20) DEFAULT 'draft',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Add columns to existing blogs table (safe no-op if already exist)
+    const blogsAlters = [
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS slug VARCHAR(512)",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS short_description TEXT",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS category VARCHAR(100)",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS tags TEXT",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS meta_title VARCHAR(255)",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS meta_description TEXT",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS keywords TEXT",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS author VARCHAR(100) DEFAULT 'Admin'",
+      "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'draft'",
+    ];
+    for (const sql of blogsAlters) {
+      try { await db.execute(sql); } catch(e) { /* column already exists */ }
+    }
+
+    // Create clients table
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS clients (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        company_name VARCHAR(255) NOT NULL,
+        description TEXT,
+        logo_url VARCHAR(512),
+        sort_order INT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
     `);
 
     console.log('TiDB: lykspire_leads DB & tables ready ✅');
@@ -388,7 +464,170 @@ app.post('/api/generate-pdf', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Backend Server running on http://localhost:${PORT}`);
+// ══ Cloudinary Upload Route ══
+app.post('/api/upload-image', upload.single('file'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file provided' });
+  try {
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { folder: 'lykspire', resource_type: 'image' },
+        (error, result) => { if (error) reject(error); else resolve(result); }
+      ).end(req.file.buffer);
+    });
+    return res.status(200).json({ url: result.secure_url, public_id: result.public_id });
+  } catch (error) {
+    console.error('Cloudinary upload error:', error);
+    return res.status(500).json({ error: 'Upload failed', details: error.message });
+  }
 });
+
+// ══ ADMIN ROUTES (Local Dev) ══
+// Admin Auth
+app.post('/api/admin-auth', async (req, res) => {
+  const { username, password } = req.body;
+  if (username === process.env.ADMIN_USERNAME?.trim() && password === process.env.ADMIN_PASSWORD?.trim()) {
+    const token = Buffer.from(`${username}:${password}`).toString('base64');
+    return res.status(200).json({ success: true, token });
+  }
+  return res.status(401).json({ error: 'Invalid credentials' });
+});
+
+// Basic Auth Middleware
+const checkAdminAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const expectedToken = Buffer.from(`${process.env.ADMIN_USERNAME?.trim()}:${process.env.ADMIN_PASSWORD?.trim()}`).toString('base64');
+  if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
+    console.log('Auth Failed!', { authHeader, expectedToken, envUser: process.env.ADMIN_USERNAME, envPass: process.env.ADMIN_PASSWORD });
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+};
+
+// Admin Contacts
+app.get('/api/admin-contacts', checkAdminAuth, async (req, res) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM contact_enquiries ORDER BY created_at DESC');
+    return res.status(200).json({ contacts: rows });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch contacts', details: error.message });
+  }
+});
+
+// Admin Blogs (public read for frontend too)
+app.get('/api/admin-blogs', async (req, res) => {
+  try {
+    const { id, status } = req.query;
+    if (id) {
+      const [rows] = await db.execute('SELECT * FROM blogs WHERE id = ?', [id]);
+      if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+      return res.status(200).json({ blog: rows[0] });
+    } else if (status) {
+      const [rows] = await db.execute('SELECT * FROM blogs WHERE status = ? ORDER BY publish_date DESC, created_at DESC', [status]);
+      return res.status(200).json({ blogs: rows });
+    } else {
+      const [rows] = await db.execute('SELECT * FROM blogs ORDER BY created_at DESC');
+      return res.status(200).json({ blogs: rows });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch blogs' });
+  }
+});
+
+app.post('/api/admin-blogs', checkAdminAuth, async (req, res) => {
+  try {
+    const { title, slug, banner_image, alt_text, content, short_description, category, tags, publish_date, read_time, meta_title, meta_description, keywords, author, status } = req.body;
+    const [result] = await db.execute(
+      'INSERT INTO blogs (title, slug, banner_image, alt_text, content, short_description, category, tags, publish_date, read_time, meta_title, meta_description, keywords, author, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, slug||null, banner_image||null, alt_text||null, content||null, short_description||null, category||null, typeof tags==='object'?JSON.stringify(tags):tags||null, publish_date||null, read_time||null, meta_title||null, meta_description||null, keywords||null, author||'Admin', status||'draft']
+    );
+    return res.status(201).json({ success: true, id: result.insertId });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to save blog', details: error.message });
+  }
+});
+
+app.put('/api/admin-blogs', checkAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.query;
+    const { title, slug, banner_image, alt_text, content, short_description, category, tags, publish_date, read_time, meta_title, meta_description, keywords, author, status } = req.body;
+    if (!id) return res.status(400).json({ error: 'Blog ID required' });
+    await db.execute(
+      'UPDATE blogs SET title=?, slug=?, banner_image=?, alt_text=?, content=?, short_description=?, category=?, tags=?, publish_date=?, read_time=?, meta_title=?, meta_description=?, keywords=?, author=?, status=? WHERE id=?',
+      [title, slug||null, banner_image||null, alt_text||null, content||null, short_description||null, category||null, typeof tags==='object'?JSON.stringify(tags):tags||null, publish_date||null, read_time||null, meta_title||null, meta_description||null, keywords||null, author||'Admin', status||'draft', id]
+    );
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to update blog', details: error.message });
+  }
+});
+
+app.delete('/api/admin-blogs', checkAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) return res.status(400).json({ error: 'Blog ID required' });
+    
+    await db.execute('DELETE FROM blogs WHERE id = ?', [id]);
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to delete blog' });
+  }
+});
+
+// ══ CLIENTS ROUTES ══
+app.get('/api/clients', async (req, res) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM clients ORDER BY sort_order ASC, id ASC');
+    return res.status(200).json({ clients: rows });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch clients' });
+  }
+});
+
+app.post('/api/admin-clients', checkAdminAuth, async (req, res) => {
+  try {
+    const { company_name, description, logo_url, sort_order } = req.body;
+    const [result] = await db.execute(
+      'INSERT INTO clients (company_name, description, logo_url, sort_order) VALUES (?, ?, ?, ?)',
+      [company_name, description||null, logo_url||null, sort_order||0]
+    );
+    return res.status(201).json({ success: true, id: result.insertId });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to add client' });
+  }
+});
+
+app.put('/api/admin-clients', checkAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.query;
+    const { company_name, description, logo_url, sort_order } = req.body;
+    if (!id) return res.status(400).json({ error: 'Client ID required' });
+    await db.execute(
+      'UPDATE clients SET company_name=?, description=?, logo_url=?, sort_order=? WHERE id=?',
+      [company_name, description||null, logo_url||null, sort_order||0, id]
+    );
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to update client' });
+  }
+});
+
+app.delete('/api/admin-clients', checkAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) return res.status(400).json({ error: 'Client ID required' });
+    await db.execute('DELETE FROM clients WHERE id = ?', [id]);
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to delete client' });
+  }
+});
+
+const PORT = process.env.PORT || 5000;
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Backend Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
