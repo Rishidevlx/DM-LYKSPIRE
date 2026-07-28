@@ -176,10 +176,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
       {/* Footer */}
       <div className="px-3 py-4 border-t border-[#ffffff]/[0.06]">
         <button 
-          onClick={() => {
-            localStorage.removeItem('adminToken');
-            navigate('/login');
-          }}
+          onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#ffffff]/40 hover:text-[#ffffff]/80 hover:bg-[#ffffff]/[0.04] transition-all"
         >
           <LogOut size={17} strokeWidth={1.8} />

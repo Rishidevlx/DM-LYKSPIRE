@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Loader2, X, Plus, CheckCircle2,
   Type, AlignLeft, Tag, FolderOpen, User, Clock, Calendar,
-  Search, FileText, TrendingUp, Globe, Eye, Image as ImageIcon,
-  File
+  Search, FileText, TrendingUp, Globe, Image as ImageIcon
 } from 'lucide-react';
 import ImageUploader from '../components/ImageUploader';
 
