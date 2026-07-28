@@ -95,40 +95,40 @@ const TypingWords: React.FC = () => {
 };
 
 const storyLines = [
-  { text: "We don’t do marketing.", highlight: false },
-  { text: "We build growth systems.", highlight: true },
+  { text: "We don't just build software.", highlight: false },
+  { text: "We engineer intelligent businesses.", highlight: true },
   {
-    text: "At LYKSPIRE, we combine GenAI,",
+    text: "At LYKSPIRE, we combine AI,",
     highlight: true,
     customStyle: (t: string) => {
       return (
         <span>
-          At LYKSPIRE, we combine <span className="text-cyber-teal">GenAI</span>,
+          At LYKSPIRE, we combine <span className="text-cyber-teal">AI</span>,
         </span>
       );
     }
   },
   {
-    text: "automation, performance marketing.",
+    text: "automation & enterprise engineering.",
     highlight: true,
     customStyle: (t: string) => {
       return (
         <span>
-          <span className="text-white/40">automation</span>, <span className="text-cyber-teal">performance &</span> <span className="text-white/40">marketing</span>.
+          <span className="text-white/80">automation &</span> <span className="text-cyber-teal">enterprise engineering</span>.
         </span>
       );
     }
   },
-  { text: "To create systems that attract,", highlight: false },
-  { text: "engage, convert & Consistently.", highlight: true },
-  { text: "Because growth should not be random.", highlight: false },
+  { text: "To create systems that think,", highlight: false },
+  { text: "operate, and scale autonomously.", highlight: true },
+  { text: "Because your business should not be manual.", highlight: false },
   {
     text: "It should be 3NG!N33R3D.",
     highlight: true,
     customStyle: () => {
       return (
         <div className="flex flex-col md:flex-row items-center justify-center gap-x-6 gap-y-2 translate-y-[4px]">
-          <span className="text-white/60">It should be</span>
+          <span className="text-white/80">It should be</span>
           <div className="relative min-w-[300px] text-cyber-teal">
             <motion.span
               animate={{
@@ -198,7 +198,7 @@ export default function About() {
         </div>
         {/* Background Grid & HUD Elements */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-[rgba(10,10,10,0.8)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-transparent" />
 
         <div className="relative z-10 max-w-6xl mx-auto w-full px-6 flex flex-col items-center text-center">
           <div className="space-y-4">
@@ -209,7 +209,7 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: false, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: i * 0.1 }}
-                className={`text-4xl md:text-6xl lg:text-7xl font-display font-black uppercase tracking-tighter leading-tight ${line.highlight ? "text-cyber-teal" : "text-white/60"}`}
+                className={`text-4xl md:text-6xl lg:text-7xl font-display font-black uppercase tracking-tighter leading-tight ${line.highlight ? "text-cyber-teal" : "text-white/90"}`}
               >
                 {line.customStyle ? line.customStyle(line.text) : line.text}
               </motion.div>
@@ -231,7 +231,7 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, margin: "-50px" }}
-            className={`text-3xl font-display font-black uppercase tracking-tighter ${line.highlight ? "text-cyber-teal" : "text-white/40"}`}
+            className={`text-3xl font-display font-black uppercase tracking-tighter ${line.highlight ? "text-cyber-teal" : "text-white/80"}`}
           >
             {line.text}
           </motion.div>
