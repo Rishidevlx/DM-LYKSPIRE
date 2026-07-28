@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import BlogList from './pages/BlogList';
 import BlogEditor from './pages/BlogEditor';
+import BlogCategories from './pages/BlogCategories';
 import ContactEnquiries from './pages/ContactEnquiries';
 import ClientsAdmin from './pages/ClientsAdmin';
 import { ThemeProvider } from './context/ThemeContext';
@@ -20,6 +21,7 @@ function App() {
             <Route path="/blogs" element={<BlogList />} />
             <Route path="/blogs/new" element={<BlogEditor />} />
             <Route path="/blogs/edit/:id" element={<BlogEditor />} />
+            <Route path="/blogs/categories" element={<BlogCategories />} />
             <Route path="/contacts" element={<ContactEnquiries />} />
             <Route path="/clients" element={<ClientsAdmin />} />
           </Route>

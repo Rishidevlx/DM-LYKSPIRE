@@ -1,42 +1,37 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap');
+
 /* ===========================================================
    LYKSPIRE ADMIN — Global Styles
    Tailwind v4: @import only, no @tailwind directives
    =========================================================== */
 @import "tailwindcss";
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap');
-
-/* ---- Quill dark theme (Quill loaded via CDN in index.html) ---- */
-.ql-toolbar.ql-snow { background: #1a1d2e !important; border-color: rgba(255,255,255,0.07) !important; border-radius: 12px 12px 0 0; }
-.ql-container.ql-snow { background: #121525 !important; border-color: rgba(255,255,255,0.07) !important; border-radius: 0 0 12px 12px; color: #e2e8f0 !important; font-size: 15px; font-family: 'Inter', sans-serif; min-height: 400px; }
-.ql-editor { min-height: 400px; padding: 20px 24px; line-height: 1.75; }
-.ql-editor.ql-blank::before { color: rgba(255,255,255,0.2) !important; font-style: normal !important; }
-.ql-toolbar .ql-stroke { stroke: #94a3b8 !important; }
-.ql-toolbar .ql-fill { fill: #94a3b8 !important; }
-.ql-toolbar .ql-picker-label { color: #94a3b8 !important; }
-.ql-snow .ql-picker-options { background: #1a1d2e !important; border-color: rgba(255,255,255,0.08) !important; color: #e2e8f0 !important; }
-.ql-toolbar button:hover .ql-stroke { stroke: #818cf8 !important; }
-.ql-toolbar button.ql-active .ql-stroke { stroke: #818cf8 !important; }
-.ql-toolbar button:hover .ql-fill { fill: #818cf8 !important; }
-.ql-toolbar button.ql-active .ql-fill { fill: #818cf8 !important; }
-.ql-editor h1, .ql-editor h2, .ql-editor h3 { color: #f1f5f9; }
-.ql-editor a { color: #818cf8; }
-.ql-editor blockquote { border-left-color: #818cf8; background: rgba(129,140,248,0.05); padding: 12px 16px; border-radius: 0 8px 8px 0; }
-
 /* ---- Theme Variables ---- */
 :root {
-  --bg-main: #f4f6fb;
-  --bg-sidebar: #ffffff;
+  --bg-main: #ffffff;
+  --bg-sidebar: #1e3a8a;
   --panel-bg: rgba(255,255,255,0.85);
-  --panel-hover: rgba(0,0,0,0.02);
+  --panel-hover: rgba(0,0,0,0.04);
   --border: rgba(0,0,0,0.08);
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: rgba(0,0,0,0.30);
+  --text-primary: #000000;
+  --text-secondary: #334155;
+  --text-muted: rgba(0,0,0,0.40);
   --input-bg: rgba(0,0,0,0.03);
   --scrollbar: rgba(0,0,0,0.10);
-  --dynamic-white: #000000; /* In light mode, 'text-white' becomes black */
+  --dynamic-white: #000000;
+  --btn-royal-blue: #2563eb;
+
+  /* Quill Variables - Light */
+  --quill-toolbar-bg: #f8fafc;
+  --quill-container-bg: #ffffff;
+  --quill-border: rgba(0,0,0,0.08);
+  --quill-text: #0f172a;
+  --quill-picker-bg: #ffffff;
+  --quill-heading: #0f172a;
+  --quill-placeholder: rgba(0,0,0,0.3);
+  
+  --color-scheme: light;
 }
 
 [data-theme="dark"] {
@@ -51,11 +46,39 @@
   --input-bg: rgba(255,255,255,0.04);
   --scrollbar: rgba(255,255,255,0.10);
   --dynamic-white: #ffffff; /* In dark mode, 'text-white' is white */
+
+  /* Quill Variables - Dark */
+  --quill-toolbar-bg: #1a1d2e;
+  --quill-container-bg: #121525;
+  --quill-border: rgba(255,255,255,0.07);
+  --quill-text: #e2e8f0;
+  --quill-picker-bg: #1a1d2e;
+  --quill-heading: #f1f5f9;
+  --quill-placeholder: rgba(255,255,255,0.2);
+  
+  --color-scheme: dark;
 }
 
 @theme {
   --color-white: var(--dynamic-white);
 }
+
+/* ---- Quill Editor Theme Adapters ---- */
+.ql-toolbar.ql-snow { background: var(--quill-toolbar-bg) !important; border-color: var(--quill-border) !important; border-radius: 12px 12px 0 0; }
+.ql-container.ql-snow { background: var(--quill-container-bg) !important; border-color: var(--quill-border) !important; border-radius: 0 0 12px 12px; color: var(--quill-text) !important; font-size: 15px; font-family: 'Inter', sans-serif; min-height: 400px; }
+.ql-editor { min-height: 400px; padding: 20px 24px; line-height: 1.75; }
+.ql-editor.ql-blank::before { color: var(--quill-placeholder) !important; font-style: normal !important; }
+.ql-toolbar .ql-stroke { stroke: #94a3b8 !important; }
+.ql-toolbar .ql-fill { fill: #94a3b8 !important; }
+.ql-toolbar .ql-picker-label { color: #94a3b8 !important; }
+.ql-snow .ql-picker-options { background: var(--quill-picker-bg) !important; border-color: var(--quill-border) !important; color: var(--quill-text) !important; }
+.ql-toolbar button:hover .ql-stroke { stroke: #818cf8 !important; }
+.ql-toolbar button.ql-active .ql-stroke { stroke: #818cf8 !important; }
+.ql-toolbar button:hover .ql-fill { fill: #818cf8 !important; }
+.ql-toolbar button.ql-active .ql-fill { fill: #818cf8 !important; }
+.ql-editor h1, .ql-editor h2, .ql-editor h3 { color: var(--quill-heading); }
+.ql-editor a { color: #818cf8; }
+.ql-editor blockquote { border-left-color: #818cf8; background: rgba(129,140,248,0.05); padding: 12px 16px; border-radius: 0 8px 8px 0; }
 
 /* ---- Global ---- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -77,4 +100,4 @@ html, body, #root {
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* date input color scheme */
-input[type="date"] { color-scheme: dark; }
+input[type="date"] { color-scheme: var(--color-scheme); }

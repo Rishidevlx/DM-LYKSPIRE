@@ -50,35 +50,35 @@ export default function ContactEnquiries() {
     <div className="max-w-6xl">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-2 text-xs font-semibold text-white/30 uppercase tracking-widest mb-2">
+        <div className="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-2">
           <TrendingUp size={13} />
           <span>CRM</span>
         </div>
-        <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Sora, sans-serif' }}>
+        <h1 className="text-3xl font-bold text-[var(--text-primary)]" style={{ fontFamily: 'Sora, sans-serif' }}>
           Contact Enquiries
         </h1>
-        <p className="text-white/40 text-sm mt-1">{contacts.length} total enquir{contacts.length !== 1 ? 'ies' : 'y'}</p>
+        <p className="text-[var(--text-secondary)] text-sm mt-1">{contacts.length} total enquir{contacts.length !== 1 ? 'ies' : 'y'}</p>
       </div>
 
       {/* Search */}
       <div className="relative mb-5">
-        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/25" />
+        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name, email, purpose…"
-          className="w-full max-w-sm bg-white/[0.04] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-white/25 outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/15 transition-all"
+          className="w-full max-w-sm bg-[var(--panel-bg)] border border-[var(--border)] rounded-xl pl-10 pr-4 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/15 transition-all"
         />
       </div>
 
       {/* Cards */}
       {isLoading ? (
-        <div className="py-20 text-center text-white/25 text-sm">Loading enquiries…</div>
+        <div className="py-20 text-center text-[var(--text-secondary)] text-sm">Loading enquiries…</div>
       ) : filtered.length === 0 ? (
         <div className="py-20 text-center">
-          <Mail size={36} className="text-white/10 mx-auto mb-3" />
-          <p className="text-white/25 text-sm">
+          <Mail size={36} className="text-[var(--text-secondary)] mx-auto mb-3" />
+          <p className="text-[var(--text-secondary)] text-sm">
             {search ? 'No results match your search.' : 'No enquiries yet.'}
           </p>
         </div>
@@ -94,26 +94,26 @@ export default function ContactEnquiries() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="bg-white/[0.03] border border-white/[0.07] rounded-xl overflow-hidden"
+                className="bg-[var(--panel-bg)] border border-[var(--border)] rounded-xl overflow-hidden"
               >
                 {/* Row */}
                 <button
                   onClick={() => setExpandedId(isExpanded ? null : contact.id)}
-                  className="w-full flex items-center gap-4 px-5 py-4 hover:bg-white/[0.025] transition-colors text-left"
+                  className="w-full flex items-center gap-4 px-5 py-4 hover:bg-[var(--panel-bg)] transition-colors text-left"
                 >
                   {/* Avatar */}
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500/30 to-violet-500/30 flex items-center justify-center text-sm font-bold text-white shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500/30 to-violet-500/30 flex items-center justify-center text-sm font-bold text-[var(--text-primary)] shrink-0">
                     {contact.name?.[0]?.toUpperCase() ?? '?'}
                   </div>
 
                   {/* Name + email */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white/90 truncate">{contact.name}</p>
-                    <p className="text-xs text-white/35 truncate">{contact.email}</p>
+                    <p className="text-sm font-semibold text-[var(--text-secondary)] truncate">{contact.name}</p>
+                    <p className="text-xs text-[var(--text-secondary)] truncate">{contact.email}</p>
                   </div>
 
                   {/* Mobile */}
-                  <p className="text-xs text-white/30 hidden md:block shrink-0">{contact.mobile}</p>
+                  <p className="text-xs text-[var(--text-secondary)] hidden md:block shrink-0">{contact.mobile}</p>
 
                   {/* Purpose */}
                   <span className={`text-[11px] font-semibold border rounded-full px-2.5 py-0.5 shrink-0 ${purpColor}`}>
@@ -121,7 +121,7 @@ export default function ContactEnquiries() {
                   </span>
 
                   {/* Date */}
-                  <span className="text-xs text-white/25 hidden lg:flex items-center gap-1 shrink-0">
+                  <span className="text-xs text-[var(--text-secondary)] hidden lg:flex items-center gap-1 shrink-0">
                     <Calendar size={11} />
                     {new Date(contact.created_at).toLocaleDateString()}
                   </span>
@@ -129,7 +129,7 @@ export default function ContactEnquiries() {
                   {/* Expand icon */}
                   <ChevronDown
                     size={15}
-                    className={`text-white/25 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                    className={`text-[var(--text-secondary)] shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                   />
                 </button>
 
@@ -139,11 +139,11 @@ export default function ContactEnquiries() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="px-5 pb-5 pt-1 border-t border-white/[0.05]"
+                    className="px-5 pb-5 pt-1 border-t border-[var(--border)]"
                   >
                     <div className="flex items-start gap-2 mt-3">
-                      <MessageSquare size={13} className="text-white/25 mt-0.5 shrink-0" strokeWidth={1.8} />
-                      <p className="text-sm text-white/55 leading-relaxed">{contact.message || 'No message provided.'}</p>
+                      <MessageSquare size={13} className="text-[var(--text-secondary)] mt-0.5 shrink-0" strokeWidth={1.8} />
+                      <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{contact.message || 'No message provided.'}</p>
                     </div>
                     <div className="flex gap-3 mt-4">
                       <a

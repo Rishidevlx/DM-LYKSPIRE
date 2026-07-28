@@ -137,6 +137,16 @@ async function initDB() {
       )
     `);
 
+    // Create blog categories table
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS blog_categories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        slug VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     console.log('TiDB: lykspire_leads DB & tables ready ✅');
   } catch (err) {
     console.error('TiDB init error:', err.message);
@@ -516,9 +526,13 @@ app.get('/api/admin-contacts', checkAdminAuth, async (req, res) => {
 // Admin Blogs (public read for frontend too)
 app.get('/api/admin-blogs', async (req, res) => {
   try {
-    const { id, status } = req.query;
+    const { id, slug, status } = req.query;
     if (id) {
       const [rows] = await db.execute('SELECT * FROM blogs WHERE id = ?', [id]);
+      if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+      return res.status(200).json({ blog: rows[0] });
+    } else if (slug) {
+      const [rows] = await db.execute('SELECT * FROM blogs WHERE slug = ?', [slug]);
       if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
       return res.status(200).json({ blog: rows[0] });
     } else if (status) {
@@ -571,6 +585,42 @@ app.delete('/api/admin-blogs', checkAdminAuth, async (req, res) => {
     return res.status(200).json({ success: true });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to delete blog' });
+  }
+});
+
+// ══ CATEGORIES ROUTES ══
+app.get('/api/categories', async (req, res) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM blog_categories ORDER BY created_at DESC');
+    return res.status(200).json({ categories: rows });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+});
+
+app.post('/api/admin-categories', checkAdminAuth, async (req, res) => {
+  try {
+    const { name, slug } = req.body;
+    if (!name) return res.status(400).json({ error: 'Name required' });
+    const finalSlug = slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const [result] = await db.execute(
+      'INSERT INTO blog_categories (name, slug) VALUES (?, ?)',
+      [name, finalSlug]
+    );
+    return res.status(201).json({ success: true, id: result.insertId });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to add category' });
+  }
+});
+
+app.delete('/api/admin-categories', checkAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) return res.status(400).json({ error: 'ID required' });
+    await db.execute('DELETE FROM blog_categories WHERE id = ?', [id]);
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to delete category' });
   }
 });
 

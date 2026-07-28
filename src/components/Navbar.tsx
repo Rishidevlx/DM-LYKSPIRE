@@ -48,6 +48,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-10 text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">
           <button onClick={() => scrollToSection('hero')} className="hover:text-white transition-colors cursor-pointer">Home</button>
           <button onClick={() => scrollToSection('services')} className="hover:text-white transition-colors cursor-pointer">Services</button>
+          <button onClick={() => scrollToSection('clients')} className="hover:text-white transition-colors cursor-pointer">Clients</button>
           <button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors cursor-pointer">About</button>
           <Link to="/blog" className="hover:text-white transition-colors cursor-pointer">Blog</Link>
         </div>
@@ -84,6 +85,7 @@ export default function Navbar() {
               <button onClick={() => scrollToSection('services')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">Services</button>
               <button onClick={() => scrollToSection('clients')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">Our Clients</button>
               <button onClick={() => scrollToSection('about')} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">About</button>
+              <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)} className="py-4 px-10 text-center hover:text-cyber-teal hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer">Blog</Link>
               <button 
                 onClick={() => {
                   setIsMobileMenuOpen(false);

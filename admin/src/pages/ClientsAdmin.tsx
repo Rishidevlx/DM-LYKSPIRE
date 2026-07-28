@@ -21,8 +21,8 @@ interface FormState {
 }
 
 const emptyForm: FormState = { company_name: '', description: '', logo_url: '', sort_order: 0 };
-const inputCls = 'w-full bg-white/[0.04] border border-white/[0.07] rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition-all';
-const labelCls = 'block text-xs font-semibold text-white/40 uppercase tracking-widest mb-1.5';
+const inputCls = 'w-full bg-[var(--panel-bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition-all';
+const labelCls = 'block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-1.5';
 
 export default function ClientsAdmin() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -111,13 +111,13 @@ export default function ClientsAdmin() {
       {/* Header */}
       <div className="flex items-start justify-between mb-7">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-white/25 flex items-center gap-1.5 mb-0.5"><TrendingUp size={10} /> Partners</p>
-          <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Sora, sans-serif' }}>Our Clients</h1>
-          <p className="text-sm text-white/35 mt-1">Manage clients shown in the "Trusted by Industry Leaders" section</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1.5 mb-0.5"><TrendingUp size={10} /> Partners</p>
+          <h1 className="text-3xl font-bold text-[var(--text-primary)]" style={{ fontFamily: 'Sora, sans-serif' }}>Our Clients</h1>
+          <p className="text-sm text-[var(--text-secondary)] mt-1">Manage clients shown in the "Trusted by Industry Leaders" section</p>
         </div>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all active:scale-[0.98]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-[#ffffff] bg-[#2563eb] hover:bg-[#1d4ed8] shadow-lg shadow-[#2563eb]/25 transition-all active:scale-[0.98]"
         >
           <Plus size={16} strokeWidth={2.5} /> Add Client
         </button>
@@ -133,11 +133,11 @@ export default function ClientsAdmin() {
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#141728] border border-white/[0.1] rounded-2xl p-6 w-full max-w-xl shadow-2xl"
+              className="bg-[var(--bg-main)] border border-[var(--border)] rounded-2xl p-6 w-full max-w-xl shadow-2xl"
             >
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-lg font-bold text-white" style={{ fontFamily: 'Sora, sans-serif' }}>{editingId ? 'Edit Client' : 'Add New Client'}</h2>
-                <button onClick={() => setShowForm(false)} className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.06] transition-colors"><X size={18} /></button>
+                <h2 className="text-lg font-bold text-[var(--text-primary)]" style={{ fontFamily: 'Sora, sans-serif' }}>{editingId ? 'Edit Client' : 'Add New Client'}</h2>
+                <button onClick={() => setShowForm(false)} className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--panel-bg)] transition-colors"><X size={18} /></button>
               </div>
 
               <div className="space-y-4">
@@ -157,8 +157,8 @@ export default function ClientsAdmin() {
               </div>
 
               <div className="flex gap-2 mt-6">
-                <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white/50 bg-white/[0.04] border border-white/[0.07] hover:text-white transition-all">Cancel</button>
-                <button onClick={handleSave} disabled={isSaving} className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 transition-all flex items-center justify-center gap-2">
+                <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-secondary)] bg-[var(--panel-bg)] border border-[var(--border)] hover:text-[var(--text-primary)] transition-all">Cancel</button>
+                <button onClick={handleSave} disabled={isSaving} className="flex-1 py-2.5 rounded-xl text-sm font-bold text-[#ffffff] bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-50 transition-all flex items-center justify-center gap-2">
                   {isSaving ? <Loader2 size={15} className="animate-spin" /> : null}
                   {editingId ? 'Update' : 'Add Client'}
                 </button>
@@ -170,11 +170,11 @@ export default function ClientsAdmin() {
 
       {/* Client Grid */}
       {isLoading ? (
-        <div className="py-20 text-center text-white/25 text-sm">Loading clients…</div>
+        <div className="py-20 text-center text-[var(--text-secondary)] text-sm">Loading clients…</div>
       ) : clients.length === 0 ? (
         <div className="py-20 text-center">
-          <Users size={40} className="text-white/10 mx-auto mb-3" />
-          <p className="text-sm text-white/30">No clients yet. Add your first partner!</p>
+          <Users size={40} className="text-[var(--text-secondary)] mx-auto mb-3" />
+          <p className="text-sm text-[var(--text-secondary)]">No clients yet. Add your first partner!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -184,10 +184,10 @@ export default function ClientsAdmin() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-5 group hover:border-white/[0.12] transition-all"
+              className="bg-[var(--panel-bg)] border border-[var(--border)] rounded-xl p-5 group hover:border-[var(--border)] transition-all"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="w-14 h-14 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-14 h-14 rounded-xl bg-[var(--panel-bg)] border border-[var(--border)] flex items-center justify-center overflow-hidden shrink-0">
                   {client.logo_url ? (
                     <img src={client.logo_url} alt={client.company_name} className="w-full h-full object-cover" />
                   ) : (
@@ -195,21 +195,21 @@ export default function ClientsAdmin() {
                   )}
                 </div>
                 <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => openEdit(client)} className="p-1.5 rounded-lg text-white/30 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"><Edit2 size={14} /></button>
-                  <button onClick={() => handleDelete(client.id)} disabled={deletingId === client.id} className="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-40">
+                  <button onClick={() => openEdit(client)} className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"><Edit2 size={14} /></button>
+                  <button onClick={() => handleDelete(client.id)} disabled={deletingId === client.id} className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-40">
                     {deletingId === client.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                   </button>
                 </div>
               </div>
-              <p className="font-bold text-white text-sm">{client.company_name}</p>
-              {client.description && <p className="text-xs text-white/40 mt-1">{client.description}</p>}
-              <p className="text-[10px] text-white/20 mt-2">Order: {client.sort_order}</p>
+              <p className="font-bold text-[var(--text-primary)] text-sm">{client.company_name}</p>
+              {client.description && <p className="text-xs text-[var(--text-secondary)] mt-1">{client.description}</p>}
+              <p className="text-[10px] text-[var(--text-secondary)] mt-2">Order: {client.sort_order}</p>
             </motion.div>
           ))}
         </div>
       )}
 
-      <p className="mt-6 text-xs text-white/25 text-center">
+      <p className="mt-6 text-xs text-[var(--text-secondary)] text-center">
         💡 Changes will reflect live on the Lykspire website's "Trusted by Industry Leaders" section
       </p>
     </div>

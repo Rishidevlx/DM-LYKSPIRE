@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Users,
   X,
+  FolderPlus,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -28,6 +29,7 @@ const navConfig = [
     children: [
       { label: 'All Blogs', icon: List, path: '/blogs' },
       { label: 'New Blog', icon: PlusCircle, path: '/blogs/new' },
+      { label: 'Add Category', icon: FolderPlus, path: '/blogs/categories' },
     ],
   },
   {
@@ -73,25 +75,25 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
         style={{ background: 'var(--bg-sidebar)', borderRight: '1px solid var(--border)' }}
       >
         {/* Logo */}
-        <div className="px-5 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="px-5 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 flex items-center justify-center shrink-0">
               <img src={logo} alt="Lykspire" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-bold text-[var(--text-primary)] leading-none tracking-wide text-sm">Lykspire</h1>
-              <span className="text-[9px] font-semibold text-[var(--text-secondary)] tracking-widest uppercase">Admin Panel</span>
+              <h1 className="font-bold text-[#ffffff] leading-none tracking-wide text-sm">Lykspire</h1>
+              <span className="text-[9px] font-semibold text-[#ffffff]/60 tracking-widest uppercase">Admin Panel</span>
             </div>
           </div>
           {/* Close button for mobile */}
-          <button className="md:hidden text-[var(--text-secondary)]" onClick={() => setIsOpen?.(false)}>
+          <button className="md:hidden text-[#ffffff]/60" onClick={() => setIsOpen?.(false)}>
             <X size={18} />
           </button>
         </div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/20 px-3 pb-2">Menu</p>
+        <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#ffffff]/20 px-3 pb-2">Menu</p>
 
         {navConfig.map((item) => {
           const Icon = item.icon;
@@ -107,7 +109,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 group ${
                     path.startsWith(item.path)
                       ? 'bg-indigo-500/15 text-indigo-300'
-                      : 'text-white/40 hover:text-white/80 hover:bg-white/[0.04]'
+                      : 'text-[#ffffff]/40 hover:text-[#ffffff]/80 hover:bg-[#ffffff]/[0.04]'
                   }`}
                 >
                   <Icon size={17} strokeWidth={1.8} />
@@ -123,7 +125,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 relative ${
                     active
                       ? 'bg-indigo-500/15 text-indigo-300'
-                      : 'text-white/40 hover:text-white/80 hover:bg-white/[0.04]'
+                      : 'text-[#ffffff]/40 hover:text-[#ffffff]/80 hover:bg-[#ffffff]/[0.04]'
                   }`}
                 >
                   {active && (
@@ -153,10 +155,10 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
                       <Link
                         key={child.path}
                         to={child.path}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-sm ${
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-150 ${
                           childActive
-                            ? 'text-indigo-300 bg-indigo-500/10'
-                            : 'text-white/35 hover:text-white/70 hover:bg-white/[0.03]'
+                            ? 'text-indigo-400 font-medium'
+                            : 'text-[#ffffff]/40 hover:text-[#ffffff]/80 hover:bg-[#ffffff]/[0.04]'
                         }`}
                       >
                         <ChildIcon size={15} strokeWidth={1.8} />
@@ -172,10 +174,13 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t border-white/[0.06]">
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-white/35 hover:text-red-400 hover:bg-red-500/[0.08] transition-all group"
+      <div className="px-3 py-4 border-t border-[#ffffff]/[0.06]">
+        <button 
+          onClick={() => {
+            localStorage.removeItem('adminToken');
+            navigate('/login');
+          }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#ffffff]/40 hover:text-[#ffffff]/80 hover:bg-[#ffffff]/[0.04] transition-all"
         >
           <LogOut size={17} strokeWidth={1.8} />
           <span className="text-sm font-medium">Sign Out</span>

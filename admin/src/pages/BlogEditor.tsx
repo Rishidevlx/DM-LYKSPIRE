@@ -60,18 +60,18 @@ function slugify(text: string) {
 
 function SectionCard({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="bg-white/[0.03] border border-white/[0.07] rounded-xl overflow-hidden">
-      <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-white/[0.06]">
+    <div className="bg-[var(--panel-bg)] border border-[var(--border)] rounded-xl overflow-hidden">
+      <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-[var(--border)]">
         <span className="text-indigo-400">{icon}</span>
-        <h3 className="text-sm font-semibold text-white/70">{title}</h3>
+        <h3 className="text-sm font-semibold text-[var(--text-secondary)]">{title}</h3>
       </div>
       <div className="p-5">{children}</div>
     </div>
   );
 }
 
-const inputCls = 'w-full bg-white/[0.04] border border-white/[0.07] rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition-all';
-const labelCls = 'block text-xs font-semibold text-white/40 uppercase tracking-widest mb-1.5';
+const inputCls = 'w-full bg-[var(--panel-bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition-all';
+const labelCls = 'block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-1.5';
 
 export default function BlogEditor() {
   const { id } = useParams();
@@ -82,8 +82,18 @@ export default function BlogEditor() {
   const [form, setForm] = useState<BlogFormData>(defaultForm);
   const [tagInput, setTagInput] = useState('');
   const [slugManual, setSlugManual] = useState(false);
+  const [categories, setCategories] = useState<{id: number, name: string, slug: string}[]>([]);
 
   const token = localStorage.getItem('adminToken');
+
+  useEffect(() => {
+    fetch(`${API}/api/categories`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.categories) setCategories(data.categories);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   useEffect(() => {
     if (isEditing) {
@@ -203,26 +213,26 @@ export default function BlogEditor() {
       {/* Page Header */}
       <div className="flex items-center justify-between mb-7">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/blogs')} className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.07] text-white/50 hover:text-white hover:bg-white/[0.07] transition-all">
+          <button onClick={() => navigate('/blogs')} className="p-2 rounded-xl bg-[var(--panel-bg)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--panel-bg)] transition-all">
             <ArrowLeft size={17} />
           </button>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/25 flex items-center gap-1.5 mb-0.5"><TrendingUp size={10} /> Content</p>
-            <h1 className="text-2xl font-bold text-white" style={{ fontFamily: 'Sora, sans-serif' }}>{isEditing ? 'Edit Post' : 'New Blog Post'}</h1>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1.5 mb-0.5"><TrendingUp size={10} /> Content</p>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]" style={{ fontFamily: 'Sora, sans-serif' }}>{isEditing ? 'Edit Post' : 'New Blog Post'}</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => handleSave('draft')}
             disabled={isSaving}
-            className="px-4 py-2.5 rounded-xl text-sm font-semibold text-white/60 bg-white/[0.05] border border-white/[0.07] hover:bg-white/[0.09] hover:text-white transition-all disabled:opacity-40 flex items-center gap-2"
+            className="px-4 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-secondary)] bg-[var(--panel-bg)] border border-[var(--border)] hover:bg-[var(--panel-bg)] hover:text-[var(--text-primary)] transition-all disabled:opacity-40 flex items-center gap-2"
           >
             <FileText size={15} /> Save Draft
           </button>
           <button
             onClick={() => handleSave('published')}
             disabled={isSaving}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 disabled:opacity-50 transition-all active:scale-[0.98] flex items-center gap-2"
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-[#ffffff] bg-[#2563eb] hover:bg-[#1d4ed8] shadow-lg shadow-[#2563eb]/25 disabled:opacity-50 transition-all active:scale-[0.98] flex items-center gap-2"
           >
             {isSaving ? <Loader2 size={15} className="animate-spin" /> : <Globe size={15} />}
             Publish
@@ -249,7 +259,7 @@ export default function BlogEditor() {
               <div>
                 <label className={labelCls}>Slug (Auto-generated)</label>
                 <div className="flex gap-2">
-                  <span className="flex items-center px-3 py-2.5 bg-white/[0.02] border border-white/[0.07] rounded-l-xl text-xs text-white/30 whitespace-nowrap border-r-0">/blog/</span>
+                  <span className="flex items-center px-3 py-2.5 bg-[var(--panel-bg)] border border-[var(--border)] rounded-l-xl text-xs text-[var(--text-secondary)] whitespace-nowrap border-r-0">/blog/</span>
                   <input
                     value={form.slug}
                     onChange={(e) => { setSlugManual(true); setField('slug', slugify(e.target.value)); }}
@@ -268,7 +278,7 @@ export default function BlogEditor() {
                   placeholder="A short, engaging summary of what this post is about…"
                   className={inputCls + ' resize-none'}
                 />
-                <p className="text-xs text-white/20 mt-1 text-right">{form.short_description.length}/300</p>
+                <p className="text-xs text-[var(--text-secondary)] mt-1 text-right">{form.short_description.length}/300</p>
               </div>
             </div>
           </SectionCard>
@@ -295,7 +305,7 @@ export default function BlogEditor() {
 
           {/* Rich Text Editor */}
           <SectionCard title="Blog Content *" icon={<AlignLeft size={15} />}>
-            <div className="rounded-xl overflow-hidden border border-white/[0.07]" style={{ minHeight: 500 }}>
+            <div className="rounded-xl overflow-hidden border border-[var(--border)]" style={{ minHeight: 500 }}>
               <ReactQuill
                 theme="snow"
                 value={form.content}
@@ -311,12 +321,12 @@ export default function BlogEditor() {
           <SectionCard title="SEO Settings" icon={<Search size={15} />}>
             <div className="space-y-4">
               {/* SEO Score Bar */}
-              <div className="p-4 bg-white/[0.02] rounded-xl border border-white/[0.06]">
+              <div className="p-4 bg-[var(--panel-bg)] rounded-xl border border-[var(--border)]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-white/50">SEO Score</span>
+                  <span className="text-xs font-semibold text-[var(--text-secondary)]">SEO Score</span>
                   <span className={`text-xs font-bold ${score >= 70 ? 'text-emerald-400' : score >= 40 ? 'text-amber-400' : 'text-red-400'}`}>{score}/100</span>
                 </div>
-                <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden">
+                <div className="h-2 bg-[var(--panel-bg)] rounded-full overflow-hidden">
                   <motion.div
                     className={`h-full rounded-full ${score >= 70 ? 'bg-emerald-500' : score >= 40 ? 'bg-amber-500' : 'bg-red-500'}`}
                     initial={{ width: 0 }}
@@ -328,12 +338,12 @@ export default function BlogEditor() {
               <div>
                 <label className={labelCls}>Meta Title</label>
                 <input value={form.meta_title} onChange={(e) => setField('meta_title', e.target.value)} placeholder={form.title || 'SEO page title'} className={inputCls} />
-                <p className="text-xs text-white/20 mt-1">{form.meta_title.length}/60 chars ideal</p>
+                <p className="text-xs text-[var(--text-secondary)] mt-1">{form.meta_title.length}/60 chars ideal</p>
               </div>
               <div>
                 <label className={labelCls}>Meta Description</label>
                 <textarea value={form.meta_description} onChange={(e) => setField('meta_description', e.target.value)} rows={2} maxLength={160} placeholder="Describe your post for Google search results…" className={inputCls + ' resize-none'} />
-                <p className="text-xs text-white/20 mt-1">{form.meta_description.length}/160 chars</p>
+                <p className="text-xs text-[var(--text-secondary)] mt-1">{form.meta_description.length}/160 chars</p>
               </div>
               <div>
                 <label className={labelCls}>Keywords (comma separated)</label>
@@ -345,37 +355,19 @@ export default function BlogEditor() {
 
         {/* RIGHT: Publish Settings */}
         <div className="space-y-5">
-          {/* Status */}
-          <SectionCard title="Status" icon={<Eye size={15} />}>
-            <div className="flex gap-2">
-              {(['draft', 'published'] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setField('status', s)}
-                  className={`flex-1 py-3 rounded-xl border flex items-center justify-center gap-2 text-sm font-semibold transition-all ${
-                    form.status === s 
-                      ? (s === 'published' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-amber-500/10 border-amber-500/30 text-amber-400')
-                      : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--text-muted)] hover:text-[var(--text-secondary)] bg-[var(--input-bg)]'
-                  }`}
-                >
-                  <div className={`w-3 h-3 rounded-full border-2 ${form.status === s ? (s === 'published' ? 'border-emerald-400 bg-emerald-400' : 'border-amber-400 bg-amber-400') : 'border-[var(--text-muted)]'}`} />
-                  {s === 'draft' ? <File size={16} /> : <Globe size={16} />} 
-                  {s === 'draft' ? 'Draft' : 'Published'}
-                </button>
-              ))}
-            </div>
-          </SectionCard>
 
           {/* Category */}
           <SectionCard title="Category" icon={<FolderOpen size={15} />}>
-            <input
-              type="text"
-              placeholder="e.g. Artificial Intelligence"
-              className={inputCls}
+            <select
+              className={inputCls + ' cursor-pointer'}
               value={form.category}
               onChange={e => setField('category', e.target.value)}
-            />
+            >
+              <option value="" disabled className="bg-[var(--bg-main)] text-[var(--text-secondary)]">Select a category</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.name} className="bg-[var(--bg-main)] text-[var(--text-primary)]">{cat.name}</option>
+              ))}
+            </select>
           </SectionCard>
 
           {/* Tags */}
@@ -422,13 +414,11 @@ export default function BlogEditor() {
 
           {/* Publish Actions */}
           <div className="space-y-2">
-            <button onClick={() => handleSave('published')} disabled={isSaving} className="w-full py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 disabled:opacity-50 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+            <button onClick={() => handleSave('published')} disabled={isSaving} className="w-full py-3 rounded-xl text-sm font-bold text-[#ffffff] bg-[#2563eb] hover:bg-[#1d4ed8] shadow-lg shadow-[#2563eb]/25 disabled:opacity-50 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
               {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Globe size={16} />}
               Publish Now
             </button>
-            <button onClick={() => handleSave('draft')} disabled={isSaving} className="w-full py-2.5 rounded-xl text-sm font-semibold text-white/50 bg-white/[0.04] border border-white/[0.07] hover:text-white hover:bg-white/[0.07] transition-all flex items-center justify-center gap-2">
-              <FileText size={15} /> Save as Draft
-            </button>
+
           </div>
         </div>
       </div>
