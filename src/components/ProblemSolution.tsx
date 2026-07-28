@@ -2,19 +2,19 @@ import { motion } from "motion/react";
 import { XCircle, CheckCircle2, AlertTriangle, ArrowRight, Zap, Target, Layers, Bot, RefreshCcw } from "lucide-react";
 
 const problems = [
-  "You get leads, but they don’t convert",
-  "Follow-ups are delayed or inconsistent",
-  "Marketing feels random and unpredictable",
-  "Too many tools, no proper integration",
-  "You’re spending money, but not seeing real ROI"
+  "You have software but it doesn't connect your business",
+  "Teams do repetitive work that AI should be handling",
+  "Technology choices aren't aligned with business outcomes",
+  "Legacy systems slow down your growth and operations",
+  "You're scaling people instead of scaling intelligent systems"
 ];
 
 const solutions = [
-  { text: "Traffic", icon: Target, desc: "Attract the right audience" },
-  { text: "Magnet", icon: Bot, desc: "Capture leads automatically" },
-  { text: "Filter", icon: Layers, desc: "Qualify high-intent intent" },
-  { text: "Nurture", icon: RefreshCcw, desc: "Build trust 24/7" },
-  { text: "Convert", icon: Zap, desc: "Close deals at scale" }
+  { text: "Discover", icon: Target, desc: "Understand your business" },
+  { text: "Design", icon: Bot, desc: "Architect the right solution" },
+  { text: "Engineer", icon: Layers, desc: "Build scalable systems" },
+  { text: "Deploy", icon: Zap, desc: "Launch with confidence" },
+  { text: "Optimize", icon: RefreshCcw, desc: "Scale with AI & analytics" }
 ];
 
 export default function ProblemSolution() {
@@ -34,7 +34,7 @@ export default function ProblemSolution() {
             >
               <div className="section-label text-red-400 border-red-400/20 bg-red-400/5">The Challenge</div>
               <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-black tracking-tighter uppercase mb-6 md:mb-8 leading-tight relative">
-                Why Your Marketing <br />
+                Why Your Technology <br />
                 <div className="relative inline-block mt-2">
                   {/* Top Half of Text */}
                   <motion.span 
@@ -53,7 +53,7 @@ export default function ProblemSolution() {
                     className="absolute inset-0 text-red-500 select-none pointer-events-none"
                     style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 48%, 85% 52%, 70% 47%, 50% 55%, 30% 45%, 15% 53%, 0% 47%)' }}
                   >
-                    Isn’t Delivering
+                    Isn't Delivering
                   </motion.span>
                   
                   {/* Bottom Half of Text */}
@@ -73,11 +73,11 @@ export default function ProblemSolution() {
                     className="absolute inset-0 text-red-500 select-none pointer-events-none"
                     style={{ clipPath: 'polygon(0% 47%, 15% 53%, 30% 45%, 50% 55%, 70% 47%, 85% 52%, 100% 48%, 100% 100%, 0% 100%)' }}
                   >
-                    Isn’t Delivering
+                    Isn't Delivering
                   </motion.span>
 
                   {/* Base Text (Invisible to maintain layout) */}
-                  <span className="opacity-0">Isn’t Delivering</span>
+                  <span className="opacity-0">Isn't Delivering</span>
 
                   {/* Realistic Crack Line Effect */}
                   <motion.svg 
@@ -107,7 +107,7 @@ export default function ProblemSolution() {
                 </div> Results
               </h2>
               <p className="text-white/60 text-lg mb-12 max-w-xl">
-                Most businesses don’t lack effort — <span className="text-white font-bold">they lack a system.</span> Without a structured process, your growth is hit-or-miss.
+                Most businesses don't lack technology — <span className="text-white font-bold">they lack intelligent systems.</span> Without a connected, automated foundation, your growth hits a ceiling.
               </p>
               
               <div className="space-y-4">
@@ -128,7 +128,7 @@ export default function ProblemSolution() {
 
               <div className="mt-12 p-6 rounded-3xl bg-red-500/5 border border-red-500/10 inline-block">
                 <p className="text-red-400 font-display font-black uppercase tracking-widest text-sm flex items-center gap-3">
-                  <AlertTriangle className="w-5 h-5" /> Marketing without a system is just noise.
+                  <AlertTriangle className="w-5 h-5" /> Technology without intelligence is just overhead.
                 </p>
               </div>
             </motion.div>
@@ -224,11 +224,11 @@ export default function ProblemSolution() {
           <div className="text-center mb-24">
             <div className="section-label mx-auto">The Solution</div>
             <h2 className="text-5xl md:text-[80px] font-display font-black tracking-tighter uppercase mb-8 leading-none">
-              We Don’t Run Campaigns. <br />
-              <span className="text-gradient">We Build Growth Systems.</span>
+              More Than a Development Company. <br />
+              <span className="text-gradient">We Deliver Business Outcomes.</span>
             </h2>
             <p className="text-white/70 text-xl max-w-2xl mx-auto font-bold uppercase tracking-widest">
-              LyKSpire designs a complete, automated pipeline that works 24/7
+              LykSpire becomes your long-term technology partner — helping you continuously innovate, adopt AI, and build solutions that grow with your business.
             </p>
           </div>
 
@@ -265,7 +265,7 @@ export default function ProblemSolution() {
           <div className="mt-32 p-12 glass-card text-center border-cyber-teal/10">
              <CheckCircle2 className="w-16 h-16 text-cyber-teal mx-auto mb-8 animate-bounce" />
              <h3 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter mb-6 leading-tight">
-                Your business runs on <span className="text-cyber-teal italic text-gradient">systems</span> — not 
+                Your business runs on <span className="text-cyber-teal italic text-gradient">intelligent systems</span> — not 
                 <motion.span 
                   initial={{ filter: "blur(12px)", opacity: 0 }}
                   whileInView={{ 
@@ -289,7 +289,7 @@ export default function ProblemSolution() {
               onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
               className="btn-primary"
             >
-              Start Building My System <Zap className="w-5 h-5 fill-current" />
+              Start Building My Intelligent Business <Zap className="w-5 h-5 fill-current" />
             </button>
           </div>
         </div>

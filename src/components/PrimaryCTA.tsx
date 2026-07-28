@@ -215,7 +215,7 @@ export default function PrimaryCTA() {
             >
               <ShieldCheck className="w-4 h-4 text-cyber-teal" />
               <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyber-teal">
-                System Verified Execution
+                Enterprise-Grade Technology Delivery
               </span>
             </motion.div>
 
@@ -231,11 +231,10 @@ export default function PrimaryCTA() {
               transition={{ delay: 0.5 }}
               className="text-white/40 text-lg md:text-2xl font-bold uppercase tracking-[0.2em] mb-16 max-w-3xl mx-auto leading-relaxed"
             >
-              Stop relying on{" "}
-              <span className="text-white">temporary tactics</span>. <br />
-              Secure your{" "}
-              <span className="text-cyber-teal">market dominance</span> with
-              automated intelligence.
+              Whether you're building your next AI product, modernizing enterprise systems,{" "}
+              <span className="text-white">or creating autonomous workflows</span>, <br />
+              LykSpire is your long-term{" "}
+              <span className="text-cyber-teal">Intelligent Business Engineering Partner</span>.
             </motion.p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
@@ -247,7 +246,7 @@ export default function PrimaryCTA() {
                 }
                 className="btn-primary text-xl px-12 py-6 w-full sm:w-auto shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
               >
-                Launch My System <Sparkles className="w-6 h-6 ml-2" />
+                Book a Discovery Call <Sparkles className="w-6 h-6 ml-2" />
               </motion.button>
               <motion.button
                 whileHover={{
@@ -260,7 +259,7 @@ export default function PrimaryCTA() {
                 }
                 className="btn-outline text-xl px-12 py-6 w-full sm:w-auto border-white/20"
               >
-                Strategy Call <ArrowRight className="w-6 h-6 ml-2" />
+                Start Your Journey <ArrowRight className="w-6 h-6 ml-2" />
               </motion.button>
             </div>
 

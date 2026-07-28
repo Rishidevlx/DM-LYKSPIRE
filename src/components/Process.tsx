@@ -59,37 +59,37 @@ const TypingScalable = () => {
 const steps = [
   {
     title: "Discover",
-    description: "We understand your brand, market, and audience to identify the biggest growth opportunities.",
-    details: ["Identify brand and growth opportunities", "Understand your audience and market", "Build a clear marketing direction"],
+    description: "We understand your business, goals, and technology landscape to identify the biggest opportunities.",
+    details: ["Understand your business and market", "Identify automation and AI opportunities", "Build a clear technology direction"],
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600"
   },
   {
-    title: "Strategy",
-    description: "We design a clear marketing strategy aligned with your brand goals and growth opportunities.",
-    details: ["Define the right marketing channels", "Build a strong content strategy", "Create a roadmap for brand growth"],
+    title: "Design",
+    description: "We architect the right solution — AI, automation, software, or cloud — aligned with your business goals.",
+    details: ["Define technology architecture", "Design scalable system blueprints", "Create a roadmap for business transformation"],
     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=600"
   },
   {
-    title: "Create",
-    description: "We produce high-impact content, visuals, and campaigns designed to capture attention and grow your brand.",
-    details: ["Create engaging visual content", "Develop campaigns that attract attention", "Launch marketing assets across platforms"],
+    title: "Engineer",
+    description: "We build enterprise-grade, scalable systems with AI, automation, and software engineering best practices.",
+    details: ["Build AI products and intelligent systems", "Develop custom software and automation workflows", "Integrate cloud, data, and enterprise systems"],
     image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=600"
   },
   {
-    title: "Scale",
-    description: "We analyze performance, optimize campaigns, and scale marketing efforts to drive continuous brand growth.",
-    details: ["Track campaign performance", "Optimize marketing strategies", "Scale growth across platforms"],
+    title: "Deploy",
+    description: "We launch with confidence — managing deployment, testing, monitoring, and go-live support.",
+    details: ["Manage production deployment", "Ensure quality, security, and performance", "Provide go-live support and handover"],
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=600"
   }
 ];
 
 const flowStages = [
-  { label: "Traffic", desc: "Attract audience", icon: Waves, color: "text-blue-400" },
-  { label: "Magnet", desc: "Capture leads", icon: Target, color: "text-purple-400" },
-  { label: "Filter", desc: "Qualify intent", icon: Filter, color: "text-cyber-teal" },
-  { label: "Nurture", desc: "Build trust", icon: Heart, color: "text-pink-400" },
-  { label: "Convert", desc: "Close deals", icon: Zap, color: "text-orange-400" },
-  { label: "Retain", desc: "Ensure loyalty", icon: Repeat, color: "text-green-400" }
+  { label: "Discover", desc: "Understand business", icon: Waves, color: "text-blue-400" },
+  { label: "Design", desc: "Architect solution", icon: Target, color: "text-purple-400" },
+  { label: "Engineer", desc: "Build systems", icon: Filter, color: "text-cyber-teal" },
+  { label: "Deploy", desc: "Launch confidently", icon: Zap, color: "text-orange-400" },
+  { label: "Optimize", desc: "Improve with AI", icon: Heart, color: "text-pink-400" },
+  { label: "Scale", desc: "Grow the business", icon: Repeat, color: "text-green-400" }
 ];
 
 export default function Process() {
@@ -106,7 +106,7 @@ export default function Process() {
             <div className="section-label">Our Philosophy</div>
             <h2 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase mb-8">How We <br/> <span className="text-gradient">Work</span></h2>
             <p className="text-white/60 text-lg leading-relaxed max-w-xl">
-              We don't just execute tasks; we engineer growth. Our approach combines deep data analysis with creative storytelling, ensuring every dollar spent translates into measurable business velocity. We act as an extension of your team, obsessing over conversion as much as you do.
+              We don't just execute projects; we engineer intelligent businesses. Our approach combines deep technical expertise with strategic thinking — ensuring every system we build translates into measurable business outcomes. We become a long-term technology partner, not just a vendor.
             </p>
           </motion.div>
 
@@ -175,7 +175,7 @@ export default function Process() {
         </div>
 
         <div className="mb-32">
-          <div className="section-label">Our Workflow</div>
+          <div className="section-label">Our Process</div>
           <h2 className="text-4xl md:text-6xl lg:text-8xl font-display font-black tracking-tighter uppercase mb-6 md:mb-8 leading-tight">
             Simple. 
             {/* STRUCTURED — Crack animation matching "Isn't Delivering" style */}
@@ -223,7 +223,7 @@ export default function Process() {
             <TypingScalable />
           </h2>
           <p className="text-white/40 text-xl font-bold uppercase tracking-widest max-w-xl">
-            We follow a proven methodology to engineer your growth system.
+            We follow a proven methodology to engineer intelligent businesses.
           </p>
         </div>
 
@@ -231,26 +231,26 @@ export default function Process() {
           {[
             {
               num: "01",
-              title: "Strategy Call",
-              desc: "We understand your business, goals, and challenges.",
+              title: "Discovery Call",
+              desc: "We understand your business, goals, and technology challenges.",
               icon: Target
             },
             {
               num: "02",
-              title: "System Design",
-              desc: "We map a custom growth engine tailored to you.",
+              title: "Solution Design",
+              desc: "We architect a custom intelligent system tailored to your business.",
               icon: Layers
             },
             {
               num: "03",
-              title: "Build & Automate",
-              desc: "We implement tools, funnels, and workflows.",
+              title: "Engineering",
+              desc: "We build AI, automation, software, and cloud systems.",
               icon: Zap
             },
             {
               num: "04",
-              title: "Launch & Optimize",
-              desc: "We track, refine, and scale performance.",
+              title: "Deploy & Optimize",
+              desc: "We launch, monitor, and continuously improve your systems.",
               icon: Activity
             }
           ].map((item, i) => (

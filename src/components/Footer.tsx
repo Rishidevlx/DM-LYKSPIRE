@@ -11,14 +11,14 @@ export default function Footer() {
         <div className="grid lg:grid-cols-2 gap-20 mb-20">
           <div>
             <h2 className="font-display text-5xl md:text-7xl font-bold mb-8 leading-tight">
-              Ready to build <br />
-              <span className="text-gradient">your growth engine?</span>
+              Ready to Build an <br />
+              <span className="text-gradient">Intelligent Business?</span>
             </h2>
             <button 
               onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
               className="btn-primary text-xl px-10 py-5"
             >
-              Book a Strategy Call <ArrowUpRight className="w-6 h-6" />
+              Book a Discovery Call <ArrowUpRight className="w-6 h-6" />
             </button>
           </div>
 
@@ -29,7 +29,9 @@ export default function Footer() {
                 <li><a href="#" className="hover:text-white transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Services</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Process</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Case Studies</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="/blogs" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
               </ul>
             </div>
             <div>

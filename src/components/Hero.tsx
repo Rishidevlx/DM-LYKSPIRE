@@ -7,7 +7,7 @@ import {
 import lykspireLogo from "../assest/LYKSPIRE LOGO.png";
 
 const inputs = ["Website","Email","CRM","Forms","Documents","APIs","Databases"];
-const outputs = ["Happy Customers","Higher Revenue","Lower Costs","Better Decisions","More Free Time"];
+const outputs = ["AI Products","Higher Revenue","Lower Costs","Better Decisions","Scalable Systems"];
 const inputIcons = [Globe, Mail, Users2, FileText, FolderOpen, Code2, Database];
 const outputIcons = [Smile, TrendingUp, DollarSign, Target, Clock];
 
@@ -42,22 +42,22 @@ export default function Hero() {
         {/* ── LEFT ── */}
         <motion.div initial={{ opacity:0, x:-50 }} animate={{ opacity:1, x:0 }} transition={{ duration:.8 }} className="flex flex-col justify-center">
           <span className="inline-flex mb-6 px-3 py-1.5 rounded-full bg-cyber-teal/10 border border-cyber-teal/30 text-cyber-teal text-[10px] font-black uppercase tracking-[.2em] animate-pulse self-start">
-            AI Agents &amp; Intelligent Systems That Run Your Business
+            Intelligent Business Engineering Company
           </span>
           <h1 className="font-display text-4xl md:text-6xl font-black leading-tight mb-6 tracking-tighter text-white">
-            Stop Scaling With <span className="text-gradient">People.</span><br />
-            Start Scaling With <span className="text-cyber-teal">Systems.</span>
+            Engineering the Future of <span className="text-gradient">Intelligent</span><br />
+            <span className="text-cyber-teal">Businesses.</span>
           </h1>
           <p className="text-white/60 text-base md:text-lg max-w-[540px] mb-3 leading-relaxed">
-            We build AI agents and intelligent platforms that think, decide, and execute — turning manual businesses into autonomous machines.
+            Build AI-native products, autonomous business workflows, enterprise software, and cloud platforms with a technology partner that stays with you beyond deployment.
           </p>
-          <p className="text-white/40 text-sm max-w-[480px] mb-10 font-medium">Replace repetitive work. Reduce costs. Scale faster.</p>
+          <p className="text-white/40 text-sm max-w-[480px] mb-10 font-medium">We don't just build software. We engineer intelligent businesses.</p>
           <div className="flex flex-col sm:flex-row gap-4 mb-10">
-            <button onClick={() => window.dispatchEvent(new Event("open-chatbot"))} className="btn-primary text-base px-8 py-4 whitespace-nowrap">Get Your AI Automation Plan</button>
-            <button onClick={() => window.dispatchEvent(new Event("open-contact-modal"))} className="btn-outline text-base px-8 py-4 whitespace-nowrap">Book Free Strategy Call</button>
+            <button onClick={() => window.dispatchEvent(new Event("open-chatbot"))} className="btn-primary text-base px-8 py-4 whitespace-nowrap">Start Your Digital Transformation</button>
+            <button onClick={() => window.dispatchEvent(new Event("open-contact-modal"))} className="btn-outline text-base px-8 py-4 whitespace-nowrap">Talk to an Expert</button>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-[10px] font-black uppercase tracking-[.25em] text-white/30">
-            {["AI Agents","Automation Systems","SaaS Platforms","ERP / CRM","Integrations"].map(t => (
+            {["Build AI Products","Custom Software","Automate Operations","Cloud & DevOps","AI Agents"].map(t => (
               <span key={t} className="flex items-center gap-1.5"><div className="w-1 h-1 bg-cyber-teal rounded-full"/>{t}</span>
             ))}
           </div>
