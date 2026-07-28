@@ -227,7 +227,7 @@ export default function ProblemSolution() {
               We Don’t Run Campaigns. <br />
               <span className="text-gradient">We Build Growth Systems.</span>
             </h2>
-            <p className="text-white/40 text-xl max-w-2xl mx-auto font-bold uppercase tracking-widest">
+            <p className="text-white/70 text-xl max-w-2xl mx-auto font-bold uppercase tracking-widest">
               LyKSpire designs a complete, automated pipeline that works 24/7
             </p>
           </div>

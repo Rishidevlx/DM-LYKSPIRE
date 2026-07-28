@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "../assest/LYKSPIRE LOGO.png";
+import TorchToggle from "./TorchToggle";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,7 +54,8 @@ export default function Navbar() {
           <Link to="/blog" className="hover:text-white transition-colors cursor-pointer">Blog</Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-4">
+          <TorchToggle />
           <button 
             onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
             className="flex items-center gap-2 px-6 py-2.5 bg-white text-obsidian rounded-full font-bold text-sm hover:bg-cyber-teal transition-colors group"
@@ -63,12 +65,15 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Toggle Button */}
-        <button 
-          className="md:hidden text-white hover:text-cyber-teal transition-colors"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-        </button>
+        <div className="md:hidden flex items-center gap-4">
+          <TorchToggle />
+          <button 
+            className="text-white hover:text-cyber-teal transition-colors"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Dropdown */}

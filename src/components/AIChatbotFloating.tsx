@@ -313,16 +313,16 @@ export default function AIChatbotFloating() {
               exit={{ opacity: 0, scale: 0.9 }}
               className="mb-4 mr-2 bg-gradient-to-r from-purple-600 to-cyber-teal p-[2px] rounded-2xl shadow-2xl shadow-purple-500/20 max-w-[250px]"
             >
-              <div className="bg-[#111] rounded-2xl p-4 relative">
+              <div className="bg-obsidian rounded-2xl p-4 relative shadow-xl">
                 <button 
                   onClick={() => setShowTooltip(false)}
-                  className="absolute -top-2 -right-2 bg-white text-black rounded-full p-1 shadow hover:scale-110 transition-transform"
+                  className="absolute -top-2 -right-2 bg-cyber-teal text-white rounded-full p-1 shadow hover:scale-110 transition-transform"
                 >
                   <X className="w-3 h-3" />
                 </button>
                 <p className="text-white text-sm font-bold leading-relaxed">{tooltipMessage}</p>
                 {/* Pointer Arrow */}
-                <div className="absolute -bottom-2 right-6 w-4 h-4 bg-[#111] rotate-45 border-b-[2px] border-r-[2px] border-cyber-teal"></div>
+                <div className="absolute -bottom-2 right-6 w-4 h-4 bg-obsidian rotate-45 border-b-[2px] border-r-[2px] border-cyber-teal"></div>
               </div>
             </motion.div>
           )}
@@ -367,10 +367,10 @@ export default function AIChatbotFloating() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-4 md:inset-0 md:m-auto z-[100] w-auto md:w-[850px] h-auto md:h-[85vh] max-h-[calc(100vh-2rem)] bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed inset-4 md:inset-0 md:m-auto z-[100] w-auto md:w-[850px] h-auto md:h-[85vh] max-h-[calc(100vh-2rem)] bg-obsidian border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 border-b border-white/10 bg-[#111] flex items-center justify-between">
+            <div className="p-4 border-b border-white/10 bg-obsidian flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden border border-cyber-teal/50">
                   <img src={botIcon} alt="ZenThira" className="w-full h-full object-cover" />
@@ -383,13 +383,13 @@ export default function AIChatbotFloating() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="hidden sm:flex items-center gap-2 bg-cyber-teal/5 px-3 py-1.5 rounded-full border border-cyber-teal/20">
-                  <TrendingUp className="w-3.5 h-3.5 text-cyber-teal" />
-                  <span className="text-[11px] text-white/70 font-bold uppercase tracking-wider">
+                <div className="hidden sm:flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                  <TrendingUp className="w-3.5 h-3.5 text-white/50" />
+                  <span className="text-[11px] text-white/60 font-bold uppercase tracking-wider">
                     <motion.span
                       key={planCount}
-                      initial={{ scale: 1.5, color: "#22d3ee" }}
-                      animate={{ scale: 1, color: "rgba(255,255,255,0.7)" }}
+                      initial={{ scale: 1.5, color: "#7C3AED" }}
+                      animate={{ scale: 1, color: "#9ca3af" }}
                       className="inline-block mr-1"
                     >
                       {planCount.toLocaleString()}+
@@ -399,7 +399,7 @@ export default function AIChatbotFloating() {
                 </div>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                  className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -407,18 +407,18 @@ export default function AIChatbotFloating() {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar bg-gradient-to-b from-obsidian to-[#0a0a0a]">
+            <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar bg-obsidian">
               
               {/* Step 1: Form Steps */}
               {step === "form" && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                   {/* Progress Bar */}
                   <div>
-                    <div className="flex justify-between text-xs text-white/60 mb-2 font-bold uppercase tracking-widest">
+                    <div className="flex justify-between text-xs text-white/50 mb-2 font-bold uppercase tracking-widest">
                       <span>Step {formStep}</span>
                       <span>{totalSteps}</span>
                     </div>
-                    <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                       <motion.div 
                         className="h-full bg-cyber-teal"
                         initial={{ width: 0 }}
@@ -428,7 +428,7 @@ export default function AIChatbotFloating() {
                     </div>
                   </div>
 
-                  <div className="bg-[#111] border border-white/5 rounded-xl p-5 text-sm text-white/80 leading-relaxed">
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-5 text-sm text-white/80 leading-relaxed">
                     Hello! I'm ZenThira, your AI Consultant. Let's build your custom growth strategy.
                   </div>
 
@@ -437,12 +437,12 @@ export default function AIChatbotFloating() {
                       <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="text-xs text-white/60 uppercase tracking-wider font-bold">Business Type <span className="text-red-500">*</span></label>
+                            <label className="text-xs text-white/50 uppercase tracking-wider font-bold">Business Type <span className="text-red-500">*</span></label>
                             <input 
                               type="text" 
                               value={formData.business_type}
                               onChange={(e) => setFormData({...formData, business_type: e.target.value})}
-                              className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
+                              className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
                               placeholder="e.g. Retail, Agency, SaaS"
                             />
                             {errors.business_type && <p className="text-red-500 text-[10px]">{errors.business_type}</p>}
@@ -453,7 +453,7 @@ export default function AIChatbotFloating() {
                               type="number" 
                               value={formData.years_in_business}
                               onChange={(e) => setFormData({...formData, years_in_business: e.target.value})}
-                              className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
+                              className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
                               placeholder="e.g. 5"
                             />
                             {errors.years_in_business && <p className="text-red-500 text-[10px]">{errors.years_in_business}</p>}
@@ -477,7 +477,7 @@ export default function AIChatbotFloating() {
                             type="text" 
                             value={formData.industry}
                             onChange={(e) => setFormData({...formData, industry: e.target.value})}
-                            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
+                            className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
                             placeholder="e.g. Healthcare, Finance"
                           />
                         </div>
@@ -491,7 +491,7 @@ export default function AIChatbotFloating() {
                           <textarea 
                             value={formData.main_activities}
                             onChange={(e) => setFormData({...formData, main_activities: e.target.value})}
-                            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors resize-none h-32"
+                            className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors resize-none h-32"
                             placeholder="What do you do daily?"
                           />
                           {errors.main_activities && <p className="text-red-500 text-[10px]">{errors.main_activities}</p>}
@@ -506,7 +506,7 @@ export default function AIChatbotFloating() {
                           <textarea 
                             value={formData.challenges}
                             onChange={(e) => setFormData({...formData, challenges: e.target.value})}
-                            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors resize-none h-32"
+                            className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors resize-none h-32"
                             placeholder="What's stopping your growth right now?"
                           />
                           {errors.challenges && <p className="text-red-500 text-[10px]">{errors.challenges}</p>}
@@ -522,7 +522,7 @@ export default function AIChatbotFloating() {
                             type="text" 
                             value={formData.tools}
                             onChange={(e) => setFormData({...formData, tools: e.target.value})}
-                            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
+                            className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors"
                             placeholder="Tally, Excel, Zoho, etc."
                           />
                           {errors.tools && <p className="text-red-500 text-[10px]">{errors.tools}</p>}
@@ -532,7 +532,7 @@ export default function AIChatbotFloating() {
                           <select 
                             value={formData.team_size}
                             onChange={(e) => setFormData({...formData, team_size: e.target.value})}
-                            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors appearance-none"
+                            className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors appearance-none"
                           >
                             <option value="">Select Size</option>
                             <option value="1-5">1-5</option>
@@ -552,7 +552,7 @@ export default function AIChatbotFloating() {
                           <textarea 
                             value={formData.goals}
                             onChange={(e) => setFormData({...formData, goals: e.target.value})}
-                            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors resize-none h-32"
+                            className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white focus:border-cyber-teal focus:outline-none transition-colors resize-none h-32"
                             placeholder="What do you want to achieve in the next 12 months?"
                           />
                           {errors.goals && <p className="text-red-500 text-[10px]">{errors.goals}</p>}
@@ -576,7 +576,7 @@ export default function AIChatbotFloating() {
                         boxShadow: ["0 0 20px rgba(168,85,247,0.2)", "0 0 40px rgba(168,85,247,0.5)", "0 0 20px rgba(168,85,247,0.2)"]
                       }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="w-28 h-28 rounded-full border-4 border-white/5 border-t-cyber-teal flex items-center justify-center bg-[#111]" 
+                      className="w-28 h-28 rounded-full border-4 border-white/5 border-t-cyber-teal flex items-center justify-center bg-input-bg" 
                     >
                       <motion.div
                         animate={{ rotate: [0, 360] }}
@@ -642,7 +642,7 @@ export default function AIChatbotFloating() {
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 select-none">
 
                   {/* Card 1: Snapshot */}
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                  <div className="bg-input-bg border border-white/5 rounded-2xl p-5 shadow-lg">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
                         <User className="w-4 h-4 text-blue-400" />
@@ -656,7 +656,7 @@ export default function AIChatbotFloating() {
                   </div>
 
                   {/* Card 2: Market Edge */}
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                  <div className="bg-input-bg border border-white/5 rounded-2xl p-5 shadow-lg">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center border border-amber-500/30">
                         <TrendingUp className="w-4 h-4 text-amber-400" />
@@ -669,7 +669,7 @@ export default function AIChatbotFloating() {
                   </div>
 
                   {/* Card 3: Digital Growth */}
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                  <div className="bg-input-bg border border-white/5 rounded-2xl p-5 shadow-lg">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-8 h-8 rounded-full bg-cyber-teal/20 flex items-center justify-center border border-cyber-teal/30">
                         <Sparkles className="w-4 h-4 text-cyber-teal" />
@@ -682,7 +682,7 @@ export default function AIChatbotFloating() {
                   </div>
 
                   {/* Card 4: 30-Day Action Plan */}
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-5 shadow-lg">
+                  <div className="bg-input-bg border border-white/5 rounded-2xl p-5 shadow-lg">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
                         <ChevronRight className="w-4 h-4 text-purple-400" />
@@ -701,7 +701,7 @@ export default function AIChatbotFloating() {
 
             {/* Fixed Footer for Form Step */}
             {step === "form" && (
-              <div className="p-4 md:p-6 border-t border-white/10 bg-[#0a0a0a] flex flex-col gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+              <div className="p-4 md:p-6 border-t border-white/10 bg-obsidian flex flex-col gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
                 {/* Social Proof Counter */}
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
@@ -711,7 +711,7 @@ export default function AIChatbotFloating() {
                   <div className="flex items-center gap-4">
                     <div className="flex -space-x-3">
                       {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="w-7 h-7 rounded-full border-2 border-[#111] bg-[#222] flex items-center justify-center overflow-hidden shadow-xl">
+                        <div key={i} className="w-7 h-7 rounded-full border-2 border-[#0d0f1c] bg-[#222] flex items-center justify-center overflow-hidden shadow-xl">
                           <img 
                             src={`https://i.pravatar.cc/100?u=${i + 10}`} 
                             alt="User" 
@@ -738,7 +738,7 @@ export default function AIChatbotFloating() {
                   {formStep > 1 && (
                     <button 
                       onClick={prevStep}
-                      className="w-12 h-12 shrink-0 bg-[#111] border border-white/10 text-white rounded-xl flex items-center justify-center hover:bg-white/5 transition-colors"
+                      className="w-12 h-12 shrink-0 bg-input-bg border border-white/10 text-white rounded-xl flex items-center justify-center hover:bg-white/5 transition-colors"
                     >
                       <ChevronLeft className="w-5 h-5" />
                     </button>
@@ -747,7 +747,7 @@ export default function AIChatbotFloating() {
                   {formStep < totalSteps ? (
                     <button 
                       onClick={nextStep}
-                      className="flex-1 py-3.5 bg-white text-obsidian rounded-xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
+                      className="flex-1 py-3.5 bg-white/10 text-white border border-white/10 rounded-xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-white/20 transition-colors"
                     >
                       Next Step
                       <ChevronRight className="w-4 h-4" />
@@ -767,7 +767,7 @@ export default function AIChatbotFloating() {
             
             {/* Fixed Footer Buttons for Result Step */}
             {step === "result" && generatedPlan && (
-              <div className="p-4 md:p-6 border-t border-white/10 bg-[#0a0a0a] flex flex-col gap-4">
+              <div className="p-4 md:p-6 border-t border-white/10 bg-input-bg flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row gap-3">
                   <button 
                     onClick={() => setShowLeadForm(true)}
@@ -791,10 +791,10 @@ export default function AIChatbotFloating() {
                     Need help implementing this plan? <span className="text-white font-bold">Contact our experts:</span>
                   </p>
                   <div className="flex gap-4">
-                    <a href="mailto:info@tieraprom.co.in" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-[#111] px-4 py-2 rounded-full border border-white/5">
+                    <a href="mailto:info@tieraprom.co.in" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-input-bg px-4 py-2 rounded-full border border-white/5">
                       <Mail className="w-4 h-4" /> info@tieraprom.co.in
                     </a>
-                    <a href="tel:+918754659759" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-[#111] px-4 py-2 rounded-full border border-white/5">
+                    <a href="tel:+918754659759" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-input-bg px-4 py-2 rounded-full border border-white/5">
                       <Phone className="w-4 h-4" /> Book a Call
                     </a>
                   </div>
@@ -815,7 +815,7 @@ export default function AIChatbotFloating() {
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-              className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 w-full max-w-md shadow-2xl relative"
+              className="bg-input-bg border border-white/10 rounded-2xl p-6 md:p-8 w-full max-w-md shadow-2xl relative"
             >
               <button 
                 onClick={() => setShowLeadForm(false)}
@@ -841,7 +841,7 @@ export default function AIChatbotFloating() {
                     value={leadDetails.email}
                     onChange={(e) => setLeadDetails({...leadDetails, email: e.target.value})}
                     placeholder="Enter your Gmail"
-                    className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+                    className="w-full bg-input-bg border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
                   />
                 </div>
                 
@@ -852,7 +852,7 @@ export default function AIChatbotFloating() {
                     value={leadDetails.phone}
                     onChange={(e) => setLeadDetails({...leadDetails, phone: e.target.value})}
                     placeholder="Enter your mobile number"
-                    className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+                    className="w-full bg-input-bg border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
                   />
                 </div>
 
@@ -891,7 +891,7 @@ const SearchableSelect = ({ value, onChange, options, placeholder }: {
       <button
         type="button"
         onClick={() => setIsSelectOpen(!isSelectOpen)}
-        className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white flex items-center justify-between focus:border-cyber-teal outline-none transition-colors"
+        className="w-full bg-input-bg border border-white/10 rounded-lg px-4 py-3 text-white flex items-center justify-between focus:border-cyber-teal outline-none transition-colors"
       >
         <div className="flex items-center gap-3">
           <Bot className="w-4 h-4 text-cyber-teal/50" />
@@ -906,16 +906,16 @@ const SearchableSelect = ({ value, onChange, options, placeholder }: {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute z-[110] w-full mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+            className="absolute z-[110] w-full mt-2 bg-obsidian border border-white/10 rounded-xl shadow-2xl overflow-hidden"
           >
-            <div className="p-3 border-b border-white/5 bg-[#111]">
+            <div className="p-3 border-b border-white/5 bg-input-bg">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search language..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyber-teal/50 transition-all"
+                  className="w-full bg-input-bg border border-white/10 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyber-teal/50 transition-all"
                 />
                 <Bot className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
               </div>
