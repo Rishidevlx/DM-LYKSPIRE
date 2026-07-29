@@ -33,7 +33,7 @@ export default function Preloader() {
             }}
             className="block font-display font-black text-2xl tracking-[0.3em] uppercase text-white"
           >
-            Lykspire
+            LYKSPIRE<sup className="text-[10px] md:text-xs ml-1 tracking-normal font-bold relative -top-2 md:-top-3 text-cyber-teal">HQ</sup>
           </motion.span>
         </div>
         

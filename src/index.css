@@ -464,3 +464,164 @@
   background: rgba(0,0,0,0.12) !important;
 }
 
+/* ======================================================
+   Cards Light Mode (Process, Leadership, Services) - Option 2
+   ====================================================== */
+
+/* Glass Card Default Hover in Light Mode */
+[data-theme="light"] .glass-card:hover {
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.1);
+  border-color: var(--theme-cyber-teal) !important;
+}
+
+/* General Card Text Colors */
+[data-theme="light"] .glass-card p.text-white\/40,
+[data-theme="light"] .glass-card p.text-white\/50,
+[data-theme="light"] .glass-card p.text-white\/60 {
+  color: #4B5563 !important; /* Slate Gray for descriptions */
+}
+
+[data-theme="light"] .glass-card .text-white\/20 {
+  color: #9CA3AF !important; /* Lighter Gray for System ID, indices */
+}
+
+/* Process Section */
+[data-theme="light"] .glass-card .text-white\/5 {
+  color: var(--theme-cyber-teal) !important;
+  opacity: 1 !important;
+}
+[data-theme="light"] .glass-card:hover .text-white\/5 {
+  opacity: 0.8 !important;
+}
+
+/* Leadership Section */
+[data-theme="light"] .group .bg-white\/10 {
+  background-color: #E5E7EB !important;
+}
+[data-theme="light"] .group .text-white\/10 {
+  color: #E5E7EB !important;
+}
+[data-theme="light"] .bg-obsidian.border-cyber-teal\/30 {
+  background-color: #FFFFFF !important;
+}
+
+/* Services Section */
+[data-theme="light"] .glass-card .bg-white\/5 {
+  background-color: #F8FAFC !important;
+  border-color: #E5E7EB !important;
+}
+[data-theme="light"] .glass-card .border-white\/10 {
+  border-color: #E5E7EB !important;
+  color: #4B5563 !important;
+}
+[data-theme="light"] .glass-card .border-white\/10:hover {
+  color: var(--theme-cyber-teal) !important;
+  border-color: var(--theme-cyber-teal) !important;
+}
+
+/* Scroll Progress Indicator in Services */
+[data-theme="light"] .bg-white\/5.rounded-full {
+  background-color: #E5E7EB !important;
+}
+
+/* ======================================================
+   Alternating Service Cards (Purple & White) in Light Mode
+   ====================================================== */
+
+/* Make every EVEN service card Solid Purple */
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card {
+  background-color: var(--theme-cyber-teal) !important;
+  border-color: var(--theme-cyber-teal) !important;
+}
+
+/* Headings in the purple card */
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card h3,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card h3 {
+  color: #FFFFFF !important;
+}
+
+/* Descriptions in the purple card */
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card p,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card p {
+  color: #E5E7EB !important; /* Soft white */
+}
+
+/* Sub-items headers (cyan pop) in the purple card */
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card h4,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card h4 {
+  color: #22D3EE !important;
+}
+
+/* Icon box in the purple card */
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card .bg-white\/5,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card .bg-white\/5 {
+  background-color: rgba(255,255,255,0.1) !important;
+  border-color: rgba(255,255,255,0.2) !important;
+}
+
+/* Icons inside the purple card */
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card .text-cyber-teal,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card .text-cyber-teal {
+  color: #FFFFFF !important;
+}
+
+/* Bottom elements (Index & Arrow) in the purple card */
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card .text-white\/20,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card .text-white\/20 {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card .border-white\/10,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card .border-white\/10 {
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="light"] section#services .flex.items-stretch > div:nth-child(even) .glass-card .border-white\/10:hover,
+[data-theme="light"] section#services .space-y-8 > div:nth-child(even) .glass-card .border-white\/10:hover {
+  background-color: rgba(255,255,255,0.15) !important;
+  border-color: #FFFFFF !important;
+}
+
+/* ======================================================
+   FAQ Active State in Light Mode
+   ====================================================== */
+
+/* Active FAQ Card Background */
+[data-theme="light"] section .glass-card.border-cyber-teal\/30 {
+  background-color: var(--theme-cyber-teal) !important;
+}
+
+/* Active FAQ Title */
+[data-theme="light"] section .glass-card.border-cyber-teal\/30 span.text-white {
+  color: #FFFFFF !important;
+}
+
+/* Active FAQ Answer Text */
+[data-theme="light"] section .glass-card.border-cyber-teal\/30 .text-white\/50 {
+  color: #E5E7EB !important;
+}
+
+/* Active FAQ Icon Box (Sparkles) */
+[data-theme="light"] section .glass-card.border-cyber-teal\/30 .bg-cyber-teal\/10 {
+  background-color: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+}
+
+/* Active FAQ Sparkles Icon Color */
+[data-theme="light"] section .glass-card.border-cyber-teal\/30 .text-cyber-teal {
+  color: #FFFFFF !important;
+}
+
+/* Active FAQ Right Toggle Button (Circle) */
+[data-theme="light"] section .glass-card.border-cyber-teal\/30 .bg-cyber-teal.text-obsidian {
+  background-color: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+  color: var(--theme-cyber-teal) !important;
+}
+
+/* Divider line inside Active FAQ */
+[data-theme="light"] section .glass-card.border-cyber-teal\/30 .bg-white\/5 {
+  background-color: rgba(255,255,255,0.2) !important;
+}

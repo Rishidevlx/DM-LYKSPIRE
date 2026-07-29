@@ -43,7 +43,9 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-4">
           <img src={logo} alt="LYKSPIRE" className="h-10 w-auto" />
-          <span className="text-gradient font-display font-black text-2xl tracking-tighter uppercase">LYKSPIRE</span>
+          <span className="text-gradient font-display font-black text-2xl tracking-tighter uppercase">
+            LYKSPIRE<sup className="text-[10px] md:text-xs ml-1 tracking-normal font-bold relative -top-2 md:-top-3">HQ</sup>
+          </span>
         </Link>
         
         <div className="hidden md:flex items-center gap-10 text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">
