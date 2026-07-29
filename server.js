@@ -132,10 +132,19 @@ async function initDB() {
         company_name VARCHAR(255) NOT NULL,
         description TEXT,
         logo_url VARCHAR(512),
+        website_url VARCHAR(512),
         sort_order INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Add columns to existing clients table
+    const clientsAlters = [
+      "ALTER TABLE clients ADD COLUMN IF NOT EXISTS website_url VARCHAR(512)"
+    ];
+    for (const sql of clientsAlters) {
+      try { await db.execute(sql); } catch(e) { /* column already exists */ }
+    }
 
     // Create blog categories table
     await db.execute(`
@@ -658,10 +667,10 @@ app.get('/api/clients', async (req, res) => {
 
 app.post('/api/admin-clients', checkAdminAuth, async (req, res) => {
   try {
-    const { company_name, description, logo_url, sort_order } = req.body;
+    const { company_name, description, logo_url, website_url, sort_order } = req.body;
     const [result] = await db.execute(
-      'INSERT INTO clients (company_name, description, logo_url, sort_order) VALUES (?, ?, ?, ?)',
-      [company_name, description||null, logo_url||null, sort_order||0]
+      'INSERT INTO clients (company_name, description, logo_url, website_url, sort_order) VALUES (?, ?, ?, ?, ?)',
+      [company_name, description||null, logo_url||null, website_url||null, sort_order||0]
     );
     return res.status(201).json({ success: true, id: result.insertId });
   } catch (error) {
@@ -672,11 +681,11 @@ app.post('/api/admin-clients', checkAdminAuth, async (req, res) => {
 app.put('/api/admin-clients', checkAdminAuth, async (req, res) => {
   try {
     const { id } = req.query;
-    const { company_name, description, logo_url, sort_order } = req.body;
+    const { company_name, description, logo_url, website_url, sort_order } = req.body;
     if (!id) return res.status(400).json({ error: 'Client ID required' });
     await db.execute(
-      'UPDATE clients SET company_name=?, description=?, logo_url=?, sort_order=? WHERE id=?',
-      [company_name, description||null, logo_url||null, sort_order||0, id]
+      'UPDATE clients SET company_name=?, description=?, logo_url=?, website_url=?, sort_order=? WHERE id=?',
+      [company_name, description||null, logo_url||null, website_url||null, sort_order||0, id]
     );
     return res.status(200).json({ success: true });
   } catch (error) {

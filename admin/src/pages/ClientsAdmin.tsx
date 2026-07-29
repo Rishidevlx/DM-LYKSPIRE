@@ -10,6 +10,7 @@ interface Client {
   company_name: string;
   description: string;
   logo_url: string;
+  website_url: string;
   sort_order: number;
 }
 
@@ -17,10 +18,11 @@ interface FormState {
   company_name: string;
   description: string;
   logo_url: string;
+  website_url: string;
   sort_order: number;
 }
 
-const emptyForm: FormState = { company_name: '', description: '', logo_url: '', sort_order: 0 };
+const emptyForm: FormState = { company_name: '', description: '', logo_url: '', website_url: '', sort_order: 0 };
 const inputCls = 'w-full bg-[var(--panel-bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition-all';
 const labelCls = 'block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-1.5';
 
@@ -56,7 +58,7 @@ export default function ClientsAdmin() {
 
   const openAdd = () => { setForm(emptyForm); setEditingId(null); setShowForm(true); };
   const openEdit = (c: Client) => {
-    setForm({ company_name: c.company_name, description: c.description, logo_url: c.logo_url, sort_order: c.sort_order });
+    setForm({ company_name: c.company_name, description: c.description, logo_url: c.logo_url, website_url: c.website_url || '', sort_order: c.sort_order });
     setEditingId(c.id);
     setShowForm(true);
   };
@@ -147,6 +149,10 @@ export default function ClientsAdmin() {
                   <input value={form.company_name} onChange={(e) => setForm((p) => ({ ...p, company_name: e.target.value }))} placeholder="e.g. Acme Corporation" className={inputCls} />
                 </div>
                 <div>
+                  <label className={labelCls}>Website URL</label>
+                  <input value={form.website_url} onChange={(e) => setForm((p) => ({ ...p, website_url: e.target.value }))} placeholder="e.g. https://example.com" className={inputCls} />
+                </div>
+                <div>
                   <label className={labelCls}>Partner Description</label>
                   <input value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} placeholder="e.g. AI Automation Partner" className={inputCls} />
                 </div>
@@ -202,6 +208,7 @@ export default function ClientsAdmin() {
                 </div>
               </div>
               <p className="font-bold text-[var(--text-primary)] text-sm">{client.company_name}</p>
+              {client.website_url && <a href={client.website_url} target="_blank" rel="noreferrer" className="text-xs text-indigo-400 hover:underline">{client.website_url}</a>}
               {client.description && <p className="text-xs text-[var(--text-secondary)] mt-1">{client.description}</p>}
               <p className="text-[10px] text-[var(--text-secondary)] mt-2">Order: {client.sort_order}</p>
             </motion.div>
