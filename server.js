@@ -491,6 +491,28 @@ app.post('/api/upload-image', upload.single('file'), async (req, res) => {
   }
 });
 
+// ══ Contact Form Route ══
+app.post('/api/send-email', async (req, res) => {
+  try {
+    const { name, email, mobile, purpose, message } = req.body;
+    
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: 'Missing required fields (name, email, message)' });
+    }
+
+    // Save to contact_enquiries table
+    await db.execute(
+      'INSERT INTO contact_enquiries (name, email, mobile, purpose, message) VALUES (?, ?, ?, ?, ?)',
+      [name, email, mobile || null, purpose || null, message]
+    );
+
+    return res.status(200).json({ success: true, message: 'Message saved successfully' });
+  } catch (error) {
+    console.error('Contact form submission error:', error);
+    return res.status(500).json({ error: 'Failed to process request', details: error.message });
+  }
+});
+
 // ══ ADMIN ROUTES (Local Dev) ══
 // Admin Auth
 app.post('/api/admin-auth', async (req, res) => {
