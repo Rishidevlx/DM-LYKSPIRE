@@ -155,7 +155,7 @@ export default function Services() {
             ))}
             
             {/* CTA CARD */}
-            <div className="flex-shrink-0 w-[450px] glass-card p-10 flex flex-col justify-center items-center text-center border-cyber-teal/30 bg-cyber-teal/5 relative overflow-hidden group">
+            <div className="services-cta-card flex-shrink-0 w-[450px] glass-card p-10 flex flex-col justify-center items-center text-center border-cyber-teal/30 bg-cyber-teal/5 relative overflow-hidden group">
                <div className="absolute inset-0 bg-gradient-to-br from-cyber-teal/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                <Sparkles className="w-16 h-16 text-cyber-teal mb-8 animate-pulse" />
                <h3 className="text-4xl font-display font-black uppercase tracking-tighter mb-4">
@@ -209,7 +209,7 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="w-full glass-card p-10 flex flex-col justify-center items-center text-center border-cyber-teal/30 bg-cyber-teal/5"
+            className="services-cta-card w-full glass-card p-10 flex flex-col justify-center items-center text-center border-cyber-teal/30 bg-cyber-teal/5"
           >
              <Sparkles className="w-12 h-12 text-cyber-teal mb-6" />
              <h3 className="text-3xl font-display font-black uppercase tracking-tighter mb-4">

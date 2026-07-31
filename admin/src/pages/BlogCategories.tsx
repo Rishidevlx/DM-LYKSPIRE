@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Loader2, CheckCircle2, FolderOpen } from 'lucide-react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const token = localStorage.getItem('adminToken');
 
 interface Category {
   id: number;
@@ -16,6 +15,7 @@ const inputCls = 'w-full bg-white/[0.04] border border-white/[0.07] rounded-xl p
 const labelCls = 'block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-1.5';
 
 export default function BlogCategories() {
+  const token = localStorage.getItem('adminToken');
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');

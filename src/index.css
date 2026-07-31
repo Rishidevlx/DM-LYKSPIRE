@@ -625,3 +625,26 @@
 [data-theme="light"] section .glass-card.border-cyber-teal\/30 .bg-white\/5 {
   background-color: rgba(255,255,255,0.2) !important;
 }
+
+/* ======================================================
+   Services CTA Card Glassy Effect (Light Mode)
+   ====================================================== */
+[data-theme="light"] section#services .services-cta-card {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 10px 40px rgba(124, 58, 237, 0.15), inset 0 0 0 1px rgba(255,255,255,0.5) !important;
+}
+
+[data-theme="light"] section#services .services-cta-card h3 {
+  color: var(--theme-text-primary) !important;
+}
+
+[data-theme="light"] section#services .services-cta-card .text-white\/60 {
+  color: var(--theme-text-muted) !important;
+}
+
+[data-theme="light"] section#services .services-cta-card .text-cyber-teal {
+  color: var(--theme-cyber-teal) !important;
+}
