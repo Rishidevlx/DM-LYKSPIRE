@@ -46,6 +46,8 @@ const db = mysql.createPool({
   ssl: { rejectUnauthorized: true },
   waitForConnections: true,
   connectionLimit: 5,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
 });
 
 // ══ Auto-create DB + table on startup ══
@@ -60,6 +62,8 @@ async function initDB() {
       ssl: { rejectUnauthorized: true },
       waitForConnections: true,
       connectionLimit: 2,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 10000,
     });
     await rootPool.execute(`CREATE DATABASE IF NOT EXISTS ${process.env.TIDB_NAME || 'lykspire_leads'}`);
     await rootPool.end();
