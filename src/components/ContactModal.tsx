@@ -224,7 +224,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
                 <div className="flex items-center gap-4 text-white/60">
                   <Mail className="w-5 h-5 text-cyber-teal flex-shrink-0" />
-                  <span className="text-sm">info@tieraprom.co.in</span>
+                  <span className="text-sm">letstalk@lykspire.com</span>
                 </div>
               </div>
             </div>

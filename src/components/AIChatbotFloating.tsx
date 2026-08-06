@@ -791,8 +791,8 @@ export default function AIChatbotFloating() {
                     Need help implementing this plan? <span className="text-white font-bold">Contact our experts:</span>
                   </p>
                   <div className="flex gap-4">
-                    <a href="mailto:info@tieraprom.co.in" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-input-bg px-4 py-2 rounded-full border border-white/5">
-                      <Mail className="w-4 h-4" /> info@tieraprom.co.in
+                    <a href="mailto:letstalk@lykspire.com" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-input-bg px-4 py-2 rounded-full border border-white/5">
+                      <Mail className="w-4 h-4" /> letstalk@lykspire.com
                     </a>
                     <a href="tel:+918754659759" className="flex items-center gap-2 text-cyber-teal hover:text-white transition-colors text-sm font-bold bg-input-bg px-4 py-2 rounded-full border border-white/5">
                       <Phone className="w-4 h-4" /> Book a Call

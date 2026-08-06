@@ -6,9 +6,21 @@ import path from 'path';
 import fs from 'fs';
 import mysql from 'mysql2/promise';
 import multer from 'multer';
+import nodemailer from 'nodemailer';
 import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();
+
+// ══ Nodemailer Config ══
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: process.env.SMTP_SECURE === 'true',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 // ══ Cloudinary Config ══
 cloudinary.config({
@@ -514,6 +526,21 @@ app.post('/api/send-email', async (req, res) => {
       'INSERT INTO contact_enquiries (name, email, mobile, purpose, message) VALUES (?, ?, ?, ?, ?)',
       [name, email, mobile || null, purpose || null, message]
     );
+
+    // Send email using Nodemailer
+    const mailOptions = {
+      from: `"LyKSpire Contact" <${process.env.SMTP_USER}>`,
+      to: process.env.RECIPIENT_EMAIL || 'letstalk@lykspire.com',
+      subject: `New Contact Enquiry from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nMobile: ${mobile || 'N/A'}\nPurpose: ${purpose || 'N/A'}\n\nMessage:\n${message}`,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (emailErr) {
+      console.error('Failed to send email:', emailErr);
+      // We still return 200 because the enquiry was saved in the DB
+    }
 
     return res.status(200).json({ success: true, message: 'Message saved successfully' });
   } catch (error) {

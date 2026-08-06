@@ -48,10 +48,10 @@ export default function Footer() {
               <h4 className="font-display font-bold mb-6 text-sm uppercase tracking-widest text-white/40">Contact</h4>
               <div className="space-y-4">
                 <a 
-                  href="mailto:info@tieraprom.co.in"
+                  href="mailto:letstalk@lykspire.com"
                   className="flex items-center gap-3 text-white/60 hover:text-white transition-colors"
                 >
-                  <Mail className="w-4 h-4 text-cyber-teal" /> info@tieraprom.co.in
+                  <Mail className="w-4 h-4 text-cyber-teal" /> letstalk@lykspire.com
                 </a>
                 <a 
                   href="https://maps.google.com/?q=Coimbatore,Tamil+Nadu,India"
